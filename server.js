@@ -2,6 +2,8 @@
 const PORT = Bun.env.PORT ?? 3000;
 
 Bun.serve({
+    // Listen on all interfaces
+    hostname: "0.0.0.0",
     port: PORT,
 
     fetch(req) {
@@ -24,4 +26,4 @@ Bun.serve({
 });
 
 // For the machine running this, it also means we can access it at that addr
-console.log(`Server running at http://localhost:${PORT}`);
+console.log(`Server running at http://0.0.0.0:${PORT}`);
