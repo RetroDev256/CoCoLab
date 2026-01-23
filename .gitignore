@@ -1,1 +1,2 @@
-.env.*
+bun.lock
+node_modules/
