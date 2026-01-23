@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
+:root
+{
+    --primary-color: #c69258;
+    --secondary-color: #83481b;
+    --accent1-color: #a5ffdd;
+    --accent2-color: #ffd39d;
+    --accent3-color: #ffc2d0;
+    --heading-font: 'Fredoka', sans-serif;
+    --paragraph-font: Arial, sans-serif;
+}
+header {
+    display: grid;
+    grid-template-columns: 150px auto;
+}
+.logo {
+    width: 100%;
+    height: 100%;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+nav a{
+    text-align: center;
+    color: #482000;
+    text-decoration: none;
+    padding: 35px;
+    width: 50%;
+    height: 50%;
+}
+
+p {
+  margin: 25px;
+}
+
+body 
+{
+    padding: 0;
+    background-color: var(--primary-color);
+  font-family: "Raleway", sans-serif;
+    margin: 0;
+}
+
+#background {
+    height: 725px;
+    width: 100%;
+    background-color: #d6e6f5;
+    grid-column: 1/11;
+    grid-row: 4/9;
+}
