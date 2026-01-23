@@ -41,6 +41,7 @@ body
 {
     padding: 0;
     background-color: var(--primary-color);
+  font-family: "Raleway", sans-serif;
     margin: 0;
 }
 
@@ -50,5 +51,4 @@ body
     background-color: #d6e6f5;
     grid-column: 1/11;
     grid-row: 4/9;
-
 }
