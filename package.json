@@ -1,5 +1,12 @@
 {
-    "dependencies": {
-        "pg": "^8.17.2"
-    }
+	"scripts": {
+		"start": "bun run src/server.js"
+	},
+	"dependencies": {
+		"pg": "^8.17.2"
+	},
+	"name": "cocolab",
+	"module": "src/server.js",
+	"type": "module",
+	"private": true
 }
