@@ -1,84 +1,84 @@
 // The SQL database that we can run queries on
-import pool from "./db.mjs";
+import pool from './db.mjs'
 
 // PORT=[port here] bun run server.js
-const PORT = Bun.env.PORT ?? 3000;
+const PORT = Bun.env.PORT ?? 3000
 
 Bun.serve({
-    // Listen on all interfaces
-    hostname: "0.0.0.0",
-    port: PORT,
+	// Listen on all interfaces
+	hostname: '0.0.0.0',
+	port: PORT,
 
-    async fetch(req) {
-        // The path of each request is locked to within the public folder.
-        // Navigating to the root path / will access index.html by default.
-        const url = new URL(req.url);
+	async fetch(req) {
+		// The path of each request is locked to within the public folder.
+		// Navigating to the root path / will access index.html by default.
+		const url = new URL(req.url)
 
-        // Example API route
-        // if (url.pathname === "/api/hello") {
-        //     return Response.json({ message: "Hello from Bun!" });
-        // }
+		// Example API route
+		// if (url.pathname === "/api/hello") {
+		//     return Response.json({ message: "Hello from Bun!" });
+		// }
 
-        // Serve static files
-        const path = url.pathname === "/" ? "/index.html" : url.pathname;
+		// Serve static files
+		const path = url.pathname === '/' ? '/index.html' : url.pathname
 
-        // The client is sending data to the server
-        if (req.method === "POST") {
-            // TODO: we can switch on the URL and req_data here
-            // const req_data = await req.json(); // data they sent
-            return new Response("YOU DARE SEND DATA TO ME!?!?");
-        }
+		// The client is sending data to the server
+		if (req.method === 'POST') {
+			// TODO: we can switch on the URL and req_data here
+			// const req_data = await req.json(); // data they sent
+			return new Response('YOU DARE SEND DATA TO ME!?!?')
+		}
 
-        // The client is requesting data from the server
-        if (req.method === "GET") {
-            // If the file exists, serve that file
-            const file = Bun.file(`./public${path}`);
-            if (await file.exists()) return new Response(file);
+		// The client is requesting data from the server
+		if (req.method === 'GET') {
+			// If the file exists, serve that file
+			const file = Bun.file(`./src/public${path}`)
+			if (await file.exists()) return new Response(file)
 
-            try {
-                // If the path is special, handle that request
-                switch (url.pathname) {
-                    // EXAMPLE: this endpoint returns JSON of the users table
-                    case "/display_sql": {
-                        const result = await pool.query("SELECT * FROM users;");
-                        return new Response(JSON.stringify(result.rows));
-                    }
+			try {
+				// If the path is special, handle that request
+				switch (url.pathname) {
+					// EXAMPLE: this endpoint returns JSON of the users table
+					case '/display_sql': {
+						const result = await pool.query('SELECT * FROM users;')
+						return new Response(JSON.stringify(result.rows))
+					}
 
-                    // EXAMPLE: this endpoint inserts one hardcoded element
-                    case "/add_one_sql": {
-                        const query_template = `
+					// EXAMPLE: this endpoint inserts one hardcoded element
+					case '/add_one_sql': {
+						const query_template = `
                             INSERT INTO users (first_name, last_name, email, phone_number)
                             VALUES ($1, $2, $3, $4)
                             RETURNING *;
-                        `;
+                        `
 
-                        const values = [
-                            "Hard",
-                            "Coded",
-                            "hardcoded@example.com",
-                            "+1 (000) 000-0000",
-                        ];
+						const values = [
+							'Hard',
+							'Coded',
+							'hardcoded@example.com',
+							'+1 (000) 000-0000',
+						]
 
-                        const result = await pool.query(query_template, values);
-                        return new Response(JSON.stringify(result.rows[0]));
-                    }
+						const result = await pool.query(query_template, values)
+						return new Response(JSON.stringify(result.rows[0]))
+					}
 
-                    // EXAMPLE: this endpoint will clear the users table
-                    case "/clear_all_sql": {
-                        _ = await pool.query("DELETE FROM users;");
-                        return new Response(JSON.stringify({ success: true }));
-                    }
-                }
-            } catch (err) {
-                // In the case that something fails with the DB query:
-                return new Response(JSON.stringify(err), { status: 500 });
-            }
+					// EXAMPLE: this endpoint will clear the users table
+					case '/clear_all_sql': {
+						_ = await pool.query('DELETE FROM users;')
+						return new Response(JSON.stringify({ success: true }))
+					}
+				}
+			} catch (err) {
+				// In the case that something fails with the DB query:
+				return new Response(JSON.stringify(err), { status: 500 })
+			}
 
-            // If nothing above handled the request, send a 404 response
-            return new Response("404 not found.", { status: 404 });
-        }
-    },
-});
+			// If nothing above handled the request, send a 404 response
+			return new Response('404 not found.', { status: 404 })
+		}
+	},
+})
 
 // For the machine running this, it also means we can access it at that addr
-console.log(`Server running at http://0.0.0.0:${PORT}`);
+console.log(`Server running at http://0.0.0.0:${PORT}`)
