@@ -33,7 +33,7 @@ Bun.serve({
                 // Log the offending form data for debugging
                 for (const [key, value] of form_data.entries())
                     console.log(JSON.stringify({ key, value }));
-                return new Response(JSON.stringify(err), { status: 500 });
+                return Response.json(err, { status: 500 });
             }
         }
 
@@ -52,7 +52,7 @@ Bun.serve({
             } catch (err) {
                 // Just in case we have out-of-band errors, like for SQL
                 console.log(`GET error encountered: ${err}`);
-                return new Response(JSON.stringify(err), { status: 500 });
+                return Response.json(err, { status: 500 });
             }
         }
 
@@ -157,8 +157,7 @@ async function apiGet(url) {
         if (url.pathname === `/api/${table}`) {
             const query = `SELECT * FROM ${table};`;
             const result = await pool.query(query);
-            const json_data = JSON.stringify(result.rows);
-            return new Response(json_data);
+            return Response.json(result.rows);
         }
     }
 
