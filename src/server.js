@@ -149,7 +149,7 @@ async function apiGet(url) {
         "users", // accessible at /api/users
         "project", // accessible at /api/project
         "category_tags", // accessible at /api/category_tags
-        "project_tags", // accessible at /api/project_tags
+        "projects_tags", // accessible at /api/projects_tags
         "project_members", // accessible at /api/project_members
     ];
 
