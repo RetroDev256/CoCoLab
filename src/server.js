@@ -51,7 +51,7 @@ Bun.serve({
                     "project_members", // accessible at /api/project_members
                 ];
 
-                for (const table in table_list) {
+                for (const table of table_list) {
                     if (url.pathname === `/api/${table}`) {
                         const query = `SELECT * FROM ${table};`;
                         const result = await pool.query(query);
