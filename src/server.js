@@ -1,84 +1,166 @@
-// The SQL database that we can run queries on
-import pool from "./db.mjs";
+import pool from './db.mjs'
+import index from './public/index.html'
+import aboutDevs from './public/pages/aboutDevs.html'
+import contactUs from './public/pages/contactUs.html'
+import sitePlan from './public/pages/sitePlan.html'
+import userSettings from './public/pages/userSettings.html'
+import projectBoard from './public/pages/projectBoard.html'
+import projectManager from './public/pages/projectManager.html'
+import forms from './public/pages/forms.html'
 
 // PORT=[port here] bun run server.js
-const PORT = Bun.env.PORT ?? 3000;
+const PORT = Bun.env.PORT ?? 3000
+
+// TODO: do something with these forms
+// TODO: um idk
 
 Bun.serve({
-    // Listen on all interfaces
-    hostname: "0.0.0.0",
-    port: PORT,
+	// Listen on all interfaces
+	hostname: '0.0.0.0',
+	port: PORT,
 
-    async fetch(req) {
-        // The path of each request is locked to within the public folder.
-        // Navigating to the root path / will access index.html by default.
-        const url = new URL(req.url);
+	routes: {
+		'/': index,
+		'/aboutDevs': aboutDevs,
+		'/contactUs': contactUs,
+		'/sitePlan': sitePlan,
+		'/forms': forms,
+		'/userSettings': userSettings,
+		'/projectBoard': projectBoard,
+		'/projectManager': projectManager,
+		'/api/*': {
+			POST: async (req) => {
+				const form_data = await req.formData()
 
-        // Example API route
-        // if (url.pathname === "/api/hello") {
-        //     return Response.json({ message: "Hello from Bun!" });
-        // }
+				try {
+					const api_response = await apiPost(req.url, form_data)
+					if (api_response) return api_response
+				} catch (err) {
+					// Just in case we have out-of-band errors, like for SQL
+					console.log(`POST error encountered: ${err} --- FORM DATA:`)
+					// Log the offending form data for debugging
+					for (const [key, value] of form_data.entries())
+						console.log(JSON.stringify({ key, value }))
+					return Response.json(err, { status: 500 })
+				}
+			},
+			GET: async (req) => {
+				try {
+					// API endpoints for fetching data from each SQL table
+					const api_response = await apiGet(req.url)
+					if (api_response) return api_response
+				} catch (err) {
+					// Just in case we have out-of-band errors, like for SQL
+					console.log(`GET error encountered: ${err}`)
+					return Response.json(err, { status: 500 })
+				}
+			},
+		},
+	},
+})
 
-        // Serve static files
-        const path = url.pathname === "/" ? "/index.html" : url.pathname;
+// Exposes POST endpoints under /api/ for each SQL table
+async function apiPost(url, data) {
+	// -------------------------------------------------------- INSERTING USERS
+	if (url.pathname === '/api/users') {
+		const result = await pool.query(
+			`INSERT INTO users (
+                first_name, last_name, email, phone_number, other_link
+            )
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *;`,
+			[
+				data.get('first_name'),
+				data.get('last_name'),
+				data.get('email'),
+				data.get('phone_number'),
+				data.get('other_link'),
+			],
+		)
 
-        // The client is sending data to the server
-        if (req.method === "POST") {
-            // TODO: we can switch on the URL and req_data here
-            // const req_data = await req.json(); // data they sent
-            return new Response("YOU DARE SEND DATA TO ME!?!?");
-        }
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
+	}
 
-        // The client is requesting data from the server
-        if (req.method === "GET") {
-            // If the file exists, serve that file
-            const file = Bun.file(`./public${path}`);
-            if (await file.exists()) return new Response(file);
+	// ----------------------------------------------------- INSERTING PROJECTS
+	if (url.pathname === '/api/project') {
+		const result = await pool.query(
+			`INSERT INTO project (project_name, max_people, details)
+            VALUES ($1, $2, $3)
+            RETURNING *;`,
+			[
+				data.get('project_name'),
+				data.get('max_people'),
+				data.get('details'),
+			],
+		)
 
-            try {
-                // If the path is special, handle that request
-                switch (url.pathname) {
-                    // EXAMPLE: this endpoint returns JSON of the users table
-                    case "/display_sql": {
-                        const result = await pool.query("SELECT * FROM users;");
-                        return new Response(JSON.stringify(result.rows));
-                    }
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
+	}
 
-                    // EXAMPLE: this endpoint inserts one hardcoded element
-                    case "/add_one_sql": {
-                        const query_template = `
-                            INSERT INTO users (first_name, last_name, email, phone_number)
-                            VALUES ($1, $2, $3, $4)
-                            RETURNING *;
-                        `;
+	// ------------------------------------------------ INSERTING CATEGORY TAGS
+	if (url.pathname === '/api/category_tags') {
+		const result = await pool.query(
+			`INSERT INTO category_tags (name)
+            VALUES ($1)
+            RETURNING *;`,
+			[data.get('name')],
+		)
 
-                        const values = [
-                            "Hard",
-                            "Coded",
-                            "hardcoded@example.com",
-                            "+1 (000) 000-0000",
-                        ];
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
+	}
 
-                        const result = await pool.query(query_template, values);
-                        return new Response(JSON.stringify(result.rows[0]));
-                    }
+	// ------------------------------------------------- INSERTING PROJECT TAGS
+	if (url.pathname === '/api/projects_tags') {
+		const result = await pool.query(
+			`INSERT INTO projects_tags (project_id, tag_id)
+            VALUES ($1, $2)
+            RETURNING *;`,
+			[data.get('project_id'), data.get('tag_id')],
+		)
 
-                    // EXAMPLE: this endpoint will clear the users table
-                    case "/clear_all_sql": {
-                        _ = await pool.query("DELETE FROM users;");
-                        return new Response(JSON.stringify({ success: true }));
-                    }
-                }
-            } catch (err) {
-                // In the case that something fails with the DB query:
-                return new Response(JSON.stringify(err), { status: 500 });
-            }
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
+	}
 
-            // If nothing above handled the request, send a 404 response
-            return new Response("404 not found.", { status: 404 });
-        }
-    },
-});
+	// ---------------------------------------------- INSERTING PROJECT MEMBERS
+	if (url.pathname === '/api/project_members') {
+		const result = await pool.query(
+			`INSERT INTO project_members (user_id, project_id, role)
+            VALUES ($1, $2, $3)
+            RETURNING *;`,
+			[data.get('user_id'), data.get('project_id'), data.get('role')],
+		)
 
-// For the machine running this, it also means we can access it at that addr
-console.log(`Server running at http://0.0.0.0:${PORT}`);
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
+	}
+
+	return null
+}
+
+// Exposes GET endpoints under /api/ for each SQL table
+async function apiGet(url) {
+	const table_list = [
+		'users', // accessible at /api/users
+		'project', // accessible at /api/project
+		'category_tags', // accessible at /api/category_tags
+		'projects_tags', // accessible at /api/projects_tags
+		'project_members', // accessible at /api/project_members
+	]
+
+	for (const table of table_list) {
+		if (url.pathname === `/api/${table}`) {
+			const query = `SELECT * FROM ${table};`
+			const result = await pool.query(query)
+			return Response.json(result.rows)
+		}
+	}
+
+	return null
+}
+
+// We can access the website at this address:
+console.log(`Server running at http://0.0.0.0:${PORT}`)
