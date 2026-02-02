@@ -1,186 +1,74 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Us</title>
-    <link rel="stylesheet" href="../style/contactUs.css" />
-  </head>
-  <body>
-    <header>
-		<div class = 'burger' onclick="toggleMenu()">
-			<span></span><br/>
-			<span></span><br/>
-			<span></span>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Contact Us</title>
+	<link rel="stylesheet" href="../style/contactUs.css" />
+</head>
+
+<body>
+	<header>
+		<div class='burger' onclick="toggleMenu()">
+			<!-- insert burger -->
 		</div>
-      <a id="logo" href="../index.html">
-        <img class="logo" src="#" alt="CoCoLab Logo" />
-      </a>
-      <a id="account" href="./userSettings.html">
-        <img class="account" src="#" alt="User Account Icon" />
-      </a>
-      <!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
-      <nav id="side-menu">
-        <a href="./pages/projectBoard.html">Project Board</a>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Contact Us</title>
-		<link rel="stylesheet" href="../style/contactUs.css" />
-	</head>
-	<body>
-		<header>
-			<div class="logoaccount">
-				<a id="logo" href="/">
-					<img class="logo" src="#" alt="CoCoLab Logo" />
-				</a>
-				<a id="account" href="/userSettings">
-					<img class="account" src="#" alt="User Account Icon" />
-				</a>
-			</div>
-			<!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
-			<nav></nav>
-		</header>
-		<head>
-			<meta charset="UTF-8" />
-			<meta
-				name="viewport"
-				content="width=device-width, initial-scale=1.0"
-			/>
-			<title>Contact Us</title>
-			<link rel="stylesheet" href="../style/contactUs.css" />
-		</head>
-		<body>
-			<header>
-				<a id="logo" href="../index.html">
-					<img class="logo" src="#" alt="CoCoLab Logo" />
-				</a>
-				<a id="account" href="./userSettings.html">
-					<img class="account" src="#" alt="User Account Icon" />
-				</a>
-				<!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
-				<nav class="side-menu">
-					<a href="./pages/projectBoard.html">Project Board</a>
 
-					<a href="./pages/projectManager.html">Project Manager</a>
+		<a id="logo" href="../index.html">
+			<img class="logo" src="#" alt="CoCoLab Logo" />
+		</a>
+		<a id="account" href="./userSettings.html">
+			<img class="account" src="#" alt="User Account Icon" />
+		</a>
+		<!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
+		<nav class="side-menu">
+			<a href="./pages/projectBoard.html">Project Board</a>
 
-					<a href="./pages/userSettings.html">User Settings</a>
+			<a href="./pages/projectManager.html">Project Manager</a>
 
-					<a href="./pages/aboutDevs.html">About the Developers</a>
-					<a href="pages/contactUs.html">Contact Us</a>
-					<a href="pages/sitePlan.html">Site Plan</a>
-					<!-- more tabs can be added as need arises-->
-				</nav>
-			</header>
+			<a href="./pages/userSettings.html">User Settings</a>
 
-			<main>
-				<h1>Contact Us</h1>
-				<p>Have questions or feedback? We'd love to hear from you!</p>
-				<main>
-					<h1>Contact Us</h1>
-					<p>
-						Have questions or feedback? We'd love to hear from you!
-					</p>
+			<a href="./pages/aboutDevs.html">About the Developers</a>
+			<a href="pages/contactUs.html">Contact Us</a>
+			<a href="pages/sitePlan.html">Site Plan</a>
+			<!-- more tabs can be added as need arises-->
+		</nav>
+	</header>
 
-					<!-- Contact Information -->
-					<section id="contact-info">
-						<h2>Get in Touch</h2>
-						<ul>
-							<li>Email: contact@cocolab.com</li>
-							<li>Phone: (555) 123-4567</li>
-							<li>
-								Address: 123 Collaboration St, Tech City, TC
-								12345
-							</li>
-						</ul>
-						<!-- Contact Information -->
-						<section id="contact-info">
-							<h2>Get in Touch</h2>
-							<ul>
-								<li>Email: contact@cocolab.com</li>
-								<li>Phone: (555) 123-4567</li>
-								<li>
-									Address: 123 Collaboration St, Tech City, TC
-									12345
-								</li>
-							</ul>
+	<main>
+		<h1>Contact Us</h1>
+		<p>Have questions or feedback? We'd love to hear from you!</p>
 
-        <!-- Basic Contact Form -->
-        <form id="contact-form">
-          <label for="name">Name:</label><br/>
-          <input type="text" id="name" name="name"/><br/><br/>
-							<!-- Basic Contact Form -->
-							<form id="contact-form">
-								<label for="name">Name:</label><br />
-								<input
-									type="text"
-									id="name"
-									name="name"
-								/><br /><br />
-								<!-- Basic Contact Form -->
-								<form id="contact-form">
-									<label for="name">Name:</label><br />
-									<input
-										type="text"
-										id="name"
-										name="name"
-									/><br /><br />
+		<!-- Contact Information -->
+		<section id="contact-info">
+			<h2>Get in Touch</h2>
+			<ul>
+				<li>Email: contact@cocolab.com</li>
+				<li>Phone: (555) 123-4567</li>
+				<li>
+					Address: 123 Collaboration St, Tech City, TC
+					12345
+				</li>
+			</ul>
 
-          <label for="email">Email:</label><br/>
-          <input type="email" id="email" name="email"/><br/><br/>
-									<label for="email">Email:</label><br />
-									<input
-										type="email"
-										id="email"
-										name="email"
-									/><br /><br />
-									<label for="email">Email:</label><br />
-									<input
-										type="email"
-										id="email"
-										name="email"
-									/><br /><br />
+			<!-- Basic Contact Form -->
+			<form id="contact-form">
+				<label for="name">Name:</label><br />
+				<input type="text" id="name" name="name" /><br /><br />
 
-          <label for="message">Message:</label><br/>
-          <textarea id="message" name="message"></textarea><br/><br/>
-									<label for="message">Message:</label><br />
-									<textarea
-										id="message"
-										name="message"
-									></textarea
-									><br /><br />
-									<label for="message">Message:</label><br />
-									<textarea
-										id="message"
-										name="message"
-									></textarea
-									><br /><br />
 
-									<!-- Submit Button -->
-									<button type="submit">Send Message</button>
-								</form>
-								<!-- Submit Button -->
-								<button type="submit">Send Message</button>
-							</form>
+				<label for="email">Email:</label><br />
+				<input type="email" id="email" name="email" /><br /><br />
 
-							<!-- Map Placeholder -->
-							<!-- This is a placeholder for a map showing our location if we decide to include one -->
-						</section>
-						<!-- Map Placeholder -->
-						<!-- This is a placeholder for a map showing our location if we decide to include one -->
-					</section>
 
-					<!-- Social Media Links -->
-					<!-- Placeholder for social media links if needed -->
-				</main>
-				<!-- Social Media Links -->
-				<!-- Placeholder for social media links if needed -->
-			</main>
+				<label for="message">Message:</label><br />
+				<textarea id="message" name="message"></textarea><br /><br />
 
-			<!-- Footer Section -->
-			<!-- Footer content can be added here if needed -->
-		</body>
-		<!-- Footer Section -->
-		<!-- Footer content can be added here if needed -->
-	</body>
+
+				<!-- Submit Button -->
+				<button type="submit">Send Message</button>
+			</form>
+			<!-- Submit Button -->
+	</main>
+</body>
 </html>
