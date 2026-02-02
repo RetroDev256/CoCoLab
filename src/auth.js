@@ -55,39 +55,39 @@ async function authenticate(req) {
 	return { authenticated: false }
 }
 
-async function protectedApiPost(req) {
-	const auth = await authenticate(req)
-	if (!auth.authenticated) {
-		return Response.json({ error: 'Unauthorized' }, { status: 401 })
-	}
+// async function protectedApiPost(req) {
+// 	const auth = await authenticate(req)
+// 	if (!auth.authenticated) {
+// 		return Response.json({ error: 'Unauthorized' }, { status: 401 })
+// 	}
 
-	const form_data = await req.formData()
+// 	const form_data = await req.formData()
 
-	try {
-		const api_response = await apiPost(req.url, form_data, auth.user)
-		if (api_response) return api_response
-	} catch (err) {
-		console.log(`POST error encountered: ${err} --- FORM DATA:`)
-		for (const [key, value] of form_data.entries())
-			console.log(JSON.stringify({ key, value }))
-		return Response.json(err, { status: 500 })
-	}
-}
+// 	try {
+// 		const api_response = await apiPost(req.url, form_data, auth.user)
+// 		if (api_response) return api_response
+// 	} catch (err) {
+// 		console.log(`POST error encountered: ${err} --- FORM DATA:`)
+// 		for (const [key, value] of form_data.entries())
+// 			console.log(JSON.stringify({ key, value }))
+// 		return Response.json(err, { status: 500 })
+// 	}
+// }
 
-async function protectedApiGet(req) {
-	const auth = await authenticate(req)
-	if (!auth.authenticated) {
-		return Response.json({ error: 'Unauthorized' }, { status: 401 })
-	}
+// async function protectedApiGet(req) {
+// 	const auth = await authenticate(req)
+// 	if (!auth.authenticated) {
+// 		return Response.json({ error: 'Unauthorized' }, { status: 401 })
+// 	}
 
-	try {
-		const api_response = await apiGet(req.url, auth.user)
-		if (api_response) return api_response
-	} catch (err) {
-		console.log(`GET error encountered: ${err}`)
-		return Response.json(err, { status: 500 })
-	}
-}
+// 	try {
+// 		const api_response = await apiGet(req.url, auth.user)
+// 		if (api_response) return api_response
+// 	} catch (err) {
+// 		console.log(`GET error encountered: ${err}`)
+// 		return Response.json(err, { status: 500 })
+// 	}
+// }
 
 async function login(req) {
 	// Route

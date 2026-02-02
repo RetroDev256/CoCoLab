@@ -1,3 +1,4 @@
+import pool from './db.mjs'
 // Exposes POST endpoints under /api/ for each SQL table
 export async function apiPost(url, data) {
 	// -------------------------------------------------------- INSERTING USERS

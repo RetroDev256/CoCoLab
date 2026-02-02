@@ -1,4 +1,3 @@
-import pool from './db.mjs'
 import index from './public/index.html'
 import aboutDevs from './public/pages/aboutDevs.html'
 import contactUs from './public/pages/contactUs.html'
@@ -7,6 +6,7 @@ import userSettings from './public/pages/userSettings.html'
 import projectBoard from './public/pages/projectBoard.html'
 import projectManager from './public/pages/projectManager.html'
 import forms from './public/pages/forms.html'
+import { apiPost, apiGet } from './api.js'
 
 // PORT=[port here] bun run server.js
 const PORT = Bun.env.PORT ?? 3000
