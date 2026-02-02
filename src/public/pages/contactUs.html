@@ -8,6 +8,11 @@
   </head>
   <body>
     <header>
+		<div class = 'burger' onclick="toggleMenu()">
+			<span></span><br/>
+			<span></span><br/>
+			<span></span>
+		</div>
       <a id="logo" href="../index.html">
         <img class="logo" src="#" alt="CoCoLab Logo" />
       </a>
@@ -15,7 +20,7 @@
         <img class="account" src="#" alt="User Account Icon" />
       </a>
       <!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
-      <nav class="side-menu">
+      <nav id="side-menu">
         <a href="./pages/projectBoard.html">Project Board</a>
 
         <a href="./pages/projectManager.html">Project Manager</a>
@@ -44,14 +49,14 @@
 
         <!-- Basic Contact Form -->
         <form id="contact-form">
-          <label for="name">Name:</label><br />
-          <input type="text" id="name" name="name" /><br /><br />
+          <label for="name">Name:</label><br/>
+          <input type="text" id="name" name="name"/><br/><br/>
 
-          <label for="email">Email:</label><br />
-          <input type="email" id="email" name="email" /><br /><br />
+          <label for="email">Email:</label><br/>
+          <input type="email" id="email" name="email"/><br/><br/>
 
-          <label for="message">Message:</label><br />
-          <textarea id="message" name="message"></textarea><br /><br />
+          <label for="message">Message:</label><br/>
+          <textarea id="message" name="message"></textarea><br/><br/>
 
           <!-- Submit Button -->
           <button type="submit">Send Message</button>
