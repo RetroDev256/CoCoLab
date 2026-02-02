@@ -9,7 +9,7 @@ export async function passwordHash(password, pw_salt) {
     salted_pw.set(pw_bytes, 0);
     salted_pw.set(pw_salt, pw_bytes.length);
     // Get the hash of the password
-    return await Crypto.digest("SHA-256", salted_pw);
+    return await crypto.subtle.digest("SHA-256", salted_pw);
 }
 
 // ===== JWK Setup =====
