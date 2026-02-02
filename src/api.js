@@ -6,7 +6,8 @@ export async function apiPost(url, data) {
     // -------------------------------------------------------- INSERTING USERS
     if (url.pathname === "/api/users") {
         // Generate 128 bits of salt for the password hash
-        const pw_salt = Crypto.randomBytes(16);
+		const pw_salt = new Uint8Array(16);
+        crypto.getRandomValues(pw_salt);
         // Get the password from the form
         const password = data.get("password");
         // Compute the hash from password and salt
