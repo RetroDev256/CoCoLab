@@ -6,7 +6,7 @@ create table
     -- The salt is appended to the password before it is hashed
     pw_salt char(16) not null,
     -- The password hash is sha2-256, for authenticating a user
-    pw_hash binary(32) not null,
+    pw_hash bytea not null,
     email text not null,
     phone_number text null,
     other_link text null,
