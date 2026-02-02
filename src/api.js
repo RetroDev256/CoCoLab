@@ -11,7 +11,7 @@ export async function apiPost(url, data) {
         // Get the password from the form
         const password = data.get("password");
         // Compute the hash from password and salt
-        const pw_hash = passwordHash(password, pw_salt);
+        const pw_hash = await passwordHash(password, pw_salt);
 
         const result = await pool.query(
             `INSERT INTO users (
