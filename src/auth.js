@@ -1,5 +1,4 @@
 import { SignJWT, jwtVerify, importJWK } from "jose";
-import { apiPost, apiGet } from "./api.js";
 
 // Get the hash of a password from a password & its salt
 export async function passwordHash(password, pw_salt) {
@@ -9,7 +8,8 @@ export async function passwordHash(password, pw_salt) {
     salted_pw.set(pw_bytes, 0);
     salted_pw.set(pw_salt, pw_bytes.length);
     // Get the hash of the password
-    return await crypto.subtle.digest("SHA-256", salted_pw);
+    const buffer = crypto.subtle.digest("SHA-256", salted_pw);
+    return new Uint8Array(await buffer);
 }
 
 // ===== JWK Setup =====
