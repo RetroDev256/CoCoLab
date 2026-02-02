@@ -1,15 +1,15 @@
 import { SignJWT, jwtVerify, importJWK } from "jose";
 import { apiPost, apiGet } from "./api.js";
 
-// Get the hash of a password from a password & it's salt
-export function passwordHash(password, pw_salt) {
-    // Salt the password with the 128 random bits
+// Get the hash of a password from a password & its salt
+export async function passwordHash(password, pw_salt) {
     const pw_bytes = new TextEncoder().encode(password);
+    // Concatenate the password and it's salt
     const salted_pw = new Uint8Array(pw_bytes.length + pw_salt.length);
     salted_pw.set(pw_bytes, 0);
     salted_pw.set(pw_salt, pw_bytes.length);
     // Get the hash of the password
-    return Crypto.hash("sha256", salted_pw);
+    return await Crypto.digest("SHA-256", salted_pw);
 }
 
 // ===== JWK Setup =====
