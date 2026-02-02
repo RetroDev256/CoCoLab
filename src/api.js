@@ -90,9 +90,6 @@ export async function apiPost(url, data) {
 
 // Exposes GET endpoints under /api/ for each SQL table
 export async function apiGet(url) {
-    const clear_result = await apiGetClear(url);
-    if (clear_result) return clear_result;
-
     const table_list = [
         "users",
         "project",
