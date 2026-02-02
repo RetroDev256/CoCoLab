@@ -1,15 +1,16 @@
 // The SQL database that we can run queries on
 import { apiPost, apiGet } from "./api.js";
 
-// PORT=[port here] bun run server.js
+// HOST=[host here] PORT=[port here] bun run server.js
 const PORT = Bun.env.PORT ?? 3000;
+const HOST = Bun.env.HOST ?? "0.0.0.0";
 
 // TODO: do something with these forms
 // TODO: um idk
 
 Bun.serve({
     // Listen on all interfaces
-    hostname: "0.0.0.0",
+    hostname: HOST,
     port: PORT,
 
     async fetch(req) {
@@ -22,17 +23,19 @@ Bun.serve({
 
         // ------------------------------------------- HANDLE DATA MODIFICATION
         if (req.method === "POST") {
-            const form_data = await req.formData();
+            // Determine what format the information we get will be in - 
+            // Convert the data to a JS object we can do field access on
+            const content_type = req.headers.get("content-type") || "";
+            const data = content_type === "application/json"
+                ? await req.json()
+                : Object.fromEntries(await req.formData());
 
             try {
-                const api_response = await apiPost(url, form_data);
+                const api_response = await apiPost(url, data);
                 if (api_response) return api_response;
             } catch (err) {
                 // Just in case we have out-of-band errors, like for SQL
-                console.log(`POST error encountered: ${err} --- FORM DATA:`);
-                // Log the offending form data for debugging
-                for (const [key, value] of form_data.entries())
-                    console.log(JSON.stringify({ key, value }));
+                console.log(`POST ERROR: ${err}`);
                 return Response.json(err, { status: 500 });
             }
         }
@@ -51,7 +54,7 @@ Bun.serve({
                 if (api_response) return api_response;
             } catch (err) {
                 // Just in case we have out-of-band errors, like for SQL
-                console.log(`GET error encountered: ${err}`);
+                console.log(`GET ERROR: ${err}`);
                 return Response.json(err, { status: 500 });
             }
         }
@@ -62,4 +65,4 @@ Bun.serve({
 });
 
 // We can access the website at this address:
-console.log(`Server running at http://0.0.0.0:${PORT}`);
+console.log(`Server running at http://${HOST}:${PORT}`);
