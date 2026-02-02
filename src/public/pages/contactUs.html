@@ -1,63 +1,100 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Contact Us</title>
-		<link rel="stylesheet" href="../style/contactUs.css" />
-	</head>
-	<body>
-		<header>
-			<div class="logoaccount">
-				<a id="logo" href="/">
-					<img class="logo" src="#" alt="CoCoLab Logo" />
-				</a>
-				<a id="account" href="userSettings.html">
-					<img class="account" src="#" alt="User Account Icon" />
-				</a>
-			</div>
-			<!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
-			<nav></nav>
-		</header>
 
-		<main>
-			<h1>Contact Us</h1>
-			<p>Have questions or feedback? We'd love to hear from you!</p>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Contact Us</title>
+	<link rel="stylesheet" href="../style/contactUs.css" />
+</head>
 
-			<!-- Contact Information -->
-			<section id="contact-info">
-				<h2>Get in Touch</h2>
+<body>
+	<header>
+		<div id='burger' onclick="toggleMenu()">
+			<img src = "../images/burger.png" alt="Menu Icon"/>
+		</div>
+
+		<a id="logo" href="../index.html">
+			<img class="logo" src="#" alt="CoCoLab Logo" />
+		</a>
+		<a id="account" href="./userSettings.html">
+			<img class="account" src="#" alt="User Account Icon" />
+		</a>
+		<!-- In our nav we could also add a back button by using a stack but thats built into the browser. -->
+		<nav class="side-menu">
 				<ul>
-					<li>Email: contact@cocolab.com</li>
-					<li>Phone: (555) 123-4567</li>
-					<li>Address: 123 Collaboration St, Tech City, TC 12345</li>
+					<!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
+					<li>
+						<a href="./projectBoard">Project Board</a>
+					</li>
+					<li>
+						<a href="./projectManager">Project Manager</a>
+					</li>
+					<li>
+						<a href="./userSettings">User Settings</a>
+					</li>
+					<li>
+						<a href="./aboutDevs">About the Developers</a>
+					</li>
+					<li><a href="./contactUs">Contact Us</a></li>
+					<li><a href="./sitePlan">Site Plan</a></li>
+					<!-- more tabs can be added as need arises-->
 				</ul>
+			</nav>
+	</header>
 
-				<!-- Basic Contact Form -->
-				<form id="contact-form">
-					<label for="name">Name:</label><br />
-					<input type="text" id="name" name="name" /><br /><br />
+	<main>
+		<h1>Contact Us</h1>
+		<p>Have questions or feedback? We'd love to hear from you!</p>
 
-					<label for="email">Email:</label><br />
-					<input type="email" id="email" name="email" /><br /><br />
+		<!-- Contact Information -->
+		<section id="contact-info">
+			<h2>Get in Touch</h2>
+			<ul>
+				<li>Email: contact@cocolab.com</li>
+				<li>Phone: (555) 123-4567</li>
+				<li>
+					Address: 123 Collaboration St, Tech City, TC
+					12345
+				</li>
+			</ul>
 
-					<label for="message">Message:</label><br />
-					<textarea id="message" name="message"></textarea
-					><br /><br />
+			<!-- Basic Contact Form -->
+			<form id="contact-form">
+				<label for="name">Name:</label><br />
+				<input type="text" id="name" name="name" /><br /><br />
 
-					<!-- Submit Button -->
-					<button type="submit">Send Message</button>
-				</form>
 
-				<!-- Map Placeholder -->
-				<!-- This is a placeholder for a map showing our location if we decide to include one -->
-			</section>
+				<label for="email">Email:</label><br />
+				<input type="email" id="email" name="email" /><br /><br />
 
-			<!-- Social Media Links -->
-			<!-- Placeholder for social media links if needed -->
-		</main>
 
-		<!-- Footer Section -->
-		<!-- Footer content can be added here if needed -->
-	</body>
+				<label for="message">Message:</label><br />
+				<textarea id="message" name="message"></textarea><br /><br />
+
+
+				<!-- Submit Button -->
+				<button type="submit">Send Message</button>
+			</form>
+			<!-- Submit Button -->
+	</main>
+	<script>
+  function toggleMenu() {
+    document.querySelector('.side-menu').classList.toggle('open');
+  }
+</script>
+<script>
+  const menu = document.querySelector('.side-menu');
+
+  function toggleMenu() {
+    menu.classList.toggle('open');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !e.target.closest('#burger')) {
+      menu.classList.remove('open');
+    }
+  });
+</script>
+</body>
 </html>
