@@ -2,7 +2,41 @@
 //this page will need to get the project id and use that to grab information from the server(?)
 //and use it to populate the page
 
-//SHould there be one lump call to the database for everything about this project? Or should we make a little one for each thing?
+async function getProject() {
+    try{
+        const response = await fetch("https://coco.alloc.dev/api/project");
+        const data = await response.json();
+
+        console.log(data);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+getProject();
+
+const exampleProjectJSON = { projectID: 2, projectTitle: "Lets make a Website", ownerId: 4, projectDetails: "We're going to work as a team to build our own website!",
+    projectDeadline: "2/10/26", projectPeople: 5
+ } //user id that's associated with a project? (One to many relationship: one user can own many projects, but a project can only be owned by one person)
+
+//When page loads, show information for this specific project requested by the user
+function init() {
+    renderProject(exampleProjectJSON);
+}
+init()
+
+function renderProject(projectData) {
+
+}
+
+//For use in rendering the tags associated with this project
+// function tagTemplate(tags) {
+//     let html = ``;
+//     tags.forEach(tag => {
+//         html += `<p id="tag">${tag}</p>\n`;
+//     });
+//     return html;
+// }
 
 //Following will need to be populated using that data:
 //Project title
@@ -15,5 +49,16 @@
 //Clicking join this project will send the current user's contact info to the owner of the project
 
 //There should be some users that are clickable, leading to that user's "profile" page
+
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
+function sendInformation() {
+    console.log("Simulating sending information...");
+}
+
+function close() {
+    window.close();
+}
+
+document.querySelector("#return-search").addEventListener("click", close);
+document.querySelector("#join-project").addEventListener("click", sendInformation);
