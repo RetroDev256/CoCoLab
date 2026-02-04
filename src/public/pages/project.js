@@ -26,7 +26,19 @@ function init() {
 init()
 
 function renderProject(projectData) {
-
+    //Project title
+    const title = document.querySelector(".project-title");
+    const titleHead = document.querySelector(".project-title-head");
+    title.innerHTML = `${projectData.projectTitle}`
+    titleHead.innerHTML = `${projectData.projectTitle}`;
+    //User who created it, along with a link to that user's profile
+    //array of tags associated with this project
+    //Details about this project
+    const details = document.querySelector(".project-details");
+    details.innerHTML = `${projectData.projectDetails}`;
+    //The deadline for this project, if there is one
+    //How many people are needed to help, and how many of those have already been filled
+    
 }
 
 //For use in rendering the tags associated with this project
@@ -38,17 +50,8 @@ function renderProject(projectData) {
 //     return html;
 // }
 
-//Following will need to be populated using that data:
-//Project title
-//User who created it, along with a link to that user's profile
-//array of tags associated with this project
-//Details about this project
-//The deadline for this project, if there is one
-//How many people are needed to help, and how many of those have already been filled
 //(For regular user, should they be able to see the users associated with a project? Or should that just be up to a project owner?)
-//Clicking join this project will send the current user's contact info to the owner of the project
 
-//There should be some users that are clickable, leading to that user's "profile" page
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
