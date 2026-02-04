@@ -2,11 +2,63 @@
 //this page will need to get the project id and use that to grab information from the server(?)
 //and use it to populate the page
 
+async function getProject() {
+    try{
+        const response = await fetch("https://coco.alloc.dev/api/project");
+        const data = await response.json();
+
+        console.log(data);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+getProject();
+
+const exampleProjectJSON = { projectID: 2, projectTitle: "Lets make a Website", ownerId: 4, projectDetails: "We're going to work as a team to build our own website!",
+    projectDeadline: "2/10/26", projectPeople: 5
+ } //user id that's associated with a project? (One to many relationship: one user can own many projects, but a project can only be owned by one person)
+
+//When page loads, show information for this specific project requested by the user
+function init() {
+    renderProject(exampleProjectJSON);
+}
+init()
+
+function renderProject(projectData) {
+
+}
+
+//For use in rendering the tags associated with this project
+// function tagTemplate(tags) {
+//     let html = ``;
+//     tags.forEach(tag => {
+//         html += `<p id="tag">${tag}</p>\n`;
+//     });
+//     return html;
+// }
+
+//Following will need to be populated using that data:
+//Project title
+//User who created it, along with a link to that user's profile
+//array of tags associated with this project
+//Details about this project
+//The deadline for this project, if there is one
+//How many people are needed to help, and how many of those have already been filled
+//(For regular user, should they be able to see the users associated with a project? Or should that just be up to a project owner?)
+//Clicking join this project will send the current user's contact info to the owner of the project
+
 //There should be some users that are clickable, leading to that user's "profile" page
+
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
+function sendInformation() {
+    console.log("Simulating sending information...");
+}
 
-//For project owner, there should be a button that will allow them to mark the project as complete.
-//They can record completion details and submit, which will save information and change project status to completed,
-//thus removing the project from the projectBoard. It will still be visible for the project owner and the other
-//contributors on their personal profiles (and/or the projectManager)
+function close() {
+    window.close();
+}
+
+document.querySelector("#return-search").addEventListener("click", close);
+document.querySelector("#join-project").addEventListener("click", sendInformation);
