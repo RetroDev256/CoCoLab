@@ -15,15 +15,16 @@ export async function apiPost(url, data) {
 
 		const result = await pool.query(
 			`INSERT INTO users (
-                user_name, pw_salt, pw_hash, email, phone_number, other_link
+                user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;`,
 			[
 				data.user_name,
 				pw_salt,
 				pw_hash,
 				data.email,
+				data.profile_url,
 				data.phone_number,
 				data.other_link,
 			],
@@ -36,10 +37,10 @@ export async function apiPost(url, data) {
 	// ----------------------------------------------------- INSERTING PROJECTS
 	if (url.pathname === '/api/project') {
 		const result = await pool.query(
-			`INSERT INTO project (project_name, max_people, details)
-            VALUES ($1, $2, $3)
+			`INSERT INTO project (project_name, max_people, details, owner_id)
+            VALUES ($1, $2, $3, $4)
             RETURNING *;`,
-			[data.project_name, data.max_people, data.details],
+			[data.project_name, data.max_people, data.details, data.owner_id],
 		)
 
 		// Return HTTP "successfully created" & the created row
@@ -102,28 +103,32 @@ export async function apiGet(url) {
 		'project_members',
 	]
 
-	// The route /api/TABLE will fetch all table entries
-	for (const table of table_list) {
-		if (url.pathname === `/api/${table}`) {
-			const query = `SELECT * FROM ${table};`
-			const result = await pool.query(query)
-			const hiddenFields = hidden_table_fields[table] || []
-			const filteredRows = result.rows.map((row) => {
-				const filteredRow = { ...row }
-				hiddenFields.forEach((field) => delete filteredRow[field])
-				return filteredRow
-			})
-			return Response.json(filteredRows)
-		}
-	}
+	// --- /api/TABLE/ID would parse to ["api", "TABLE", "ID"]
+	const parts = url.pathname.split('/').filter(Boolean)
 
-	// The route /api/TABLE/clear will clear all entries
-	// This route will be removed later, it's for testing
-	for (const table of table_list) {
-		if (url.pathname === `/api/${table}/clear`) {
-			const query = `DELETE FROM ${table};`
-			const result = await pool.query(query)
-			return Response.json(result.rows)
+	switch (parts.length) {
+		// The route /api/TABLE will fetch all table entries
+		case 2: {
+			if (parts[0] !== 'api') break
+			for (const table of table_list) {
+				if (parts[1] === table) {
+					const query = `SELECT * FROM ${table};`
+					const result = await pool.query(query)
+					return Response.json(result.rows)
+				}
+			}
+		}
+		// The route /api/TABLE/ID will fetch all table entries matching that ID
+		case 3: {
+			if (parts[0] !== 'api') break
+			const id = parseInt(parts[2], 10)
+			for (const table of table_list) {
+				if (parts[1] === table) {
+					const query = `SELECT * FROM ${table} WHERE id = ${id};`
+					const result = await pool.query(query)
+					return Response.json(result.rows)
+				}
+			}
 		}
 	}
 
