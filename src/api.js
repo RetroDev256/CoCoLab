@@ -15,15 +15,16 @@ export async function apiPost(url, data) {
 
         const result = await pool.query(
             `INSERT INTO users (
-                user_name, pw_salt, pw_hash, email, phone_number, other_link
+                user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
             )
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;`,
             [
                 data.user_name,
                 pw_salt,
                 pw_hash,
                 data.email,
+                data.profile_url,
                 data.phone_number,
                 data.other_link,
             ],
@@ -36,10 +37,10 @@ export async function apiPost(url, data) {
     // ----------------------------------------------------- INSERTING PROJECTS
     if (url.pathname === "/api/project") {
         const result = await pool.query(
-            `INSERT INTO project (project_name, max_people, details)
+            `INSERT INTO project (project_name, max_people, details, owner_id)
             VALUES ($1, $2, $3)
             RETURNING *;`,
-            [data.project_name, data.max_people, data.details],
+            [data.project_name, data.max_people, data.details, data.owner_id],
         );
 
         // Return HTTP "successfully created" & the created row
