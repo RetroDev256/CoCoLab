@@ -38,7 +38,7 @@ export async function apiPost(url, data) {
     if (url.pathname === "/api/project") {
         const result = await pool.query(
             `INSERT INTO project (project_name, max_people, details, owner_id)
-            VALUES ($1, $2, $3)
+            VALUES ($1, $2, $3, $4)
             RETURNING *;`,
             [data.project_name, data.max_people, data.details, data.owner_id],
         );
