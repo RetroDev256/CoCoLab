@@ -99,22 +99,31 @@ export async function apiGet(url) {
         "project_members",
     ];
 
-    // The route /api/TABLE will fetch all table entries
-    for (const table of table_list) {
-        if (url.pathname === `/api/${table}`) {
-            const query = `SELECT * FROM ${table};`;
-            const result = await pool.query(query);
-            return Response.json(result.rows);
-        }
-    }
+    // --- /api/TABLE/ID would parse to ["api", "TABLE", "ID"]
+    const parts = url.pathname.split("/").filter(Boolean);
 
-    // The route /api/TABLE/clear will clear all entries
-    // This route will be removed later, it's for testing
-    for (const table of table_list) {
-        if (url.pathname === `/api/${table}/clear`) {
-            const query = `DELETE FROM ${table};`;
-            const result = await pool.query(query);
-            return Response.json(result.rows);
+    switch (parts.length) {
+        // The route /api/TABLE will fetch all table entries
+        case 2: {
+            if (parts[0] !== "api") break;
+            for (const table of table_list) {
+                if (parts[1] === table) {
+                    const query = `SELECT * FROM ${table};`;
+                    const result = await pool.query(query);
+                    return Response.json(result.rows);
+                }
+            }
+        }
+        case 3: {
+            if (parts[0] !== "api") break;
+            const id = parseInt(parts[2], 10);
+            for (const table of table_list) {
+                if (parts[1] === table) {
+                    const query = `SELECT * FROM ${table} WHERE id = ${id};`;
+                    const result = await pool.query(query);
+                    return Response.json(result.rows);
+                }
+            }
         }
     }
 
