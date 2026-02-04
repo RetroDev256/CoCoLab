@@ -114,6 +114,7 @@ export async function apiGet(url) {
                 }
             }
         }
+        // The route /api/TABLE/ID will fetch all table entries matching that ID
         case 3: {
             if (parts[0] !== "api") break;
             const id = parseInt(parts[2], 10);
