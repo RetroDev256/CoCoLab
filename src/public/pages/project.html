@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title class="project-title-head">Project</title>
 
-        <link rel="stylesheet" href="./style/style.css" />
+        <link rel="stylesheet" href="../style/style.css" />
 		<link rel="icon" type="image/webp" href="./images/brownie.webp" />
 
         <script type="module" src="project.js"></script>
@@ -24,15 +24,19 @@
 	</body>
     <main>
         <div>
+            <!-- Most of these below will be populated by data from the database via the JS -->
             <h1 class="project-title">Project</h1>
-            <!-- Eventually will be the same as the title above. Both will be populated by data from the database via the JS -->
-			<h3>Created by 'insert user here'</h3>
-			<p>Insert some cool way of showing all the tags that are associated with this project</p>
+			<h3 class="project-owner">Created by 'insert user here'</h3>
+			<div class="project-tags">
+				Insert some cool way of showing all the tags that are associated with this project
+			</div>
 			<b>Project details:</b>
 			<p class="project-details">Load project details from table in database</p>
 
-			<h3>Deadline: 'insert date if there is one, or just put None instead'</h3>
-			<h3>This will be populated with a function from the JS- 3 of 5 spots filled or whatever</h3>
+			<!-- Insert date if there is one, or just put none instead -->
+			<h3>Deadline: None</h3>
+			<h3 class="people-needed">Number of people needed: 0</h3>
+			<h3 class="people-have">Spots filled: 0</h3> <!--If this is same as above number, join project button should be visible but faded/disabled-->
 
 			<button id="join-project">Join this Project</button> <!--clicking this will trigger a popup that lets you verify and send your info-->
 			<button id="return-search">Back to search</button> <!--Ideally on y index as the project, just to the right.-->
