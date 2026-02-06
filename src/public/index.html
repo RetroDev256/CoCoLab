@@ -4,8 +4,8 @@
         <meta charset="UTF-8" />
         <title>CoCoLab</title>
 
-        <link rel="stylesheet" href="./style/style.css" />
-        <link rel="icon" type="image/webp" href="./images/brownie.webp" />
+		<link rel="stylesheet" href="./style/style.css" />
+		<link rel="icon" type="image/webp" href="./images/brownie.webp" />
 
         <script type="module" src="./main.js"></script>
 
@@ -16,31 +16,34 @@
 
     <body>
         <header>
+			<div id='burger' onclick="toggleMenu()">
+			<img src = "images/burger.png" alt="Menu Icon"/>
+		</div>
             <!-- Our logo functions as a quick navigation link back to the home page -->
-            <a id="logo" href="/">
-                <img class="logo" src="#" alt="CoCoLab Logo" />
+            <a id="logo" href="index.html">
+                <img class="logo" src="./images/logo2.png" alt="CoCoLab Logo" />
             </a>
 
             <!-- This is a placeholder for the account drop down menu we were thinking of, if thats what we are doing, or we can just have it take us straight to a page. -->
-            <a id="account" href="pages/userSettings.html">
-                <img class="account" src="#" alt="User Account Icon" />
+            <a id="account" href="./pages/userSettings.html">
+                <img class="account" src="./images/account_user.png" alt="User Account Icon" />
             </a>
 
             <h1>CoCoLab</h1>
-            <nav>
+            <nav class="side-menu">
                 <ul>
                     <!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
                     <li>
-                        <a href="pages/projectBoard.html">Project Board</a>
+                        <a href="./pages/projectBoard.html">Project Board</a>
                     </li>
                     <li>
-                        <a href="pages/projectManager.html">Project Manager</a>
+                        <a href="./pages/projectManager.html">Project Manager</a>
                     </li>
                     <li>
-                        <a href="pages/userSettings.html">User Settings</a>
+                        <a href="./pages/userSettings.html">User Settings</a>
                     </li>
                     <li>
-                        <a href="pages/aboutDevs.html">About the Developers</a>
+                        <a href="./pages/aboutDevs.html">About the Developers</a>
                     </li>
                     <li><a href="pages/contactUs.html">Contact Us</a></li>
                     <li><a href="pages/sitePlan.html">Site Plan</a></li>
@@ -48,8 +51,10 @@
                 </ul>
             </nav>
         </header>
-        <div>
+        <div id = "div">
             <!-- We can insert a hero here if we want -->
+            <a href="pages/forms.html" class="brownie">
+            <img src="./images/brownie.webp" alt="Temporary" />
         </div>
         <main>
             <img src="#" alt="some image" />
@@ -60,7 +65,6 @@
                 title as we flesh out ideas more)
             </p>
             <img src="#" alt="another image" />
-            <a href="pages/forms.html"> TEST OUT THE DATABASE </a>
             <h3>Ease of Use</h3>
             <!-- Same here for paragraph text -->
             <p>
@@ -77,19 +81,40 @@
 
         <footer>
             <!-- We can put the big 3 socials here if we want to go that far i.e FB, Insta, Twitter/X -->
-            <a id="social-icons" href="#">
-                <img class="socials" src="#" alt="Social Media Icon" />
+        <div class="social-row">
+            <a class="social-icon" href="#">
+                <img class="socials" src="./images/social media/facebook.png" alt="facebook" />
             </a>
-            <a id="social-icons" href="#">
-                <img class="socials" src="#" alt="Social Media Icon" />
+            <a class="social-icon" href="#">
+                <img class="socials" src="./images/social media/instagram.png" alt="instagram" />
             </a>
-            <a id="social-icons" href="#">
-                <img class="socials" src="#" alt="Social Media Icon" />
+            <a class="social-icon" href="#">
+                <img class="socials" src="./images/social media/youtube.png" alt="youtube" />
             </a>
+        </div>
             <p>&copy; <span id="year">2026</span> CoCoLab. All rights reserved.</p>
             <script>
                 document.getElementById("year").textContent = new Date().getFullYear();
             </script>
         </footer>
+		<script>
+  const menu = document.querySelector('.side-menu');
+
+  function toggleMenu() {
+    menu.classList.toggle('open');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !e.target.closest('#burger')) {
+      menu.classList.remove('open');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      menu.classList.remove('open');
+    }
+  });
+</script>
     </body>
 </html>

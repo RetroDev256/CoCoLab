@@ -18,6 +18,7 @@ CREATE TABLE
     pw_salt BYTEA NOT NULL,
     pw_hash BYTEA NOT NULL,
     email TEXT NOT NULL,
+    profile_url TEXT,
     phone_number TEXT,
     other_link TEXT,
     created_at TIMESTAMP
@@ -34,7 +35,8 @@ CREATE TABLE
     details TEXT NOT NULL,
     created_at TIMESTAMP
     WITH
-      TIME ZONE NOT NULL DEFAULT NOW ()
+      TIME ZONE NOT NULL DEFAULT NOW (),
+      owner_id BIGINT NOT NULL REFERENCES public.users (id) ON UPDATE CASCADE ON DELETE CASCADE
   ) TABLESPACE pg_default;
 
 -- Category_tags table
@@ -69,3 +71,4 @@ CREATE TABLE
       user_id BIGINT NOT NULL REFERENCES public.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
       project_id BIGINT NOT NULL REFERENCES public.project (id) ON UPDATE CASCADE ON DELETE CASCADE
   ) TABLESPACE pg_default;
+''
