@@ -21,3 +21,21 @@
 //     let userInput = document.getElementById("game-search").value;
 //     filterGames(userInput.toLowerCase());
 // }
+
+
+//You'll also need something like this for loading each project based off its information (loaded from the database as JSON)
+// function getGameTemplate(game) {
+//     return `<section class="game-container">
+//                 <article class="game">
+//                     <img src="${game.image}" alt="${game.name}">
+//                     <div class="game-info">
+//                         <div class="tags">
+//                             ${tagTemplate(game.tags)}
+//                         </div>
+//                         <h3>${game.name}</h3>
+//                         <p>${game.description}</p>
+//                          ${game.playable ? `<a href="${game.pagelink}"><button class="play-button">Play Now!</button></a>` : ""}
+//                     </div>
+//                 </article>
+//             </section>`;
+// }
