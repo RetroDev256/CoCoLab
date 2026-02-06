@@ -91,40 +91,37 @@ export async function apiPost(url, data) {
 
 // Exposes GET endpoints under /api/ for each SQL table
 export async function apiGet(url) {
-    const table_list = [
-        "users",
-        "project",
-        "category_tags",
-        "projects_tags",
-        "project_members",
-    ];
-
     // --- /api/TABLE/ID would parse to ["api", "TABLE", "ID"]
     const parts = url.pathname.split("/").filter(Boolean);
+    if (parts[0] !== "api") return null;
 
     switch (parts.length) {
-        // The route /api/TABLE will fetch all table entries
-        case 2: {
-            if (parts[0] !== "api") break;
-            for (const table of table_list) {
-                if (parts[1] === table) {
-                    const query = `SELECT * FROM ${table};`;
-                    const result = await pool.query(query);
-                    return Response.json(result.rows);
-                }
-            }
+        // /api returns special link
+        case 1: {
+            return Response.redirect("https://youtu.be/dQw4w9WgXcQ", 302);
         }
-        // The route /api/TABLE/ID will fetch all table entries matching that ID
+
+        // /api/TABLE fetches all table entries
+        case 2: {
+            const table = parts[1];
+            const query = `SELECT * FROM ${table};`;
+            const result = await pool.query(query);
+            return Response.json(result.rows);
+        }
+
+        // /api/TABLE/ID fetches all table entries matching that ID
         case 3: {
+            const [table, id] = [parts[1], parts[2]];
+            const query = `SELECT * FROM ${table} WHERE id = ${id};`;
+            return Response.json(await pool.query(query).rows);
+        }
+
+        // /api/TABLE/FIELD/VALUE fetches all from TABLE where FIELD = VALUE
+        case 4: {
             if (parts[0] !== "api") break;
-            const id = parseInt(parts[2], 10);
-            for (const table of table_list) {
-                if (parts[1] === table) {
-                    const query = `SELECT * FROM ${table} WHERE id = ${id};`;
-                    const result = await pool.query(query);
-                    return Response.json(result.rows);
-                }
-            }
+            const [table, field, value] = [parts[1], parts[2], parts[3]];
+            const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`;
+            return Response.json(await pool.query(query).rows);
         }
     }
 
