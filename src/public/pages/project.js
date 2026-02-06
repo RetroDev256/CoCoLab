@@ -29,7 +29,10 @@ async function init() {
 
 init()
 
-async function renderProject(projectData) {
+async function renderProject(projectDataArray) {
+    if (projectDataArray.length == 0) return
+    const projectData = projectDataArray[0];
+    
     //Project title
     const title = document.querySelector(".project-title");
     const titleHead = document.querySelector(".project-title-head");
