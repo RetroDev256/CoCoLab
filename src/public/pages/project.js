@@ -15,7 +15,6 @@ async function getProject() {
     }
 }
 
-getProject();
 
 // const exampleProjectJSON = { id: 2, project_name: "Lets make a Website", owner_id: 4, details: "We're going to work as a team to build our own website!",
 //     projectDeadline: "2/10/26", max_people: 5
@@ -24,6 +23,7 @@ getProject();
 //When page loads, show information for this specific project requested by the user
 async function init() {
     // renderProject(exampleProjectJSON);
+    await getProject();
     await renderProject(project_data);
 }
 
