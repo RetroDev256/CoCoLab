@@ -17,18 +17,19 @@ async function getProject() {
 
 getProject();
 
-const exampleProjectJSON = { id: 2, project_name: "Lets make a Website", owner_id: 4, details: "We're going to work as a team to build our own website!",
-    projectDeadline: "2/10/26", max_people: 5
- } //user id that's associated with a project? (One to many relationship: one user can own many projects, but a project can only be owned by one person)
+// const exampleProjectJSON = { id: 2, project_name: "Lets make a Website", owner_id: 4, details: "We're going to work as a team to build our own website!",
+//     projectDeadline: "2/10/26", max_people: 5
+//  } //user id that's associated with a project? (One to many relationship: one user can own many projects, but a project can only be owned by one person)
 
 //When page loads, show information for this specific project requested by the user
-function init() {
-    renderProject(exampleProjectJSON);
-    //renderProject(project_data);
+async function init() {
+    // renderProject(exampleProjectJSON);
+    await renderProject(project_data);
 }
+
 init()
 
-function renderProject(projectData) {
+async function renderProject(projectData) {
     //Project title
     const title = document.querySelector(".project-title");
     const titleHead = document.querySelector(".project-title-head");
@@ -37,7 +38,7 @@ function renderProject(projectData) {
 
     //User who created it, along with a link to that user's profile
     //This calls a separate function that makes call to owner endpoint and gets that owner's name and hyperlink
-    const owner_info = getOwnerData(projectData.owner_id);
+    const owner_info = await getOwnerData(projectData.owner_id);
     const user = document.querySelector(".project-owner");
     user.innerHTML = owner_info;
 
@@ -59,7 +60,7 @@ function renderProject(projectData) {
     //How many people are already helping on the project
     //Separate function will call endpoint and total them up
     const helpers = document.querySelector(".people-have");
-    const total_helpers = getHelpersTotal(projectData.id);
+    const total_helpers = await getHelpersTotal(projectData.id);
     helpers.innerHTML = `Spots filled: ${total_helpers}`;
 }
 
