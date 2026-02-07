@@ -11,7 +11,7 @@
 var project_data;
 
 async function getProject() {
-    try{
+    try {
         //This will get an id from a different page and call just that project
         const response = await fetch("https://coco.alloc.dev/api/project/2"); // add /id at the end to get just one project
         project_data = await response.json();
@@ -21,7 +21,6 @@ async function getProject() {
         console.error(err);
     }
 }
-
 
 // const exampleProjectJSON = { id: 2, project_name: "Lets make a Website", owner_id: 4, details: "We're going to work as a team to build our own website!",
 //     projectDeadline: "2/10/26", max_people: 5
@@ -34,12 +33,12 @@ async function init() {
     await renderProject(project_data);
 }
 
-init()
+init();
 
 async function renderProject(projectDataArray) {
-    if (projectDataArray.length == 0) return
+    if (projectDataArray.length == 0) return;
     const projectData = projectDataArray[0];
-    
+
     //Project title
     const title = document.querySelector(".project-title");
     const titleHead = document.querySelector(".project-title-head");
@@ -57,7 +56,6 @@ async function renderProject(projectDataArray) {
     const tags_info = await getTagsTemplate(projectData.id);
     const project_tags = document.querySelector(".project-tags");
     project_tags.innerHTML = tags_info;
-
 
     //Details about this project
     const details = document.querySelector(".project-details");
@@ -79,25 +77,37 @@ async function renderProject(projectDataArray) {
 
 //returns html for owner information
 async function getOwnerData(ownerID) {
-    try{
-        const owner_response = await fetch(`https://coco.alloc.dev/api/users/${ownerID}`); // add /id at the end to get just one project
-        const owner = await owner_response.json();
-        
-        return `Created by: <a href="${owner.profile_url}">${owner.user_name}</a>`
+    try {
+        const owner_response = await fetch(
+            `https://coco.alloc.dev/api/users/${ownerID}`,
+        );
+
+        // The API response is a list of values
+        const owner_list = await owner_response.json();
+
+        if (owner_list.length === 0) {
+            return `Unknown project owner`;
+        } else {
+            const owner = owner_list[0];
+            return `Created by: <a href="${owner.profile_url}">${owner.user_name}</a>`;
+        }
+
     } catch (err) {
         console.error(err);
-        return `Created by: unavailable user`
+        return `Created by: unavailable user`;
     }
 }
 
 //returns html for rendering tags associated with this project
 async function getTagsTemplate(projectID) {
-    try{
+    try {
         //This returns all the entities that exist in the database with the provided projectID
-        const project_response = await fetch(`https://coco.alloc.dev/api/projects_tags/project_id/${projectID}`);
+        const project_response = await fetch(
+            `https://coco.alloc.dev/api/projects_tags/project_id/${projectID}`,
+        );
         const project_tags = await project_response.json();
 
-        const tag_ids = project_tags.map(pt => pt.tag_id);
+        const tag_ids = project_tags.map((pt) => pt.tag_id);
 
         let html = ``;
         for (const tag_id of tag_ids) {
@@ -108,29 +118,36 @@ async function getTagsTemplate(projectID) {
         return html;
     } catch (err) {
         console.error(err);
-        return `Some tags are not like others`
+        return `Some tags are not like others`;
     }
 }
 
-async function getTagName(tag_id){
-    const tag_response = await fetch(`https://coco.alloc.dev/api/category_tags/${tag_id}`);
-    const tag = await tag_response.json();
-    return `${tag.name}`
+async function getTagName(tag_id) {
+    const tag_response = await fetch(
+        `https://coco.alloc.dev/api/category_tags/${tag_id}`,
+    );
+    const tag_list = await tag_response.json();
+
+    if (tag_list.length === 0) {
+        return `[NO TAG]`;
+    } else {
+        return tag_list[0].name;
+    }
 }
 
 //returns int representing number of helpers that are already on the project
 async function getHelpersTotal(projectID) {
-    try{
-        const member_response = await fetch(`https://coco.alloc.dev/api/project_members/project_id/${projectID}`);
+    try {
+        const member_response = await fetch(
+            `https://coco.alloc.dev/api/project_members/project_id/${projectID}`,
+        );
         const members = await member_response.json();
         return members.length;
     } catch (err) {
         console.error(err);
         return 0;
     }
-
 }
-
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
@@ -143,4 +160,6 @@ function close() {
 }
 
 document.querySelector("#return-search").addEventListener("click", close);
-document.querySelector("#join-project").addEventListener("click", sendInformation);
+document
+    .querySelector("#join-project")
+    .addEventListener("click", sendInformation);
