@@ -31,7 +31,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return Response.json(result.rows[0], { status: 201 });
+        return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
     // ----------------------------------------------------- INSERTING PROJECTS
@@ -44,7 +44,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return Response.json(result.rows[0], { status: 201 });
+        return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
     // ------------------------------------------------ INSERTING CATEGORY TAGS
@@ -57,7 +57,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return Response.json(result.rows[0], { status: 201 });
+        return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
     // ------------------------------------------------- INSERTING PROJECT TAGS
@@ -70,7 +70,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return Response.json(result.rows[0], { status: 201 });
+        return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
     // ---------------------------------------------- INSERTING PROJECT MEMBERS
@@ -83,7 +83,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return Response.json(result.rows[0], { status: 201 });
+        return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
     return null;
@@ -100,7 +100,8 @@ export async function apiGet(url) {
     switch (parts.length) {
         // /api returns special link
         case 1: {
-            return Response.redirect("https://youtu.be/dQw4w9WgXcQ", 302);
+            const link = "https://youtu.be/dQw4w9WgXcQ";
+            return cors(Response.redirect(link, 302));
         }
 
         // /api/TABLE fetches all table entries
@@ -108,7 +109,7 @@ export async function apiGet(url) {
             const table = esc_ident(parts[1]);
             const query = `SELECT * FROM ${table};`;
             console.log(`1. QUERY: \`${query}\``); // DEBUG
-            return Response.json((await pool.query(query)).rows);
+            return cors(Response.json((await pool.query(query)).rows));
         }
 
         // /api/TABLE/ID fetches all table entries matching that ID
@@ -117,7 +118,7 @@ export async function apiGet(url) {
             const id = esc_value(parts[2]);
             const query = `SELECT * FROM ${table} WHERE id = ${id};`;
             console.log(`2. QUERY: \`${query}\``); // DEBUG
-            return Response.json((await pool.query(query)).rows);
+            return cors(Response.json((await pool.query(query)).rows));
         }
 
         // /api/TABLE/FIELD/VALUE fetches all from TABLE where FIELD = VALUE
@@ -127,9 +128,27 @@ export async function apiGet(url) {
             const value = esc_value(parts[3]);
             const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`;
             console.log(`3. QUERY: \`${query}\``); // DEBUG
-            return Response.json((await pool.query(query)).rows);
+            return cors(Response.json((await pool.query(query)).rows));
         }
     }
 
     return null;
+}
+
+// Exposes OPTIONS endpoint for cross-origin fetching
+export async function apiOptions() {
+    const h = new Headers();
+    h.set("Access-Control-Allow-Origin", "*");
+    h.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    h.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return new Response(null, { status: 204, headers: h });
+}
+
+// Allow frontend fetches to work cross-origin
+function cors(res) {
+    const h = res.headers;
+    h.set("Access-Control-Allow-Origin", "*");
+    h.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    h.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return res;
 }

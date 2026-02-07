@@ -86,7 +86,7 @@ async function getOwnerData(ownerID) {
         const owner_list = await owner_response.json();
 
         if (owner_list.length === 0) {
-            return `Unknown project owner`;
+            return `[INVALID ]`;
         } else {
             const owner = owner_list[0];
             return `Created by: <a href="${owner.profile_url}">${owner.user_name}</a>`;
@@ -129,7 +129,7 @@ async function getTagName(tag_id) {
     const tag_list = await tag_response.json();
 
     if (tag_list.length === 0) {
-        return `[NO TAG]`;
+        return `[INVALID TAG]`;
     } else {
         return tag_list[0].name;
     }
