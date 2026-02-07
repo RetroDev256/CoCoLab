@@ -7,7 +7,7 @@ import { apiId, apiValue, isValidURL } from "../main.js";
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
-    const project = apiId("project", 2); // Example
+    const project = await apiId("project", 2); // Example
 
     if (project === null) {
         console.log("No matching project found");
@@ -30,7 +30,7 @@ async function renderProject(project) {
     //This calls a separate function that makes call to owner endpoint and gets that owner's name and hyperlink
     const owner_info = await getOwnerData(project.owner_id);
     const user = document.querySelector(".project-owner");
-    user.innerHTML = owner_info.name;
+    user.innerHTML = owner_info;
 
     //array of tags associated with this project
     //Calls a separate function that will call the project-tags table and get that information
