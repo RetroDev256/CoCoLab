@@ -93,6 +93,8 @@ export async function apiPost(url, data) {
 export async function apiGet(url) {
     // --- /api/TABLE/ID would parse to ["api", "TABLE", "ID"]
     const parts = url.pathname.split("/").filter(Boolean);
+    const esc_ident = (v) => `"${String(v).replace(/"/g, '""')}"`;
+    const esc_value = (v) => `'${String(v).replace(/'/g, "''")}'`;
     if (parts[0] !== "api") return null;
 
     switch (parts.length) {
@@ -103,25 +105,29 @@ export async function apiGet(url) {
 
         // /api/TABLE fetches all table entries
         case 2: {
-            const table = parts[1];
+            const table = esc_ident(parts[1]);
             const query = `SELECT * FROM ${table};`;
-            const result = await pool.query(query);
-            return Response.json(result.rows);
+            console.log(`1. QUERY: \`${query}\``); // DEBUG
+            return Response.json((await pool.query(query)).rows);
         }
 
         // /api/TABLE/ID fetches all table entries matching that ID
         case 3: {
-            const [table, id] = [parts[1], parts[2]];
+            const table = esc_ident(parts[1]);
+            const id = esc_value(parts[2]);
             const query = `SELECT * FROM ${table} WHERE id = ${id};`;
-            return Response.json(await pool.query(query).rows);
+            console.log(`2. QUERY: \`${query}\``); // DEBUG
+            return Response.json((await pool.query(query)).rows);
         }
 
         // /api/TABLE/FIELD/VALUE fetches all from TABLE where FIELD = VALUE
         case 4: {
-            if (parts[0] !== "api") break;
-            const [table, field, value] = [parts[1], parts[2], parts[3]];
+            const table = esc_ident(parts[1]);
+            const field = esc_ident(parts[2]);
+            const value = esc_value(parts[3]);
             const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`;
-            return Response.json(await pool.query(query).rows);
+            console.log(`3. QUERY: \`${query}\``); // DEBUG
+            return Response.json((await pool.query(query)).rows);
         }
     }
 
