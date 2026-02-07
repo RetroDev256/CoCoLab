@@ -34,7 +34,7 @@ Bun.serve({
                 const api_response = await apiPost(url, data);
                 if (api_response) return api_response;
             } catch (err) {
-                // Just in case we have out-of-band errors, like for SQL
+                // Just in case we have out-of-band errors
                 console.log(`POST ERROR: ${err}`);
                 return Response.json(err, { status: 500 });
             }
@@ -53,8 +53,20 @@ Bun.serve({
                 const api_response = await apiGet(url);
                 if (api_response) return api_response;
             } catch (err) {
-                // Just in case we have out-of-band errors, like for SQL
+                // Just in case we have out-of-band errors
                 console.log(`GET ERROR: ${err}`);
+                return Response.json(err, { status: 500 });
+            }
+        }
+
+        // -------------------------------------------- HANDLE OPTIONS REQUESTS
+        if (req.method === "OPTIONS") {
+            try {
+                const response = await apiOptions();
+                if (response) return response;
+            } catch (err) {
+                // Just in case we have out-of-band errors
+                console.log(`OPTIONS ERROR: ${err}`);
                 return Response.json(err, { status: 500 });
             }
         }
