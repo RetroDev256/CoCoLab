@@ -1,5 +1,6 @@
 import pool from "./db.mjs";
 import { passwordHash } from "./auth.js";
+import { cors } from "./server.js";
 
 // Exposes POST endpoints under /api/ for each SQL table
 export async function apiPost(url, data) {
@@ -142,13 +143,4 @@ export async function apiOptions() {
     h.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
     h.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
     return new Response(null, { status: 204, headers: h });
-}
-
-// Allow frontend fetches to work cross-origin
-function cors(res) {
-    const h = res.headers;
-    h.set("Access-Control-Allow-Origin", "*");
-    h.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-    h.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res;
 }
