@@ -1,57 +1,110 @@
-//This is the logic behind a project, regardless of which project it is
-//this page will need to get the project id and use that to grab information from the server(?)
-//and use it to populate the page
+// This is the logic behind a project, regardless of which project it is
+// this page will need to get the project id and use that to grab information from the server(?)
+// and use it to populate the page
 
-async function getProject() {
-    try{
-        const response = await fetch("https://coco.alloc.dev/api/project");
-        const data = await response.json();
+// Helper functions for the API in the root main.js (client-side) file
+import { apiId, apiValue, isValidURL } from "../main.js";
 
-        console.log(data);
-    } catch (err) {
-        console.error(err);
+// When page loads, show information for this specific project requested by the user
+async function init() {
+    const project = await apiId("project", 2); // Example
+
+    if (project === null) {
+        console.log("No matching project found");
+        return;
+    }
+
+    await renderProject(project);
+}
+
+init();
+
+async function renderProject(project) {
+    //Project title
+    const title = document.querySelector(".project-title");
+    const titleHead = document.querySelector(".project-title-head");
+    title.innerHTML = project.project_name;
+    titleHead.innerHTML = project.project_name;
+
+    //User who created it, along with a link to that user's profile
+    //This calls a separate function that makes call to owner endpoint and gets that owner's name and hyperlink
+    const owner_info = await getOwnerData(project.owner_id);
+    const user = document.querySelector(".project-owner");
+    user.innerHTML = owner_info;
+
+    //array of tags associated with this project
+    //Calls a separate function that will call the project-tags table and get that information
+    const tags_info = await getTagsTemplate(project.id);
+    const project_tags = document.querySelector(".project-tags");
+    project_tags.innerHTML = tags_info;
+
+    //Details about this project
+    const details = document.querySelector(".project-details");
+    details.innerHTML = project.details;
+
+    //The deadline for this project, if there is one
+    //Currently not implementing this, so deadline will always be none
+
+    //How many people are needed to help
+    const needed = document.querySelector(".people-needed");
+    needed.innerHTML = `Number of people needed: ${project.max_people}`;
+
+    //How many people are already helping on the project
+    //Separate function will call endpoint and total them up
+    const helpers = document.querySelector(".people-have");
+    const total_helpers = await getHelpersTotal(project.id);
+    helpers.innerHTML = `Spots filled: ${total_helpers}`;
+}
+
+// Returns html for owner information
+async function getOwnerData(owner_id) {
+    const owner = await apiId("users", owner_id);
+
+    // Handle the case where we can't find a user with that ID
+    if (owner === null) return `Unknown project owner`;
+
+    // Render the HTML depending on if the profile URL is valid
+    if (isValidURL(owner.profile_url)) {
+        return `Created By: <a href="${owner.profile_url}">${owner.user_name}</a>`;
+    } else {
+        return `Created By: ${owner.user_name}`;
     }
 }
 
-getProject();
+// Returns html for rendering tags associated with this project
+async function getTagsTemplate(project_id) {
+    // Get the list of all projects_tags for that project_id
+    const tag_list = await apiValue("projects_tags", "project_id", project_id);
 
-const exampleProjectJSON = { projectID: 2, projectTitle: "Lets make a Website", ownerId: 4, projectDetails: "We're going to work as a team to build our own website!",
-    projectDeadline: "2/10/26", projectPeople: 5
- } //user id that's associated with a project? (One to many relationship: one user can own many projects, but a project can only be owned by one person)
+    if (tag_list.length === 0) {
+        console.log(`There are no tags for project ${project_id}`);
+    }
 
-//When page loads, show information for this specific project requested by the user
-function init() {
-    renderProject(exampleProjectJSON);
+    let html = ``;
+    for (const tag of tag_list) {
+        // Get the name of that tag by it's ID
+        const tag_name = await getTagName(tag.tag_id);
+        html += `<p class="tag">${tag_name}</p>\n`;
+    }
+
+    return html;
 }
-init()
 
-function renderProject(projectData) {
-
+// Get the name of a tag based on it's ID
+async function getTagName(tag_id) {
+    const tag = await apiId("category_tags", tag_id);
+    return tag ? tag.name : "INVALID_TAG";
 }
 
-//For use in rendering the tags associated with this project
-// function tagTemplate(tags) {
-//     let html = ``;
-//     tags.forEach(tag => {
-//         html += `<p id="tag">${tag}</p>\n`;
-//     });
-//     return html;
-// }
-
-//Following will need to be populated using that data:
-//Project title
-//User who created it, along with a link to that user's profile
-//array of tags associated with this project
-//Details about this project
-//The deadline for this project, if there is one
-//How many people are needed to help, and how many of those have already been filled
-//(For regular user, should they be able to see the users associated with a project? Or should that just be up to a project owner?)
-//Clicking join this project will send the current user's contact info to the owner of the project
-
-//There should be some users that are clickable, leading to that user's "profile" page
+// Returns the number of helpers that are already on the project
+async function getHelpersTotal(project_id) {
+    const members = await apiValue("project_members", "project_id", project_id);
+    return members.length;
+}
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
+
 function sendInformation() {
     console.log("Simulating sending information...");
 }
@@ -60,5 +113,7 @@ function close() {
     window.close();
 }
 
-document.querySelector("#return-search").addEventListener("click", close);
-document.querySelector("#join-project").addEventListener("click", sendInformation);
+const return_search = document.querySelector("#return-search");
+return_search.addEventListener("click", close);
+const join_project = document.querySelector("#join-project");
+join_project.addEventListener("click", sendInformation);
