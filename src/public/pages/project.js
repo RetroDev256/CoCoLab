@@ -7,7 +7,9 @@ import { apiId, apiValue, isValidURL } from "../main.js";
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
-    const project = await apiId("project", 2); // Example
+    const params = new URLSearchParams(window.location.search);
+    const project_id = params.get("id");
+    const project = await apiId("project", project_id);
 
     if (project === null) {
         console.log("No matching project found");
