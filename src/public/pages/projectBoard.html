@@ -10,7 +10,7 @@
         <link rel="icon" type="image/webp" href="/images/brownie.webp" />
 
         <script type="module">
-            import { selectByTable, apiId } from "/main.js";
+            import { selectByTable } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
