@@ -225,3 +225,44 @@ footer p {
   align-items: center;
   gap: 10px;
 }
+
+/* Job Board */
+body.job-board-page {
+  background-color: var(--primary-color);
+  padding: 18px;
+}
+
+header.job-header {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: rgba(137, 89, 62, 0.92);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+}
+
+main.job-board {
+  max-width: var(--content-max);
+  margin: 18px auto;
+  padding: 22px;
+  background-image: url("../images/board.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  min-height: 520px;
+}
+
+.job-posting {
+  background: rgba(255,255,255,0.92);
+  border-radius: 14px;
+  padding: 14px;
+  max-width: 420px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.16);
+}
+
+@media (max-width: 520px) {
+  body.job-board-page { padding: 12px; }
+  main.job-board { padding: 16px; }
+  .job-posting { max-width: 100%; }
+}
