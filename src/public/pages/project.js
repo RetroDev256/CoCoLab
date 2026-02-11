@@ -1,5 +1,5 @@
 // This is the logic behind a project, regardless of which project it is
-// this page will need to get the project id and use that to grab information from the server(?)
+// this page will need to get the project id and use that to grab information from the server
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
@@ -54,6 +54,15 @@ async function renderProject(project) {
     const helpers = document.querySelector(".people-have");
     const total_helpers = await getHelpersTotal(project.id);
     helpers.innerHTML = `Spots filled: ${total_helpers}`;
+
+    const join_project = document.getElementById("#join-project");
+    //Basic logic for disabling the Join Project button if project is full
+    if (total_helpers >= project.max_people) //greater than shouldn't be possible but could be
+    {
+        join_project.disabled = true;
+    }
+    //Should above happen for if current student has already joined the project too?
+    //We'd need a way to get current user's id and compare it internally if that's the case
 }
 
 // Returns html for owner information
@@ -82,7 +91,7 @@ async function getTagsTemplate(project_id) {
 
     let html = ``;
     for (const tag of tag_list) {
-        // Get the name of that tag by it's ID
+        // Get the name of that tag by its ID
         const tag_name = await getTagName(tag.tag_id);
         html += `<p class="tag">${tag_name}</p>\n`;
     }
@@ -107,6 +116,7 @@ async function getHelpersTotal(project_id) {
 
 function sendInformation() {
     console.log("Simulating sending information...");
+    //This will need some sort of API call to make a record with this user's ID
 }
 
 function close() {

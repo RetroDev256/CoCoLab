@@ -1,6 +1,17 @@
 // This is the logic behind a project, regardless of which project it is
-// this page will need to get the project id and use that to grab information from the server(?)
+// this page will need to get the project id and use that to grab information from the server
 // and use it to populate the page
+
+//There will be a bonus popup that will show on this page when there is someone who wants to join the project
+//The owner can view the user's profile, then reject (popup goes away, internal request is removed) OR
+//accept (popup goes away, request is removed, user_id gets added to project_members, and consequently shows up onscreen)
+
+//For project owner, there should be a button that will allow them to mark the project as complete.
+//They can record completion details and submit, which will save information and change project status to completed,
+//thus removing the project from the projectBoard. It will still be visible for the project owner and the other
+//contributors on their personal profiles (and/or the projectManager)
+
+//Project owner should also be able to see users (and their contact information) associated with this project
 
 // Helper functions for the API in the root main.js (client-side) file
 import { apiId, apiValue, isValidURL } from "../main.js";
@@ -105,8 +116,30 @@ async function getHelpersTotal(project_id) {
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
-function sendInformation() {
-    console.log("Simulating sending information...");
+function loadCompleteProjectModal() {
+    const completionModal = document.querySelector("#completion-modal-container");
+    const completionModalHTML = completionTemplate();
+    
+    completionModal.innerHTML = completionModalHTML;
+
+    document.querySelector(".close-modal").addEventListener("click", closeQuestion);
+}
+
+function completionTemplate() {
+    //write html in here for the completion modal
+    return `<div class="completion-modal">
+                <button class="close-modal">X</button>
+                <div id="completion-box">
+                    <p>It's a me</p>
+                </div>
+            </div>`
+}
+
+function closeQuestion() {
+    const element = document.querySelector(".completion-modal");
+    if (element) {
+        element.remove();
+    }
 }
 
 function close() {
@@ -115,5 +148,5 @@ function close() {
 
 const return_search = document.querySelector("#return-search");
 return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);
+const complete_project = document.querySelector("#complete-project");
+complete_project.addEventListener("click", loadCompleteProjectModal);

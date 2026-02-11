@@ -225,3 +225,48 @@ footer p {
   align-items: center;
   gap: 10px;
 }
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* Stuff for the modal that will pop up for project completion */
+.completion-modal {
+  position: fixed;
+  z-index: 10;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.75);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: center;
+}
+
+#completion-box {
+  background-color: var(--primary-color);
+  color: var(--body-color);
+  width: 1000px;
+  min-height: 400px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  font-size: 30px;
+  font-family: var(--paragraph-font);
+  text-align: center;
+}
+
+.close-modal {
+  padding: 0;
+  justify-self: end;
+  margin: 10px;
+  width: 40px;
+  background-color: var(--accent1-color);
+  color: var(--primary-color);
+  font-family: var(--paragraph-font);
+  font-size: 20px;
+}
