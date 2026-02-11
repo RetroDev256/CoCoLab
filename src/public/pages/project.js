@@ -3,13 +3,13 @@
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { apiId, apiValue, isValidURL } from "../main.js";
+import { selectById, selectByValue, isValidURL } from "../main.js";
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
-    const project = await apiId("project", project_id);
+    const project = await selectById("project", project_id);
 
     if (project === null) {
         console.log("No matching project found");
@@ -60,7 +60,7 @@ async function renderProject(project) {
 
 // Returns html for owner information
 async function getOwnerData(owner_id) {
-    const owner = await apiId("users", owner_id);
+    const owner = await selectById("users", owner_id);
 
     // Handle the case where we can't find a user with that ID
     if (owner === null) return `Unknown project owner`;
@@ -76,7 +76,7 @@ async function getOwnerData(owner_id) {
 // Returns html for rendering tags associated with this project
 async function getTagsTemplate(project_id) {
     // Get the list of all projects_tags for that project_id
-    const tag_list = await apiValue("projects_tags", "project_id", project_id);
+    const tag_list = await selectByValue("projects_tags", "project_id", project_id);
 
     if (tag_list.length === 0) {
         console.log(`There are no tags for project ${project_id}`);
@@ -94,13 +94,13 @@ async function getTagsTemplate(project_id) {
 
 // Get the name of a tag based on it's ID
 async function getTagName(tag_id) {
-    const tag = await apiId("category_tags", tag_id);
+    const tag = await selectById("category_tags", tag_id);
     return tag ? tag.name : "INVALID_TAG";
 }
 
 // Returns the number of helpers that are already on the project
 async function getHelpersTotal(project_id) {
-    const members = await apiValue("project_members", "project_id", project_id);
+    const members = await selectByValue("project_members", "project_id", project_id);
     return members.length;
 }
 
