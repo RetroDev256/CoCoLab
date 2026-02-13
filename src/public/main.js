@@ -1,5 +1,28 @@
 // put client side stuff here
 
+// Create a new user and send it to the database
+export async function createUser(
+    user_name,
+    password,
+    email,
+    profile_url,
+    phone_number,
+    other_link,
+) {
+    return await fetch("https://coco.alloc.dev/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_name,
+            password,
+            email,
+            profile_url,
+            phone_number,
+            other_link,
+        }),
+    });
+}
+
 // Returns a list of all JS objects in a table
 export async function selectByTable(table) {
     const url = "https://coco.alloc.dev";
