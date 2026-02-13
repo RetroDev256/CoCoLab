@@ -136,6 +136,9 @@ async function sendInformation() {
             role: "requester"
         })
     });
+
+    const join_project = document.getElementById("#join-project");
+    join_project.disabled = true;
 }
 
 function close() {
