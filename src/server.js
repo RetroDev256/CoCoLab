@@ -1,5 +1,5 @@
 // The SQL database that we can run queries on
-import { apiPost, apiGet } from "./api.js";
+import { apiPost, apiGet, apiOptions } from "./api.js";
 
 // HOST=[host here] PORT=[port here] bun run server.js
 const PORT = Bun.env.PORT ?? 3000;
