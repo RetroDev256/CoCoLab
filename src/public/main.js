@@ -9,7 +9,7 @@ export async function createUser(
     phone_number,
     other_link,
 ) {
-    return await fetch("/api/users", {
+    return await fetch("https://coco.alloc.dev/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
