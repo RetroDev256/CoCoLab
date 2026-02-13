@@ -1,76 +1,82 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <body>
-        <!-- This is a form to input user data into the DB -->
-        <h3>User creation input form:</h3>
-        <form action="/api/users" method="POST">
-            <input name="user_name" placeholder="User name" required />
-            <br />
-            <input name="password" placeholder="Password" required />
-            <br />
-            <input name="email" placeholder="Email" required />
-            <br />
-            <input name="profile_url" placeholder="Profile URL" required />
-            <br />
-            <input name="phone_number" placeholder="Phone number" />
-            <br />
-            <input name="other_link" placeholder="Other link" />
-            <br />
-            <button type="submit">Create User</button>
-        </form>
-        <br />
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<!-- This is a form to input project data into the DB -->
+		<h3>Project creation input form:</h3>
+		<form action="/api/project" method="POST">
+			<input name="project_name" placeholder="Project name" required />
+			<br />
+			<input
+				name="max_people"
+				type="number"
+				placeholder="Max people"
+				required
+			/>
+			<br />
+			<input
+				name="owner_id"
+				type="number"
+				placeholder="Owner ID"
+				required
+			/>
+			<br />
+			<textarea name="details" placeholder="Details" required></textarea>
+			<br />
+			<button type="submit">Create Project</button>
+		</form>
+		<br />
 
-        <!-- This is a form to input project data into the DB -->
-        <h3>Project creation input form:</h3>
-        <form action="/api/project" method="POST">
-            <input name="project_name" placeholder="Project name" required />
-            <br />
-            <input name="max_people" type="number" placeholder="Max people" required />
-            <br />
-            <input name="owner_id" type="number" placeholder="Owner ID" required />
-            <br />
-            <textarea name="details" placeholder="Details" required></textarea>
-            <br />
-            <button type="submit">Create Project</button>
-        </form>
-        <br />
+		<!-- This is a form to input category tags into the DB -->
+		<h3>Category tag creation input form:</h3>
+		<form action="/api/category_tags" method="POST">
+			<input name="name" placeholder="Tag name" required />
+			<br />
+			<button type="submit">Create Tag</button>
+		</form>
+		<br />
 
-        <!-- This is a form to input category tags into the DB -->
-        <h3>Category tag creation input form:</h3>
-        <form action="/api/category_tags" method="POST">
-            <input name="name" placeholder="Tag name" required />
-            <br />
-            <button type="submit">Create Tag</button>
-        </form>
-        <br />
+		<!-- This is a form to input project tags into the DB -->
+		<h3>Project tag creation input form:</h3>
+		<form action="/api/projects_tags" method="POST">
+			<input
+				name="project_id"
+				type="number"
+				placeholder="Project ID"
+				required
+			/>
+			<br />
+			<input name="tag_id" type="number" placeholder="Tag ID" required />
+			<br />
+			<button type="submit">Attach Tag to Project</button>
+		</form>
+		<br />
 
-        <!-- This is a form to input project tags into the DB -->
-        <h3>Project tag creation input form:</h3>
-        <form action="/api/projects_tags" method="POST">
-            <input name="project_id" type="number" placeholder="Project ID" required />
-            <br />
-            <input name="tag_id" type="number" placeholder="Tag ID" required />
-            <br />
-            <button type="submit">Attach Tag to Project</button>
-        </form>
-        <br />
-
-        <!-- This is a form to input project member data into the DB -->
-        <h3>Project member creation input form:</h3>
-        <form action="/api/project_members" method="POST">
-            <input name="user_id" type="number" placeholder="User ID" required />
-            <br />
-            <input name="project_id" type="number" placeholder="Project ID" required />
-            <br />
-            <input name="role" placeholder="Role" required />
-            <br />
-            <button type="submit">Add Member</button>
-        </form>
-        <br />
-    </body>
+		<!-- This is a form to input project member data into the DB -->
+		<h3>Project member creation input form:</h3>
+		<form action="/api/project_members" method="POST">
+			<input
+				name="user_id"
+				type="number"
+				placeholder="User ID"
+				required
+			/>
+			<br />
+			<input
+				name="project_id"
+				type="number"
+				placeholder="Project ID"
+				required
+			/>
+			<br />
+			<input name="role" placeholder="Role" required />
+			<br />
+			<button type="submit">Add Member</button>
+		</form>
+		<br />
+	</body>
 </html>

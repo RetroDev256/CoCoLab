@@ -1,40 +1,13 @@
 import pool from './db.mjs'
-import { passwordHash } from './auth.js'
 import { cors } from './server.js'
+import { authRoutes } from './auth.js'
 
 // Exposes POST endpoints under /api/ for each SQL table
 export async function apiPost(url, data) {
-	// -------------------------------------------------------- INSERTING USERS
-	if (url.pathname === '/api/users') {
-		// Generate 128 bits of salt for the password hash
-		const pw_salt = new Uint8Array(16)
-		crypto.getRandomValues(pw_salt)
-		// Get the password from the form
-		const password = data.password
-		// Compute the hash from password and salt
-		const pw_hash = await passwordHash(password, pw_salt)
-
-		const result = await pool.query(
-			`INSERT INTO users (
-                user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING *;`,
-			[
-				data.user_name,
-				pw_salt,
-				pw_hash,
-				data.email,
-				data.profile_url,
-				data.phone_number,
-				data.other_link,
-			],
-		)
-
-		// Return HTTP "successfully created" & the created row
-		return cors(Response.json(result.rows[0], { status: 201 }))
+	const auth = await authRoutes(url, data)
+	if (auth) {
+		return cors(auth)
 	}
-
 	// ----------------------------------------------------- INSERTING PROJECTS
 	if (url.pathname === '/api/project') {
 		const result = await pool.query(
@@ -88,10 +61,6 @@ export async function apiPost(url, data) {
 	}
 
 	return null
-}
-
-const hidden_table_fields = {
-	users: 'pw_salt, pw_hash',
 }
 
 // Exposes GET endpoints under /api/ for each SQL table

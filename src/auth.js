@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify, importJWK } from 'jose'
 import pool from './db.mjs'
 
 // Get the hash of a password from a password & its salt
-export async function passwordHash(password, pw_salt) {
+export async function hashPassword(password, pw_salt) {
 	const pw_bytes = new TextEncoder().encode(password)
 	// Concatenate the password and it's salt
 	const salted_pw = new Uint8Array(pw_bytes.length + pw_salt.length)
@@ -59,7 +59,7 @@ export async function authenticate(req) {
 	const token = authHeader.substring(7)
 	const result = await verifyToken(token)
 
-	if (result.valid) {
+	if (result.valid && result.payload) {
 		return { authenticated: true, user: result.payload }
 	}
 
@@ -67,30 +67,22 @@ export async function authenticate(req) {
 }
 
 export async function authRoutes(url, data) {
-	if (url.pathname === '/api/login') {
-		if (data.user_name && data.password) {
-			const isValidUser = await validateCredentials(
-				data.user_name,
-				data.password,
-			)
-
-			if (isValidUser) {
+	if (url.pathname === '/api/signin') {
+		if (data.username && data.password) {
+			const user = await getUser(data.username, data.password)
+			if (user) {
 				const token = await createToken({
-					sub: data.user_name,
-					role: 'user',
-					// Add any other claims you need
+					sub: user,
 				})
-
 				return Response.json({ token })
 			}
 		}
-
 		return Response.json({ error: 'Invalid credentials' }, { status: 401 })
 	}
 
 	if (url.pathname === '/api/signup') {
 		// Validate required fields
-		if (!data.user_name || !data.password || !data.email) {
+		if (!data.username || !data.password || !data.email) {
 			return Response.json(
 				{
 					error: 'Username, email, and password are required',
@@ -100,7 +92,7 @@ export async function authRoutes(url, data) {
 		}
 
 		// Validate password strength (example)
-		if (body.password.length < 8) {
+		if (data.password.length < 8) {
 			return Response.json(
 				{
 					error: 'Password must be at least 8 characters',
@@ -111,8 +103,8 @@ export async function authRoutes(url, data) {
 
 		try {
 			// Check if user already exists
-			const userExists = await checkUserExists(body.username, body.email)
-			if (userExists) {
+			const existingUser = await getUser(data.username, data.password)
+			if (existingUser) {
 				return Response.json(
 					{
 						error: 'Username or email already exists',
@@ -121,22 +113,19 @@ export async function authRoutes(url, data) {
 				)
 			}
 
-			// Hash password
-			const hashedPassword = await hashPassword(body.password)
-
 			// Create user in database
-			await createUser({
-				username: body.username,
-				email: body.email,
-				password: hashedPassword,
-				// Add any other fields you need
-			})
+			await createUser(data)
+			const user = {
+				username: data.username,
+				email: data.email,
+				profile_url: data.profile_url,
+				phone_number: data.phone_number,
+				other_link: data.other_link,
+			}
 
 			// Automatically log them in by creating a token
 			const token = await createToken({
-				sub: body.username,
-				email: body.email,
-				role: 'user',
+				sub: user,
 			})
 
 			return Response.json(
@@ -158,16 +147,44 @@ export async function authRoutes(url, data) {
 	}
 }
 
-async function signup(req) {
-	if (req.method !== 'POST') {
-		return Response.json({ error: 'Method not allowed' }, { status: 405 })
+async function getUser(username, password) {
+	const result = await pool.query(
+		`SELECT * FROM users WHERE user_name = ${username};`,
+	)
+	for (const row of result.rows) {
+		if ((await hashPassword(password, row.pw_salt)) === row.pw_hash) {
+			return {
+				username: row.user_name,
+				email: row.email,
+				profile_url: row.profile_url,
+				phone_number: row.phone_number,
+				other_link: row.other_link,
+			}
+		}
 	}
-
-	const body = await req.json()
+	throw new Error('Invalid credentials')
 }
 
-async function validateCredentials(username, password) {
-	// TODO: Check against your database
-	// Then verify password hash
-	return username === 'user' && password === 'password' // REPLACE THIS
+async function createUser(data) {
+	const pw_salt = new Uint8Array(16)
+	crypto.getRandomValues(pw_salt)
+	// Compute the hash from password and salt
+	const pw_hash = await hashPassword(data.password, pw_salt)
+
+	await pool.query(
+		`INSERT INTO users (
+                user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *;`,
+		[
+			data.username,
+			pw_salt,
+			pw_hash,
+			data.email,
+			data.profile_url,
+			data.phone_number,
+			data.other_link,
+		],
+	)
 }
