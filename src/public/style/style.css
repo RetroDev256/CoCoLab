@@ -162,12 +162,13 @@ main ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 20px;
   gap: 12px;
-  padding: 5px;
+  padding: 2px;
   transition: 
   transform 0.2s ease, 
   background 0.2s ease;
+  
 }
 
 .brownie:hover {
@@ -223,4 +224,90 @@ footer p {
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* Stuff for the modal that will pop up for project completion */
+.completion-modal {
+  position: fixed;
+  z-index: 10;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.75);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: center;
+}
+
+#completion-box {
+  background-color: var(--primary-color);
+  color: var(--body-color);
+  width: 1000px;
+  min-height: 400px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  font-size: 30px;
+  font-family: var(--paragraph-font);
+  text-align: center;
+}
+
+.close-modal {
+  padding: 0;
+  justify-self: end;
+  margin: 10px;
+  width: 40px;
+  background-color: var(--accent1-color);
+  color: var(--primary-color);
+  font-family: var(--paragraph-font);
+  font-size: 20px;
+}
+
+/* Job Board */
+body.job-board-page {
+  background-color: var(--primary-color);
+  padding: 18px;
+}
+
+header.job-header {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: rgba(137, 89, 62, 0.92);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+}
+
+main.job-board {
+  max-width: var(--content-max);
+  margin: 18px auto;
+  padding: 22px;
+  background-image: url("../images/board.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  min-height: 520px;
+}
+
+.job-posting {
+  background: rgba(255,255,255,0.92);
+  border-radius: 14px;
+  padding: 14px;
+  max-width: 420px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.16);
+}
+
+@media (max-width: 520px) {
+  body.job-board-page { padding: 12px; }
+  main.job-board { padding: 16px; }
+  .job-posting { max-width: 100%; }
 }

@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="../style/style.css" />
 		<link rel="icon" type="image/webp" href="./images/brownie.webp" />
 
-        <script type="module" src="project.js"></script>
+        <script type="module" src="project-ownerView.js"></script>
 	</head>
 	<body>
 		<header>
@@ -38,11 +38,12 @@
 			<h3 class="people-needed">Number of people needed: 0</h3>
 			<h3 class="people-have">Spots filled: 0</h3> <!--If this is same as above number, join project button should be visible but faded/disabled-->
 
-			<button id="join-project">Join this Project</button> <!--clicking this will trigger a popup that lets you verify and send your info-->
+			<button id="complete-project">Complete Project</button> <!--clicking this will trigger a popup that lets you verify and send your info-->
 			<button id="return-search">Back to search</button> <!--Ideally on y index as the project, just to the right.-->
 			<!--clickable, looks like a hyperlink but really just closes the tab and goes back to projectBoard-->
 
         </div>
+		<div id="completion-modal-container"></div> <!--will only be populated if the owner clicks complete project-->
 
 
     </main>

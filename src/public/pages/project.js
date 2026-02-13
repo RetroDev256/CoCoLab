@@ -1,13 +1,18 @@
 // This is the logic behind a project, regardless of which project it is
-// this page will need to get the project id and use that to grab information from the server(?)
+// this page will need to get the project id and use that to grab information from the server
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { apiId, apiValue, isValidURL } from "../main.js";
+import { selectById, selectByValue, isValidURL } from "../main.js";
+//For use in creating project request
+let global_project_id = 0;
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
-    const project = await apiId("project", 2); // Example
+    const params = new URLSearchParams(window.location.search);
+    const project_id = params.get("id");
+    global_project_id = project_id;
+    const project = await selectById("project", project_id);
 
     if (project === null) {
         console.log("No matching project found");
@@ -31,6 +36,7 @@ async function renderProject(project) {
     const owner_info = await getOwnerData(project.owner_id);
     const user = document.querySelector(".project-owner");
     user.innerHTML = owner_info;
+    global_project_id = project.owner_id;
 
     //array of tags associated with this project
     //Calls a separate function that will call the project-tags table and get that information
@@ -54,11 +60,20 @@ async function renderProject(project) {
     const helpers = document.querySelector(".people-have");
     const total_helpers = await getHelpersTotal(project.id);
     helpers.innerHTML = `Spots filled: ${total_helpers}`;
+
+    const join_project = document.getElementById("#join-project");
+    //Basic logic for disabling the Join Project button if project is full
+    if (total_helpers >= project.max_people) //greater than shouldn't be possible but could be
+    {
+        join_project.disabled = true;
+    }
+    //Should above happen for if current student has already joined the project too?
+    //We'd need a way to get current user's id and compare it internally if that's the case
 }
 
 // Returns html for owner information
 async function getOwnerData(owner_id) {
-    const owner = await apiId("users", owner_id);
+    const owner = await selectById("users", owner_id);
 
     // Handle the case where we can't find a user with that ID
     if (owner === null) return `Unknown project owner`;
@@ -74,7 +89,7 @@ async function getOwnerData(owner_id) {
 // Returns html for rendering tags associated with this project
 async function getTagsTemplate(project_id) {
     // Get the list of all projects_tags for that project_id
-    const tag_list = await apiValue("projects_tags", "project_id", project_id);
+    const tag_list = await selectByValue("projects_tags", "project_id", project_id);
 
     if (tag_list.length === 0) {
         console.log(`There are no tags for project ${project_id}`);
@@ -82,7 +97,7 @@ async function getTagsTemplate(project_id) {
 
     let html = ``;
     for (const tag of tag_list) {
-        // Get the name of that tag by it's ID
+        // Get the name of that tag by its ID
         const tag_name = await getTagName(tag.tag_id);
         html += `<p class="tag">${tag_name}</p>\n`;
     }
@@ -92,21 +107,38 @@ async function getTagsTemplate(project_id) {
 
 // Get the name of a tag based on it's ID
 async function getTagName(tag_id) {
-    const tag = await apiId("category_tags", tag_id);
+    const tag = await selectById("category_tags", tag_id);
     return tag ? tag.name : "INVALID_TAG";
 }
 
 // Returns the number of helpers that are already on the project
 async function getHelpersTotal(project_id) {
-    const members = await apiValue("project_members", "project_id", project_id);
+    const members = await selectByValue("project_members", "project_id", project_id);
     return members.length;
 }
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
-function sendInformation() {
+//This will need some sort of API call to make a record with this user's ID and project owner's ID
+async function sendInformation() {
     console.log("Simulating sending information...");
+    //Here we only need the ID- the contact information can be fetched using it later
+    //const data = {"user_id": "1", "project_id": `${global_project_id}`, "role": "request"};
+    const response = await fetch("https://coco.alloc.dev/api/project_requests", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: 1,
+            project_id: global_project_id,
+            role: "requester"
+        })
+    });
+
+    const join_project = document.getElementById("#join-project");
+    join_project.disabled = true;
 }
 
 function close() {

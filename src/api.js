@@ -1,13 +1,39 @@
 import pool from './db.mjs'
-import { cors } from './server.js'
-import { authRoutes } from './auth.js'
+import { passwordHash } from './auth.js'
 
 // Exposes POST endpoints under /api/ for each SQL table
 export async function apiPost(url, data) {
-	const auth = await authRoutes(url, data)
-	if (auth) {
-		return cors(auth)
+	// -------------------------------------------------------- INSERTING USERS
+	if (url.pathname === '/api/users') {
+		// Generate 128 bits of salt for the password hash
+		const pw_salt = new Uint8Array(16)
+		crypto.getRandomValues(pw_salt)
+		// Get the password from the form
+		const password = data.password
+		// Compute the hash from password and salt
+		const pw_hash = await passwordHash(password, pw_salt)
+
+		const result = await pool.query(
+			`INSERT INTO users (
+                user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *;`,
+			[
+				data.user_name,
+				pw_salt,
+				pw_hash,
+				data.email,
+				data.profile_url,
+				data.phone_number,
+				data.other_link,
+			],
+		)
+
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
 	}
+
 	// ----------------------------------------------------- INSERTING PROJECTS
 	if (url.pathname === '/api/project') {
 		const result = await pool.query(
@@ -18,7 +44,7 @@ export async function apiPost(url, data) {
 		)
 
 		// Return HTTP "successfully created" & the created row
-		return cors(Response.json(result.rows[0], { status: 201 }))
+		return Response.json(result.rows[0], { status: 201 })
 	}
 
 	// ------------------------------------------------ INSERTING CATEGORY TAGS
@@ -31,7 +57,7 @@ export async function apiPost(url, data) {
 		)
 
 		// Return HTTP "successfully created" & the created row
-		return cors(Response.json(result.rows[0], { status: 201 }))
+		return Response.json(result.rows[0], { status: 201 })
 	}
 
 	// ------------------------------------------------- INSERTING PROJECT TAGS
@@ -44,7 +70,7 @@ export async function apiPost(url, data) {
 		)
 
 		// Return HTTP "successfully created" & the created row
-		return cors(Response.json(result.rows[0], { status: 201 }))
+		return Response.json(result.rows[0], { status: 201 })
 	}
 
 	// ---------------------------------------------- INSERTING PROJECT MEMBERS
@@ -57,52 +83,75 @@ export async function apiPost(url, data) {
 		)
 
 		// Return HTTP "successfully created" & the created row
-		return cors(Response.json(result.rows[0], { status: 201 }))
+		return Response.json(result.rows[0], { status: 201 })
+	}
+
+	// ---------------------------------------------- INSERTING PROJECT MEMBERS
+	if (url.pathname === '/api/project_requests') {
+		const result = await pool.query(
+			`INSERT INTO project_requests (user_id, project_id, role)
+            VALUES ($1, $2, $3)
+            RETURNING *;`,
+			[data.user_id, data.project_id, data.role],
+		)
+
+		// Return HTTP "successfully created" & the created row
+		return Response.json(result.rows[0], { status: 201 })
 	}
 
 	return null
 }
 
-// Exposes GET endpoints under /api/ for each SQL table
+// Exposes GET endpoints under /API/ for each SQL table
 export async function apiGet(url) {
-	// --- /api/TABLE/ID would parse to ["api", "TABLE", "ID"]
+	// --- /API/TABLE/ID would parse to ["API", "TABLE", "ID"]
 	const parts = url.pathname.split('/').filter(Boolean)
 	const esc_ident = (v) => `"${String(v).replace(/"/g, '""')}"`
 	const esc_value = (v) => `'${String(v).replace(/'/g, "''")}'`
-	if (parts[0] !== 'api') return null
+	if (parts[0] !== 'API') return null
 
 	switch (parts.length) {
-		// /api returns special link
-		case 1: {
-			const link = 'https://youtu.be/dQw4w9WgXcQ'
-			return cors(Response.redirect(link, 302))
-		}
-
-		// /api/TABLE fetches all table entries
-		case 2: {
-			const table = esc_ident(parts[1])
-			const query = `SELECT * FROM ${table};`
-			console.log(`1. QUERY: \`${query}\``) // DEBUG
-			return cors(Response.json((await pool.query(query)).rows))
-		}
-
-		// /api/TABLE/ID fetches all table entries matching that ID
+		// /API/SELECT/TABLE
 		case 3: {
-			const table = esc_ident(parts[1])
-			const id = esc_value(parts[2])
-			const query = `SELECT * FROM ${table} WHERE id = ${id};`
-			console.log(`2. QUERY: \`${query}\``) // DEBUG
-			return cors(Response.json((await pool.query(query)).rows))
+			if (parts[1] !== 'SELECT') break
+			const table = esc_ident(parts[2])
+			const query = `SELECT * FROM ${table};`
+			return Response.json((await pool.query(query)).rows)
 		}
 
-		// /api/TABLE/FIELD/VALUE fetches all from TABLE where FIELD = VALUE
+		// /API/SELECT/TABLE/ID OR /API/DELETE/TABLE/ID
 		case 4: {
-			const table = esc_ident(parts[1])
-			const field = esc_ident(parts[2])
-			const value = esc_value(parts[3])
-			const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`
-			console.log(`3. QUERY: \`${query}\``) // DEBUG
-			return cors(Response.json((await pool.query(query)).rows))
+			const table = esc_ident(parts[2])
+			const id = esc_value(parts[3])
+
+			switch (parts[1]) {
+				case 'SELECT': {
+					const query = `SELECT * FROM ${table} WHERE id = ${id};`
+					return Response.json((await pool.query(query)).rows)
+				}
+				case 'DELETE': {
+					const query = `DELETE FROM ${table} WHERE id = ${id};`
+					return Response.json((await pool.query(query)).rows)
+				}
+			}
+		}
+
+		// /API/SELECT/TABLE/FIELD/VALUE OR /API/DELETE/TABLE/FIELD/VALUE
+		case 5: {
+			const table = esc_ident(parts[2])
+			const field = esc_ident(parts[3])
+			const value = esc_value(parts[4])
+
+			switch (parts[1]) {
+				case 'SELECT': {
+					const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`
+					return Response.json((await pool.query(query)).rows)
+				}
+				case 'DELETE': {
+					const query = `DELETE FROM ${table} WHERE ${field} = ${value};`
+					return Response.json((await pool.query(query)).rows)
+				}
+			}
 		}
 	}
 

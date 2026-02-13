@@ -1,20 +1,54 @@
 <!doctype html>
+
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Project Board</title>
-	</head>
-	<body>
-		<header>
-			<nav>
-				<a id="logo" href="/">
-					<img class="logo" src="#" alt="CoCoLab Logo" />
-				</a>
-				<a id="account" href="userSettings.html">
-					<img class="account" src="#" alt="User Account Icon" />
-				</a>
-			</nav>
-		</header>
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CoCoLab - Project Board</title>
+
+        <link rel="stylesheet" href="/style/style.css" />
+        <link rel="icon" type="image/webp" href="/images/brownie.webp" />
+
+        <script type="module">
+            import { selectByTable } from "/main.js";
+
+            const project_list = await selectByTable("project");
+            const listings = document.getElementById("listings");
+
+            let listing_html = "";
+            for (const project of project_list) {
+                listing_html += `
+				<li class="job-posting">
+					<a href="/pages/project.html?id=${project.id}" target="_blank">
+						${project.project_name}
+					</a>
+				</li>
+				`;
+            }
+
+            listings.innerHTML = listing_html;
+        </script>
+    </head>
+
+    <body class="job-board-page">
+        <header class="job-header">
+            <nav class="job-nav">
+                <a id="logo" href="/">
+                    <img class="logo" src="/images/brownie.webp" alt="CoCoLab Logo" />
+                </a>
+                <a id="account" href="userSettings.html">
+                    <img class="account" src="/images/account_user.png" alt="User Account Icon" />
+                </a>
+            </nav>
+        </header>
+
+        <main class="job-board">
+            <h1>Projects:</h1>
+            <ol id="listings"></ol>
+        </main>
+
+        <footer>
+            <p>&copy; CoCoLab. All rights reserved.</p>
+        </footer>
+    </body>
 </html>

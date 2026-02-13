@@ -1,5 +1,5 @@
 // The SQL database that we can run queries on
-import { apiPost, apiGet } from './api.js'
+import { apiPost, apiGet, apiOptions } from './api.js'
 
 // HOST=[host here] PORT=[port here] bun run server.js
 const PORT = Bun.env.PORT ?? 3000
@@ -30,7 +30,7 @@ Bun.serve({
 
 			try {
 				const api_response = await apiPost(url, data)
-				if (api_response) return api_response
+				if (api_response) return cors(api_response)
 			} catch (err) {
 				// Just in case we have out-of-band errors
 				console.log(`POST ERROR: ${err}`)
@@ -49,7 +49,7 @@ Bun.serve({
 
 				// API endpoints for fetching data from each SQL table
 				const api_response = await apiGet(url)
-				if (api_response) return api_response
+				if (api_response) return cors(api_response)
 			} catch (err) {
 				// Just in case we have out-of-band errors
 				console.log(`GET ERROR: ${err}`)
@@ -61,7 +61,7 @@ Bun.serve({
 		if (req.method === 'OPTIONS') {
 			try {
 				const response = await apiOptions()
-				if (response) return response
+				if (response) return cors(response)
 			} catch (err) {
 				// Just in case we have out-of-band errors
 				console.log(`OPTIONS ERROR: ${err}`)
@@ -75,7 +75,7 @@ Bun.serve({
 })
 
 // Allow frontend fetches to work cross-origin
-export function cors(res) {
+function cors(res) {
 	const h = res.headers
 	h.set('Access-Control-Allow-Origin', '*')
 	h.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
