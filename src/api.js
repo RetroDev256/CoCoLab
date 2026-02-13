@@ -87,6 +87,19 @@ export async function apiPost(url, data) {
         return cors(Response.json(result.rows[0], { status: 201 }));
     }
 
+    // ---------------------------------------------- INSERTING PROJECT MEMBERS
+    if (url.pathname === "/api/project_requests") {
+        const result = await pool.query(
+            `INSERT INTO project_requests (user_id, project_id, role)
+            VALUES ($1, $2, $3)
+            RETURNING *;`,
+            [data.user_id, data.project_id, data.role],
+        );
+
+        // Return HTTP "successfully created" & the created row
+        return cors(Response.json(result.rows[0], { status: 201 }));
+    }
+
     return null;
 }
 

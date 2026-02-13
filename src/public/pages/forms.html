@@ -72,5 +72,19 @@
             <button type="submit">Add Member</button>
         </form>
         <br />
+
+
+        <!-- This is a form to input project request data into the DB -->
+        <h3>Project request creation input form:</h3>
+        <form action="/api/project_requests" method="POST">
+            <input name="user_id" type="number" placeholder="User ID" required />
+            <br />
+            <input name="project_id" type="number" placeholder="Project ID" required />
+            <br />
+            <input name="role" placeholder="Role" required />
+            <br />
+            <button type="submit">Add Member</button>
+        </form>
+        <br />
     </body>
 </html>
