@@ -14,9 +14,10 @@
 //Project owner should also be able to see users (and their contact information) associated with this project
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL } from "../main.js";
+import { selectById, selectByValue, isValidURL, deleteByValue } from "../main.js";
 
 // When page loads, show information for this specific project requested by the user
+//Also load whether anyone has requested to join this project
 async function init() {
     const project = await selectById("project", 2); // Example
 
@@ -65,6 +66,9 @@ async function renderProject(project) {
     const helpers = document.querySelector(".people-have");
     const total_helpers = await getHelpersTotal(project.id);
     helpers.innerHTML = `Spots filled: ${total_helpers}`;
+
+    //Determines whether anyone has requested to join this project. If so, trigger side modal
+    getJoinRequests(project.id);
 }
 
 // Returns html for owner information
@@ -93,7 +97,7 @@ async function getTagsTemplate(project_id) {
 
     let html = ``;
     for (const tag of tag_list) {
-        // Get the name of that tag by it's ID
+        // Get the name of that tag by its ID
         const tag_name = await getTagName(tag.tag_id);
         html += `<p class="tag">${tag_name}</p>\n`;
     }
@@ -101,7 +105,7 @@ async function getTagsTemplate(project_id) {
     return html;
 }
 
-// Get the name of a tag based on it's ID
+// Get the name of a tag based on its ID
 async function getTagName(tag_id) {
     const tag = await selectById("category_tags", tag_id);
     return tag ? tag.name : "INVALID_TAG";
@@ -113,6 +117,36 @@ async function getHelpersTotal(project_id) {
     return members.length;
 }
 
+async function getJoinRequests(project_id){
+    //will need a way to get the id of the current person using the page?
+    const requests = await selectByValue("project_requests", "project_id", project_id);
+    if (requests.length != 0) {loadRequestModal()};
+}
+
+function loadRequestModal() {
+    const completionModal = document.querySelector("#completion-modal-container");
+    const completionModalHTML = completionTemplate();
+    
+    completionModal.innerHTML = completionModalHTML;
+
+    document.querySelector(".accept-button").addEventListener("click", acceptRequest);
+    document.querySelector(".reject-button").addEventListener("click", rejectRequest);
+    document.querySelector(".close-modal").addEventListener("click", closeModal);
+}
+
+//will "accept" the request to join this project, adding user info to project_members
+//will also delete record from project_requests and close the modal
+async function acceptRequest(){
+    closeModal();
+}
+
+//will "reject" the request to join, so info is not added
+//still deletes record from project_requests and closes the modal
+async function rejectRequest() {
+    closeModal();
+
+}
+
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
@@ -122,7 +156,7 @@ function loadCompleteProjectModal() {
     
     completionModal.innerHTML = completionModalHTML;
 
-    document.querySelector(".close-modal").addEventListener("click", closeQuestion);
+    document.querySelector(".close-modal").addEventListener("click", closeModal);
 }
 
 function completionTemplate() {
@@ -135,7 +169,7 @@ function completionTemplate() {
             </div>`
 }
 
-function closeQuestion() {
+function closeModal() {
     const element = document.querySelector(".completion-modal");
     if (element) {
         element.remove();
