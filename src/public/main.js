@@ -62,7 +62,7 @@ export async function deleteById(table, id) {
 export async function selectByValue(table, field, value) {
     const url = "https://coco.alloc.dev";
     const path = `${url}/API/SELECT/${table}/${field}/${value}`;
-    return await (await fetch(path, { method: "POST" })).json();
+    return await (await fetch(path)).json();
 }
 
 // Returns a list based on a table, field, and value
