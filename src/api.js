@@ -1,6 +1,5 @@
 import pool from "./db.mjs";
 import { passwordHash } from "./auth.js";
-import { cors } from "./server.js";
 
 // Exposes POST endpoints under /api/ for each SQL table
 export async function apiPost(url, data) {
@@ -32,7 +31,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     // ----------------------------------------------------- INSERTING PROJECTS
@@ -45,7 +44,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     // ------------------------------------------------ INSERTING CATEGORY TAGS
@@ -58,7 +57,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     // ------------------------------------------------- INSERTING PROJECT TAGS
@@ -71,7 +70,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     // ---------------------------------------------- INSERTING PROJECT MEMBERS
@@ -84,7 +83,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     // ---------------------------------------------- INSERTING PROJECT MEMBERS
@@ -97,7 +96,7 @@ export async function apiPost(url, data) {
         );
 
         // Return HTTP "successfully created" & the created row
-        return cors(Response.json(result.rows[0], { status: 201 }));
+        return Response.json(result.rows[0], { status: 201 });
     }
 
     return null;
@@ -117,7 +116,7 @@ export async function apiGet(url) {
             if (parts[1] !== "SELECT") break;
             const table = esc_ident(parts[2]);
             const query = `SELECT * FROM ${table};`;
-            return cors(Response.json((await pool.query(query)).rows));
+            return Response.json((await pool.query(query)).rows);
         }
 
         // /API/SELECT/TABLE/ID OR /API/DELETE/TABLE/ID
@@ -128,11 +127,11 @@ export async function apiGet(url) {
             switch (parts[1]) {
                 case "SELECT": {
                     const query = `SELECT * FROM ${table} WHERE id = ${id};`;
-                    return cors(Response.json((await pool.query(query)).rows));
+                    return Response.json((await pool.query(query)).rows);
                 }
                 case "DELETE": {
                     const query = `DELETE FROM ${table} WHERE id = ${id};`;
-                    return cors(Response.json((await pool.query(query)).rows));
+                    return Response.json((await pool.query(query)).rows);
                 }
             }
         }
@@ -146,11 +145,11 @@ export async function apiGet(url) {
             switch (parts[1]) {
                 case "SELECT": {
                     const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`;
-                    return cors(Response.json((await pool.query(query)).rows));
+                    return Response.json((await pool.query(query)).rows);
                 }
                 case "DELETE": {
                     const query = `DELETE FROM ${table} WHERE ${field} = ${value};`;
-                    return cors(Response.json((await pool.query(query)).rows));
+                    return Response.json((await pool.query(query)).rows);
                 }
             }
         }

@@ -1,5 +1,28 @@
 // put client side stuff here
 
+// Create a new user and send it to the database
+export async function createUser(
+    user_name,
+    password,
+    email,
+    profile_url,
+    phone_number,
+    other_link,
+) {
+    return await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_name,
+            password,
+            email,
+            profile_url,
+            phone_number,
+            other_link,
+        }),
+    });
+}
+
 // Returns a list of all JS objects in a table
 export async function selectByTable(table) {
     const url = "https://coco.alloc.dev";
@@ -39,7 +62,7 @@ export async function deleteById(table, id) {
 export async function selectByValue(table, field, value) {
     const url = "https://coco.alloc.dev";
     const path = `${url}/API/SELECT/${table}/${field}/${value}`;
-    return await (await fetch(path)).json();
+    return await (await fetch(path, { method: "POST" })).json();
 }
 
 // Returns a list based on a table, field, and value
