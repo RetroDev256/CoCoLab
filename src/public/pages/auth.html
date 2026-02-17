@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Authentication</title>
 	</head>
 	<body>
 		<!-- This is a form to input user data into the DB -->
@@ -35,7 +35,10 @@
 		</form>
 		<br />
 	</body>
-	<script defer>
+	<script defer type="module">
+		import { saveToken, getUser } from '../main.js'
+		const user = getUser()
+		console.log(user)
 		document
 			.getElementById('SignupForm')
 			.addEventListener('submit', async (e) => {
@@ -47,7 +50,12 @@
 					body: formData,
 				})
 				console.log(response)
-				console.log(response.json())
+				if (response.ok) {
+					const json = await response.json()
+					console.log(json)
+					saveToken(json.token)
+					// window.location.href = '/'
+				}
 			})
 
 		document
@@ -61,7 +69,12 @@
 					body: formData,
 				})
 				console.log(response)
-				console.log(response.json())
+				if (response.ok) {
+					const json = await response.json()
+					console.log(json)
+					saveToken(json.token)
+					// window.location.href = '/'s
+				}
 			})
 	</script>
 </html>

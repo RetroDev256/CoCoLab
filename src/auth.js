@@ -70,6 +70,7 @@ export async function authRoutes(url, data) {
 	if (url.pathname === '/api/signin') {
 		if (data.username && data.password) {
 			const user = await getUser(data.username, data.password)
+			console.log('user', user)
 			if (user) {
 				const token = await createToken({
 					sub: user,
@@ -114,14 +115,13 @@ export async function authRoutes(url, data) {
 			}
 
 			// Create user in database
-			await createUser(data)
-			const user = {
-				username: data.username,
-				email: data.email,
-				profile_url: data.profile_url,
-				phone_number: data.phone_number,
-				other_link: data.other_link,
-			}
+			const user = await createUser(data)
+			if (!user)
+				return Response.json(
+					{ error: 'Failed to create account' },
+					{ status: 500 },
+				)
+			console.log('user', user)
 
 			// Automatically log them in by creating a token
 			const token = await createToken({
@@ -149,11 +149,14 @@ export async function authRoutes(url, data) {
 
 async function getUser(username, password) {
 	const result = await pool.query(
-		`SELECT * FROM users WHERE user_name = ${username};`,
+		`SELECT * FROM users WHERE user_name = $1;`,
+		[username],
 	)
 	for (const row of result.rows) {
-		if ((await hashPassword(password, row.pw_salt)) === row.pw_hash) {
+		const hash = await hashPassword(password, row.pw_salt)
+		if (crypto.timingSafeEqual(hash, row.pw_hash)) {
 			return {
+				id: row.id,
 				username: row.user_name,
 				email: row.email,
 				profile_url: row.profile_url,
@@ -162,7 +165,6 @@ async function getUser(username, password) {
 			}
 		}
 	}
-	throw new Error('Invalid credentials')
 }
 
 async function createUser(data) {
@@ -171,7 +173,7 @@ async function createUser(data) {
 	// Compute the hash from password and salt
 	const pw_hash = await hashPassword(data.password, pw_salt)
 
-	await pool.query(
+	const result = await pool.query(
 		`INSERT INTO users (
                 user_name, pw_salt, pw_hash, email, profile_url, phone_number, other_link
             )
@@ -187,4 +189,16 @@ async function createUser(data) {
 			data.other_link,
 		],
 	)
+
+	if (result.rowCount > 0) {
+		const row = result.rows[0]
+		return {
+			id: row.id,
+			username: row.user_name,
+			email: row.email,
+			profile_url: row.profile_url,
+			phone_number: row.phone_number,
+			other_link: row.other_link,
+		}
+	}
 }
