@@ -73,6 +73,15 @@ export async function apiPost(url, data) {
 	return null
 }
 
+function getFields(table) {
+	switch (table) {
+		case 'users':
+			return 'id, user_name, email, profile_url, phone_number, other_link'
+		default:
+			return '*'
+	}
+}
+
 // Exposes GET endpoints under /API/ for each SQL table
 export async function apiGet(url) {
 	// --- /API/TABLE/ID would parse to ["API", "TABLE", "ID"]
@@ -86,7 +95,7 @@ export async function apiGet(url) {
 		case 3: {
 			if (parts[1] !== 'SELECT') break
 			const table = esc_ident(parts[2])
-			const query = `SELECT * FROM ${table};`
+			const query = `SELECT ${getFields(table)} FROM ${table};`
 			return Response.json((await pool.query(query)).rows)
 		}
 
@@ -97,7 +106,7 @@ export async function apiGet(url) {
 
 			switch (parts[1]) {
 				case 'SELECT': {
-					const query = `SELECT * FROM ${table} WHERE id = ${id};`
+					const query = `SELECT ${getFields(table)} FROM ${table} WHERE id = ${id};`
 					return Response.json((await pool.query(query)).rows)
 				}
 				case 'DELETE': {
@@ -115,7 +124,7 @@ export async function apiGet(url) {
 
 			switch (parts[1]) {
 				case 'SELECT': {
-					const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`
+					const query = `SELECT ${getFields(table)} FROM ${table} WHERE ${field} = ${value};`
 					return Response.json((await pool.query(query)).rows)
 				}
 				case 'DELETE': {
