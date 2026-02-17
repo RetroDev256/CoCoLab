@@ -3,7 +3,7 @@ const { Pool } = pkg
 
 const pool = new Pool({
 	user: 'retrodev', // postgres role
-	host: 'coco.alloc.dev', // current machine
+	host: 'localhost', // current machine
 	database: 'coco', // database name
 	port: 5432, // postgres port
 })

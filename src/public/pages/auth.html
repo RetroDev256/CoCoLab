@@ -44,17 +44,14 @@
 			.addEventListener('submit', async (e) => {
 				e.preventDefault()
 				const formData = new FormData(e.target)
-				console.log(formData)
 				const response = await fetch('/api/signup', {
 					method: 'POST',
 					body: formData,
 				})
-				console.log(response)
 				if (response.ok) {
 					const json = await response.json()
-					console.log(json)
 					saveToken(json.token)
-					// window.location.href = '/'
+					window.location.href = '/'
 				}
 			})
 
@@ -63,17 +60,14 @@
 			.addEventListener('submit', async (e) => {
 				e.preventDefault()
 				const formData = new FormData(e.target)
-				console.log(formData)
 				const response = await fetch('/api/signin', {
 					method: 'POST',
 					body: formData,
 				})
-				console.log(response)
 				if (response.ok) {
 					const json = await response.json()
-					console.log(json)
 					saveToken(json.token)
-					// window.location.href = '/'s
+					window.location.href = '/'
 				}
 			})
 	</script>

@@ -121,7 +121,6 @@ export async function authRoutes(url, data) {
 					{ error: 'Failed to create account' },
 					{ status: 500 },
 				)
-			console.log('user', user)
 
 			// Automatically log them in by creating a token
 			const token = await createToken({
