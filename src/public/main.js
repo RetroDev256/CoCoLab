@@ -60,12 +60,6 @@ export function isValidURL(url) {
 }
 
 // Authentication
-
-// Decode the token payload (base64)
-function getUserFromToken(token) {
-	const payload = token.split('.')[1]
-	return JSON.parse(atob(payload))?.sub
-}
 export function saveToken(token) {
 	localStorage.setItem('token', token)
 }
@@ -76,6 +70,7 @@ export function getToken() {
 export function getUser() {
 	const token = getToken()
 	if (token) {
-		return getUserFromToken(token)
+		const payload = token.split('.')[1]
+		return JSON.parse(atob(payload))?.sub
 	}
 }
