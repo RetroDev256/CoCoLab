@@ -24,13 +24,22 @@
   cursor: pointer;
 }
 
+#logo {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  background-color: transparent;
+}
+
 .side-menu {
   position: fixed;
   top: 0;
-  left: -220px;              /* hide off-screen */
+  left: -230px;              /* hide off-screen */
   width: 220px;
-  height: 100%;
-  background-color: #fff;
+  height: 98.9%;
+  background-color: rgb(76,133,157,1);
+  border: 5px solid rgb(31, 59, 61);
+  border-left: 0px;
   border-radius: 0 10px 10px 0;
   transition: left 0.3s ease;
   z-index: 1000;
@@ -46,7 +55,7 @@ body {
   font-family: var(--paragraph-font);
   line-height: 1.5;
   color: #482000;
-  padding: 18px;
+  padding: 0px;
 }
 
 img {
@@ -64,30 +73,49 @@ footer {
 }
 
 header {
-  max-width: var(--content-max);
+  position: sticky;
+  top: 0;
+  max-width: 100%;
   margin: 0 auto;
-  padding: var(--page-padding);
+  padding: 10px;
+  padding-bottom: 0;
+  row-gap: 0;
   display: grid;
+  border-radius: 0;
   grid-template-columns: 64px 1fr 64px;
   grid-template-rows: auto auto;
   align-items: center;
   gap: 12px 16px;
 }
 
+#moddedtext {
+  text-decoration: none;
+  color: var(--accent1-color);
+}
 
 #account {
      grid-column: 3; 
      grid-row: 1; 
      justify-self: end; 
+     text-decoration: none;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 header h1 {
   grid-column: 2;
   grid-row: 1;
+  padding: 0;
   justify-self: center;
   margin: 0;
   font-family: var(--heading-font);
   color: #ffcba8;
+  
 }
 
 header nav {
@@ -115,10 +143,8 @@ nav ul {
 nav a {
   display: inline-block;
   padding: 8px 12px;
-  border-radius: 999px;
   text-decoration: none;
-  color: #482000;
-  background: rgba(255, 255, 255, 0.20);
+  color: white;
 }
 
 nav a:hover {
@@ -191,6 +217,8 @@ footer {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 5px;
   padding-top: 16px;
 }
 
