@@ -3,9 +3,11 @@
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL } from "../main.js";
+import { selectById, selectByValue, isValidURL, getUser } from "../main.js";
 //For use in creating project request
 let global_project_id = 0;
+let current_user = getUser();
+console.log(`Current User: ${current_user}`);
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
@@ -131,12 +133,13 @@ async function sendInformation() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            user_id: 1,
+            user_id: current_user.id,
             project_id: global_project_id,
             role: "requester"
         })
     });
 
+    //In the future the button should be automatically disabled for a user who has already requested to join the project
     const join_project = document.getElementById("#join-project");
     join_project.disabled = true;
 }
