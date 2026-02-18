@@ -260,6 +260,38 @@ button:disabled {
   text-align: center;
 }
 
+/* Notes for modal or box
+Should be way smaller, since it only has one line of text
+Two buttons should appear next to each other and will need to be styled
+Should appear on/from the righthand side of the screen as a little notification
+Also background doesn't need to be grayed and it shouldn't cover stuff on page */
+.request-modal {
+  position: fixed;
+  z-index: 10;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.75);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: center;
+}
+
+#request-box {
+  background-color: var(--primary-color);
+  color: var(--body-color);
+  width: 1000px;
+  min-height: 400px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  font-size: 30px;
+  font-family: var(--paragraph-font);
+  text-align: center;
+}
+
 .close-modal {
   padding: 0;
   justify-self: end;

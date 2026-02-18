@@ -7,7 +7,7 @@ import { selectById, selectByValue, isValidURL, getUser } from "../main.js";
 //For use in creating project request
 let global_project_id = 0;
 let current_user = getUser();
-console.log(`Current User: ${current_user}`);
+// console.log(`Current User: ${current_user}`);
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
@@ -65,7 +65,7 @@ async function renderProject(project) {
 
     const join_project = document.getElementById("#join-project");
     //Basic logic for disabling the Join Project button if project is full
-    if (total_helpers >= project.max_people) //greater than shouldn't be possible but could be
+    if (total_helpers >= project.max_people || current_user === null) //greater than shouldn't be possible but could be
     {
         join_project.disabled = true;
     }
@@ -107,7 +107,7 @@ async function getTagsTemplate(project_id) {
     return html;
 }
 
-// Get the name of a tag based on it's ID
+// Get the name of a tag based on its ID
 async function getTagName(tag_id) {
     const tag = await selectById("category_tags", tag_id);
     return tag ? tag.name : "INVALID_TAG";
@@ -125,19 +125,30 @@ async function getHelpersTotal(project_id) {
 //This will need some sort of API call to make a record with this user's ID and project owner's ID
 async function sendInformation() {
     console.log("Simulating sending information...");
-    //Here we only need the ID- the contact information can be fetched using it later
-    //const data = {"user_id": "1", "project_id": `${global_project_id}`, "role": "request"};
-    const response = await fetch("https://coco.alloc.dev/api/project_requests", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            user_id: current_user.id,
-            project_id: global_project_id,
-            role: "requester"
-        })
-    });
+    const join_message = document.querySelector(".join-success");
+
+    //user has to exist, otherwise this will not run
+    if(current_user !== null) {
+        //Here we only need the ID- the contact information can be fetched using it later
+        const response = await fetch("https://coco.alloc.dev/api/project_requests", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: current_user.id,
+                project_id: global_project_id,
+                role: "requester"
+            })
+        });
+        console.log(response);
+        //This will need to say something better
+        join_message.innerHTML = response;
+    }
+    else {
+        console.log("You are not logged in. Please log in before joining any projects.");
+        join_message.innerHTML = "You are not logged in. Please log in before joining any projects.";
+    }
 
     //In the future the button should be automatically disabled for a user who has already requested to join the project
     const join_project = document.getElementById("#join-project");
