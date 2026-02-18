@@ -6,6 +6,7 @@
 
 		<link rel="stylesheet" href="./style/style.css" />
 		<link rel="icon" type="image/webp" href="./images/brownie.webp" />
+		<script type="module" src="main.js"></script>
 
 		<meta name="author" content="CoCoLab Team" />
 		<meta
@@ -16,8 +17,8 @@
 	</head>
 
 	<body>
-		<header class="site-header">
-			<div id="burger" onclick="toggleMenu()">
+		<header>
+			<div id="burger">
 				<img src="images/burger.png" alt="Menu Icon" />
 			</div>
 
@@ -62,37 +63,21 @@
 							>About the Developers</a
 						>
 					</li>
-					<li>
-						<a href="./pages/auth.html">Authentication</a>
-					</li>
 					<li><a href="pages/contactUs.html">Contact Us</a></li>
 					<li><a href="pages/sitePlan.html">Site Plan</a></li>
 					<!-- more tabs can be added as need arises -->
 				</ul>
 			</nav>
 		</header>
-		<section class="stc-hero">
-			<div class="stc-picbackground" aria-hidden="true"></div>
-
-			<div class="stc-hero-stuff">
-				<h2>Work with others</h2>
-				<p>
-					something here, writing an about us or our mission, all the
-					available
-				</p>
-			</div>
-		</section>
 
 		<div id="div">
 			<!-- We can insert a hero here if we want -->
-			<a href="https://alloc.dev/brownie/" class="brownie">
+			<a href="pages/forms.html" class="brownie">
 				<img src="./images/brownie.webp" alt="Temporary" />
 			</a>
 		</div>
 
 		<main>
-			<a class="button" href="./pages/forms.html">Start Networking</a>
-
 			<img src="#" alt="some image" />
 			<h3>Description</h3>
 			<!-- For CSS we should probably make this paragraph text bigger -->
@@ -101,7 +86,6 @@
 				(tbd). (We can change this about tab and its title as we flesh
 				out ideas more)
 			</p>
-
 			<img src="#" alt="another image" />
 			<h3>Ease of Use</h3>
 			<!-- Same here for paragraph text -->
@@ -151,25 +135,5 @@
 					new Date().getFullYear()
 			</script>
 		</footer>
-
-		<script>
-			const menu = document.querySelector('.side-menu')
-
-			function toggleMenu() {
-				menu.classList.toggle('open')
-			}
-
-			document.addEventListener('click', (e) => {
-				if (!menu.contains(e.target) && !e.target.closest('#burger')) {
-					menu.classList.remove('open')
-				}
-			})
-
-			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape') {
-					menu.classList.remove('open')
-				}
-			})
-		</script>
 	</body>
 </html>

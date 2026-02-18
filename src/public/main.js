@@ -1,5 +1,31 @@
 // put client side stuff here
 
+// toggle menu script for the burger menu
+      const menu = document.querySelector(".side-menu");
+
+	  document.getElementById("burger").addEventListener("click", (e) => {
+		toggleMenu();
+	  });
+
+      export function toggleMenu() {
+        menu.classList.toggle("open");
+      }
+
+      document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target) && !e.target.closest("#burger")) {
+          menu.classList.remove("open");
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          menu.classList.remove("open");
+        }
+      });
+
+
+
+
 // Returns a list of all JS objects in a table
 export async function selectByTable(table) {
     const url = "https://coco.alloc.dev";
