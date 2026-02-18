@@ -1,129 +1,175 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>CoCoLab</title>
+	<head>
+		<meta charset="UTF-8" />
+		<title>CoCoLab</title>
 
-        <link rel="stylesheet" href="./style/style.css" />
-        <link rel="icon" type="image/webp" href="./images/brownie.webp" />
+		<link rel="stylesheet" href="./style/style.css" />
+		<link rel="icon" type="image/webp" href="./images/brownie.webp" />
 
-        <meta name="author" content="CoCoLab Team" />
-        <meta name="description" content="Collaboration hub for students and businesses (tbd)" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
+		<meta name="author" content="CoCoLab Team" />
+		<meta
+			name="description"
+			content="Collaboration hub for students and businesses (tbd)"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
 
-    <body>
-        <header>
-            <div id="burger" onclick="toggleMenu()">
-                <img src="images/burger.png" alt="Menu Icon" />
-            </div>
+	<body>
+		<header class="site-header">
+			<div id="burger" onclick="toggleMenu()">
+				<img src="images/burger.png" alt="Menu Icon" />
+			</div>
 
-            <div id="container">
-                <!-- Our logo functions as a quick navigation link back to the home page -->
-                <a id="logo" href="index.html">
-                    <img class="logo" src="./images/logo.png" alt="CoCoLab Logo" />
-                </a>
-                <a id="moddedtext" href="index.html">
-                    <h1>CoCoLab</h1>
-                </a>
-            </div>
+			<div id="container">
+				<!-- Our logo functions as a quick navigation link back to the home page -->
+				<a id="logo" href="index.html">
+					<img
+						class="logo"
+						src="./images/logo.png"
+						alt="CoCoLab Logo"
+					/>
+				</a>
+				<a id="moddedtext" href="index.html">
+					<h1>CoCoLab</h1>
+				</a>
+			</div>
 
-            <!-- This is a placeholder for the account drop down menu we were thinking of, if thats what we are doing, or we can just have it take us straight to a page. -->
-            <a id="account" href="./pages/userSettings.html">
-                <img class="account" src="./images/account_user.png" alt="User Account Icon" />
-            </a>
-            <nav class="side-menu">
-                <ul>
-                    <!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
-                    <li>
-                        <a href="./pages/projectBoard.html">Project Board</a>
-                    </li>
-                    <li>
-                        <a href="./pages/projectManager.html">Project Manager</a>
-                    </li>
-                    <li>
-                        <a href="./pages/userSettings.html">User Settings</a>
-                    </li>
-                    <li>
-                        <a href="./pages/aboutDevs.html">About the Developers</a>
-                    </li>
-                    <li>
-                        <a href="./pages/auth.html">Authentication</a>
-                    </li>
-                    <li><a href="pages/contactUs.html">Contact Us</a></li>
-                    <li><a href="pages/sitePlan.html">Site Plan</a></li>
-                    <!-- more tabs can be added as need arises -->
-                </ul>
-            </nav>
-        </header>
+			<!-- This is a placeholder for the account drop down menu we were thinking of, if thats what we are doing, or we can just have it take us straight to a page. -->
+			<a id="account" href="./pages/userSettings.html">
+				<img
+					class="account"
+					src="./images/account_user.png"
+					alt="User Account Icon"
+				/>
+			</a>
+			<nav class="side-menu">
+				<ul>
+					<!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
+					<li>
+						<a href="./pages/projectBoard.html">Project Board</a>
+					</li>
+					<li>
+						<a href="./pages/projectManager.html"
+							>Project Manager</a
+						>
+					</li>
+					<li>
+						<a href="./pages/userSettings.html">User Settings</a>
+					</li>
+					<li>
+						<a href="./pages/aboutDevs.html"
+							>About the Developers</a
+						>
+					</li>
+					<li>
+						<a href="./pages/auth.html">Authentication</a>
+					</li>
+					<li><a href="pages/contactUs.html">Contact Us</a></li>
+					<li><a href="pages/sitePlan.html">Site Plan</a></li>
+					<!-- more tabs can be added as need arises -->
+				</ul>
+			</nav>
+		</header>
+		<section class="stc-hero">
+			<div class="stc-picbackground" aria-hidden="true"></div>
 
-        <div id="div">
-            <!-- We can insert a hero here if we want -->
-            <a href="pages/forms.html" class="brownie">
-                <img src="./images/brownie.webp" alt="Temporary" />
-            </a>
-        </div>
+			<div class="stc-hero-stuff">
+				<h2>Work with others</h2>
+				<p>
+					something here, writing an about us or our mission, all the
+					available
+				</p>
+			</div>
+		</section>
 
-        <main>
-            <img src="#" alt="some image" />
-            <h3>Description</h3>
-            <!-- For CSS we should probably make this paragraph text bigger -->
-            <p>
-                CoCoLab is a collaboration hub for students and businesses (tbd). (We can change this about tab and its
-                title as we flesh out ideas more)
-            </p>
-            <img src="#" alt="another image" />
-            <h3>Ease of Use</h3>
-            <!-- Same here for paragraph text -->
-            <p>
-                CoCoLab is designed to be intuitive and user-friendly, allowing users to easily manage projects and
-                collaborate with others. It's as easy as 1-2 and done!
-            </p>
-            <ul>
-                <!-- This is just an idea I had about a quick catchphrase or saying, this doesn't have to stay -->
-                <li>1. Create an account</li>
-                <li>2. Make posts!</li>
-                <li>Done! You'll get results!</li>
-            </ul>
-        </main>
+		<div id="div">
+			<!-- We can insert a hero here if we want -->
+			<a href="https://alloc.dev/brownie/" class="brownie">
+				<img src="./images/brownie.webp" alt="Temporary" />
+			</a>
+		</div>
 
-        <footer>
-            <!-- We can put the big 3 socials here if we want to go that far i.e FB, Insta, Twitter/X -->
-            <div class="social-row">
-                <a class="social-icon" href="#">
-                    <img class="socials" src="./images/social_media/facebook.png" alt="facebook" />
-                </a>
-                <a class="social-icon" href="#">
-                    <img class="socials" src="./images/social_media/instagram.png" alt="instagram" />
-                </a>
-                <a class="social-icon" href="#">
-                    <img class="socials" src="./images/social_media/youtube.png" alt="youtube" />
-                </a>
-            </div>
-            <p>&copy; <span id="year">2026</span> CoCoLab. All rights reserved.</p>
-            <script>
-                document.getElementById("year").textContent = new Date().getFullYear();
-            </script>
-        </footer>
+		<main>
+			<a class="button" href="./pages/forms.html">Start Networking</a>
 
-        <script>
-            const menu = document.querySelector(".side-menu");
+			<img src="#" alt="some image" />
+			<h3>Description</h3>
+			<!-- For CSS we should probably make this paragraph text bigger -->
+			<p>
+				CoCoLab is a collaboration hub for students and businesses
+				(tbd). (We can change this about tab and its title as we flesh
+				out ideas more)
+			</p>
 
-            function toggleMenu() {
-                menu.classList.toggle("open");
-            }
+			<img src="#" alt="another image" />
+			<h3>Ease of Use</h3>
+			<!-- Same here for paragraph text -->
+			<p>
+				CoCoLab is designed to be intuitive and user-friendly, allowing
+				users to easily manage projects and collaborate with others.
+				It's as easy as 1-2 and done!
+			</p>
+			<ul>
+				<!-- This is just an idea I had about a quick catchphrase or saying, this doesn't have to stay -->
+				<li>1. Create an account</li>
+				<li>2. Make posts!</li>
+				<li>Done! You'll get results!</li>
+			</ul>
+		</main>
 
-            document.addEventListener("click", (e) => {
-                if (!menu.contains(e.target) && !e.target.closest("#burger")) {
-                    menu.classList.remove("open");
-                }
-            });
+		<footer>
+			<!-- We can put the big 3 socials here if we want to go that far i.e FB, Insta, Twitter/X -->
+			<div class="social-row">
+				<a class="social-icon" href="#">
+					<img
+						class="socials"
+						src="./images/social_media/facebook.png"
+						alt="facebook"
+					/>
+				</a>
+				<a class="social-icon" href="#">
+					<img
+						class="socials"
+						src="./images/social_media/instagram.png"
+						alt="instagram"
+					/>
+				</a>
+				<a class="social-icon" href="#">
+					<img
+						class="socials"
+						src="./images/social_media/youtube.png"
+						alt="youtube"
+					/>
+				</a>
+			</div>
+			<p>
+				&copy; <span id="year">2026</span> CoCoLab. All rights reserved.
+			</p>
+			<script>
+				document.getElementById('year').textContent =
+					new Date().getFullYear()
+			</script>
+		</footer>
 
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") {
-                    menu.classList.remove("open");
-                }
-            });
-        </script>
-    </body>
+		<script>
+			const menu = document.querySelector('.side-menu')
+
+			function toggleMenu() {
+				menu.classList.toggle('open')
+			}
+
+			document.addEventListener('click', (e) => {
+				if (!menu.contains(e.target) && !e.target.closest('#burger')) {
+					menu.classList.remove('open')
+				}
+			})
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') {
+					menu.classList.remove('open')
+				}
+			})
+		</script>
+	</body>
 </html>
