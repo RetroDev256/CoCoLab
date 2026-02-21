@@ -81,7 +81,14 @@ async function renderProject(project) {
 
     //Determines whether anyone has requested to join this project. If so, trigger side modal
     getJoinRequests(project.id);
-    
+
+    //Hides completion button if the project has already been marked as complete
+    const complete_project = document.querySelector("#complete-project");
+    if (project.completed) {
+        complete_project.style.visibiltiy = 'hidden';
+        const comp_notice = document.querySelector("#completion-status");
+        comp_notice.innerHTML = `This project has already been completed! Good job :)`
+    }
 }
 
 // Returns html for owner information
@@ -132,7 +139,23 @@ async function getHelpersTotal(project_id) {
 
 async function getPeopleTemplate(project_id) {
     const members = await selectByValue("project_members", "project_id", project_id);
-    return 'yo';
+    if (members.length === 0) {
+        console.log(`There are no people helping on this project ${project_id}`);
+    }
+    let html = ``;
+    for (const person of members) {
+        if (html === '') {
+            html += `<p>People helping on this project:</p>`
+        }
+        const person_details = await getPersonDetails(person.user_id);
+        html += `<p><a href="${person_details.profile_url}">${person_details.user_name}</a>: ${person_details.email}</p>`
+    }
+    return html;
+}
+
+async function getPersonDetails(user_id) {
+    const person = await selectById("users", user_id);
+    return person ? person : "INVALID_PERSON";
 }
 
 async function getJoinRequests(project_id){
@@ -191,6 +214,9 @@ async function acceptRequest(requests){
         console.log(addResult);
 
         //Get user to show up onscreen
+        const helpers_box = document.querySelector(".helpers-info");
+        const person = await getPersonDetails(request.user_id);
+        helpers_box.innerHTML += `<p><a href="${person_details.profile_url}">${person_details.user_name}</a>: ${person_details.email}</p>`;
 
         //Delete user
         const result = await deleteByValue("project_requests", "user_id", request.user_id);
@@ -210,27 +236,57 @@ async function rejectRequest(requests) {
 
 }
 
-//For regular people viewing a project, there should be a button they can click that allows them to "join" the project
-//That button will send the user's contact information to the project owner, who can then accept/reject the person
+//For project owners, they can mark a project as complete. That will make it so the project won't show
+//on the project board. It will print a notice of success, then disable the button
+async function completeProject() {
+    const current_project = await selectById("project", global_project_id);
+    const response = await fetch("https://coco.alloc.dev/api/project", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            //best I can figure right now is that this needs to have all data
+            body: JSON.stringify({
+                id: global_project_id,
+                project_name: current_project.project_name,
+                max_people: current_project.max_people,
+                details: current_project.details,
+                created_at: current_project.created_at,
+                completed: true,
+                owner_id: current_project.owner_id
+            })
+        });
+        console.log(response);
 
-function loadCompleteProjectModal() {
-    const completionModal = document.querySelector("#completion-modal-container");
-    const completionModalHTML = completionTemplate();
+    const comp_notice = document.querySelector("#completion-status");
+    comp_notice.innerHTML = `You completed this project!! Good job :)`
+
+    const comp_button = document.querySelector("#complete-project");
+    comp_button.disabled = true;
+}
+
+//For use in future if we want to have any additional details/changes when a project is completed
+// function loadCompleteProjectModal() {
+//     const completionModal = document.querySelector("#completion-modal-container");
+//     const completionModalHTML = completionTemplate();
     
-    completionModal.innerHTML = completionModalHTML;
+//     completionModal.innerHTML = completionModalHTML;
+    
+//     document.querySelector(".close-modal").addEventListener("click", closeModal);
+// }
 
-    document.querySelector(".close-modal").addEventListener("click", closeModal);
-}
 
-function completionTemplate() {
-    //write html in here for the completion modal
-    return `<div class="completion-modal">
-                <button class="close-modal">X</button>
-                <div id="completion-box">
-                    <p>It's a me</p>
-                </div>
-            </div>`
-}
+// function completionTemplate() {
+//     //write html in here for the completion modal
+//     return `<div class="completion-modal">
+//                 <button class="close-modal">X</button>
+//                 <div id="completion-box">
+//                     <p>Congratulations on finishing this project!</p>
+//                     <p>Enter details here:</p>
+//                     <button>
+//                 </div>
+//             </div>`
+// }
 
 function closeModal() {
     let element = document.querySelector(".completion-modal");
@@ -252,4 +308,4 @@ function close() {
 const return_search = document.querySelector("#return-search");
 return_search.addEventListener("click", close);
 const complete_project = document.querySelector("#complete-project");
-complete_project.addEventListener("click", loadCompleteProjectModal);
+complete_project.addEventListener("click", completeProject);
