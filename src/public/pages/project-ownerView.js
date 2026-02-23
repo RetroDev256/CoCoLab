@@ -14,12 +14,19 @@
 //Project owner should also be able to see users (and their contact information) associated with this project
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL, deleteByValue } from "../main.js";
+import { selectById, selectByValue, isValidURL, deleteByValue, getUser } from "../main.js";
+let global_project_id = 0;
+let current_user = getUser();
 
 // When page loads, show information for this specific project requested by the user
 //Also load whether anyone has requested to join this project
 async function init() {
-    const project = await selectById("project", 2); // Example
+    //ONLY UNTIL CSS is in place!!!!!!
+    loadRequestModal();
+    const params = new URLSearchParams(window.location.search);
+    const project_id = params.get("id");
+    global_project_id = project_id;
+    const project = await selectById("project", project_id);
 
     if (project === null) {
         console.log("No matching project found");
@@ -66,9 +73,15 @@ async function renderProject(project) {
     const helpers = document.querySelector(".people-have");
     const total_helpers = await getHelpersTotal(project.id);
     helpers.innerHTML = `Spots filled: ${total_helpers}`;
+    
+    //Project owners also get to see each person who has signed up along with contact info
+    const helpers_info = await getPeopleTemplate(project.id);
+    const helpers_box = document.querySelector(".helpers-info");
+    helpers_box.innerHTML = helpers_info;
 
     //Determines whether anyone has requested to join this project. If so, trigger side modal
     getJoinRequests(project.id);
+    
 }
 
 // Returns html for owner information
@@ -117,32 +130,82 @@ async function getHelpersTotal(project_id) {
     return members.length;
 }
 
+async function getPeopleTemplate(project_id) {
+    const members = await selectByValue("project_members", "project_id", project_id);
+    return 'yo';
+}
+
 async function getJoinRequests(project_id){
     //will need a way to get the id of the current person using the page?
     const requests = await selectByValue("project_requests", "project_id", project_id);
-    if (requests.length != 0) {loadRequestModal()};
+    if (requests.length != 0) {loadRequestModal(requests)};
 }
 
-function loadRequestModal() {
-    const completionModal = document.querySelector("#completion-modal-container");
-    const completionModalHTML = completionTemplate();
+function loadRequestModal(requests) {
+    //const requests = await selectByValue("project_requests", "project_id", global_project_id);
+    const requestModal = document.querySelector("#request-modal-container");
+    const requestModalHTML = requestTemplate(requests);
     
-    completionModal.innerHTML = completionModalHTML;
+    requestModal.innerHTML = requestModalHTML;
 
-    document.querySelector(".accept-button").addEventListener("click", acceptRequest);
-    document.querySelector(".reject-button").addEventListener("click", rejectRequest);
+    document.querySelector(".accept-button").addEventListener("click", acceptRequest(requests));
+    document.querySelector(".reject-button").addEventListener("click", rejectRequest(requests));
     document.querySelector(".close-modal").addEventListener("click", closeModal);
 }
 
+function requestTemplate(requests) {
+    let people = ``;
+    //use when css is done
+    //     for (const request of requests) {
+    //         people += `<p>${request.user_id} wants to join this project</p>\n`
+    //     }
+    people += 'So and so would like to join this project';
+    //write html in here for the request modal
+    return `<div class="request-modal">
+                <button class="close-modal">X</button>
+                <div id="request-box">
+                    ${people}
+                    <button class="accept-button">Accept</button>
+                    <button class="reject-button">Reject</button>
+                </div>
+            </div>`
+}
+
 //will "accept" the request to join this project, adding user info to project_members
+//This will cause the user in question to show up onscreen WITH contact information
 //will also delete record from project_requests and close the modal
-async function acceptRequest(){
+async function acceptRequest(requests){
+    for (const request in requests) {
+        //Add user
+        const addResult = await fetch("https://coco.alloc.dev/api/project_members", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: request.user_id,
+                project_id: global_project_id,
+                role: "member"
+            })
+        });
+        console.log(addResult);
+
+        //Get user to show up onscreen
+
+        //Delete user
+        const result = await deleteByValue("project_requests", "user_id", request.user_id);
+        console.log(`Person ${request.user_id} accepted and record deleted: ${result}`);
+    }
     closeModal();
 }
 
 //will "reject" the request to join, so info is not added
 //still deletes record from project_requests and closes the modal
-async function rejectRequest() {
+async function rejectRequest(requests) {
+    for (const request in requests) {
+        const result = await deleteByValue("project_requests", "user_id", request.user_id);
+        console.log(`Person ${request.user_id} rejected and record deleted: ${result}`);
+    }
     closeModal();
 
 }
@@ -170,9 +233,15 @@ function completionTemplate() {
 }
 
 function closeModal() {
-    const element = document.querySelector(".completion-modal");
+    let element = document.querySelector(".completion-modal");
     if (element) {
         element.remove();
+    }
+    else {
+        element = document.querySelector(".request-modal");
+        if(element) {
+            element.remove();
+        }
     }
 }
 
