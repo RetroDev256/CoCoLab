@@ -5,14 +5,14 @@ import { authRoutes } from "./auth.js";
 export async function apiPost(url, data) {
     const res = await authRoutes(url, data);
     if (res) return res;
-    
+
     // ----------------------------------------------------- INSERTING PROJECTS
     if (url.pathname === "/api/project") {
         const result = await pool.query(
-            `INSERT INTO project (project_name, max_people, details, owner_id)
-            VALUES ($1, $2, $3, $4)
+            `INSERT INTO project (project_name, max_people, completed, details, owner_id)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *;`,
-            [data.project_name, data.max_people, data.details, data.owner_id],
+            [data.project_name, data.max_people, data.completed, data.details, data.owner_id],
         );
 
         // Return HTTP "successfully created" & the created row
