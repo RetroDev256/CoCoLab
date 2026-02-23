@@ -10,16 +10,23 @@
         <link rel="icon" type="image/webp" href="/images/brownie.webp" />
 
         <script type="module">
-            import { selectByTable } from "/main.js";
+            import { selectByTable,  getUser} from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
+            const user_id = getUser()?.id;
 
             let listing_html = "";
             for (const project of project_list) {
+
+                let page = "project.html";
+                if (user_id !== null && user_id == project.owner_id) {
+                    page = "project-ownerView.html";
+                }
+
                 listing_html += `
 				<li class="job-posting">
-					<a href="/pages/project.html?id=${project.id}" target="_blank">
+					<a href="/pages/${page}?id=${project.id}" target="_blank">
 						${project.project_name}
 					</a>
 				</li>
