@@ -10,7 +10,7 @@
         <link rel="icon" type="image/webp" href="/images/brownie.webp" />
 
         <script type="module">
-            import { selectByTable,  getUser} from "/main.js";
+            import { selectByTable, getUser } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
@@ -18,12 +18,16 @@
 
             let listing_html = "";
             for (const project of project_list) {
+                // Do not include completed projects inside of the listing
+                if (project.completed) continue;
 
+                // If you are the owner of a project, use the owner page
                 let page = "project.html";
                 if (user_id !== null && user_id == project.owner_id) {
                     page = "project-ownerView.html";
                 }
 
+                // Add a list eleement to the projects list for each project
                 listing_html += `
 				<li class="job-posting">
 					<a href="/pages/${page}?id=${project.id}" target="_blank">

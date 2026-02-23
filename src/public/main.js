@@ -61,20 +61,23 @@ export function isValidURL(url) {
 
 // Authentication
 export function saveToken(token) {
+    console.log(`Saving token: ${token}`);
     localStorage.setItem("token", token);
 }
 
 export function getToken() {
-    return localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    console.log(`Loading token: ${token}`);
+    return token;
 }
 
 export function getUser() {
     const token = getToken();
-    
-	if (token !== null) {
+
+    if (token !== null) {
         const payload = token.split(".")[1];
         return JSON.parse(atob(payload))?.sub;
     } else {
-		return null;
-	}
+        return null;
+    }
 }
