@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CoCoLab - Project Board</title>
 
-        <link rel="stylesheet" href="/style/style.css" />
+        <!-- <link rel="stylesheet" href="/style/style.css" /> -->
         <link rel="icon" type="image/webp" href="/images/brownie.webp" />
 
         <script type="module">
-            import { selectByTable,  getUser} from "/main.js";
+            import { selectByTable, getUser } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
@@ -18,7 +18,6 @@
 
             let listing_html = "";
             for (const project of project_list) {
-
                 let page = "project.html";
                 if (user_id !== null && user_id == project.owner_id) {
                     page = "project-ownerView.html";
@@ -41,10 +40,18 @@
         <header class="job-header">
             <nav class="job-nav">
                 <a id="logo" href="/">
-                    <img class="logo" src="/images/brownie.webp" alt="CoCoLab Logo" />
+                    <img
+                        class="logo"
+                        src="/images/brownie.webp"
+                        alt="CoCoLab Logo"
+                    />
                 </a>
                 <a id="account" href="userSettings.html">
-                    <img class="account" src="/images/account_user.png" alt="User Account Icon" />
+                    <img
+                        class="account"
+                        src="/images/account_user.png"
+                        alt="User Account Icon"
+                    />
                 </a>
             </nav>
         </header>
