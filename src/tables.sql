@@ -1,5 +1,7 @@
 -- SERVER: "psql -U retrodev -d coco -f tables.sql" to reset the DB
 -- Drop tables in reverse dependency order to avoid foreign key conflicts
+DROP TABLE IF EXISTS public.project_requests CASCADE;
+
 DROP TABLE IF EXISTS public.project_members CASCADE;
 
 DROP TABLE IF EXISTS public.projects_tags CASCADE;
