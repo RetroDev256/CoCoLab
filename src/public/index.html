@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CoCoLab</title>
 
-        <link rel="stylesheet" href="./output.css" />
-        <link rel="icon" type="image/webp" href="./images/brownie.webp" />
+        <link rel="stylesheet" href="output.css" />
+        <link rel="icon" type="image/webp" href="images/brownie.webp" />
 
         <meta name="author" content="CoCoLab Team" />
         <meta
@@ -26,7 +26,7 @@
                             aria-label="open sidebar"
                             class="btn btn-square btn-ghost"
                         >
-                            <img src="./images/icons/menu.svg" alt="Menu" />
+                            <img src="images/icons/menu.svg" alt="Menu" />
                         </label>
                     </div>
                     <a class="navbar-center gap-2 p-1" href="/">
@@ -40,13 +40,24 @@
                         </h1>
                     </a>
                     <div class="navbar-end">
-                        <button class="btn btn-ghost btn-circle">
+                        <button class="btn btn-ghost btn-circle" id="account">
                             <img
                                 class="account"
-                                src="./images/icons/user.svg"
+                                src="images/icons/user.svg"
                                 alt="User Account"
                             />
                         </button>
+                        <script defer type="module">
+                            import { getUser } from "./main.js";
+                            document
+                                .getElementById("account")
+                                .addEventListener("click", async () => {
+                                    const user = getUser();
+                                    window.location.href = user
+                                        ? "pages/userSettings.html"
+                                        : "pages/auth.html";
+                                });
+                        </script>
                     </div>
                 </div>
             </div>
@@ -60,26 +71,15 @@
                 <ul class="menu bg-base-200 min-h-full w-80 p-4">
                     <!-- Sidebar content here -->
                     <li>
-                        <a href="./pages/projectBoard.html">Project Board</a>
+                        <a href="pages/projectBoard.html">Project Board</a>
                     </li>
                     <li>
-                        <a href="./pages/projectManager.html"
-                            >Project Manager</a
-                        >
+                        <a href="pages/projectManager.html">Project Manager</a>
                     </li>
                     <li>
-                        <a href="./pages/userSettings.html">User Settings</a>
-                    </li>
-                    <li>
-                        <a href="./pages/aboutDevs.html"
-                            >About the Developers</a
-                        >
-                    </li>
-                    <li>
-                        <a href="./pages/auth.html">Authentication</a>
+                        <a href="pages/aboutDevs.html">About the Developers</a>
                     </li>
                     <li><a href="pages/contactUs.html">Contact Us</a></li>
-                    <li><a href="pages/sitePlan.html">Site Plan</a></li>
                 </ul>
             </div>
         </header>
@@ -100,10 +100,8 @@
             </div>
         </section>
 
-        <main
-            class="bg-base-100 rounded-box m-4 md:m-8 p-4 shadow-xl border border-base-300 space-y-4"
-        >
-            <div class="flex items-center justify-between gap-6">
+        <main class="m-4 md:m-8 p-4">
+            <div class="flex items-center justify-between gap-6 mb-3">
                 <a
                     class="btn btn-primary btn-lg shadow-lg hover:scale-105 transition-transform"
                     href="./pages/forms.html"
@@ -189,21 +187,21 @@
                 <a>
                     <img
                         class="size-5"
-                        src="./images/icons/social_media/facebook.svg"
+                        src="images/icons/social_media/facebook.svg"
                         alt="facebook"
                     />
                 </a>
                 <a>
                     <img
                         class="size-5"
-                        src="./images/icons/social_media/instagram.svg"
+                        src="images/icons/social_media/instagram.svg"
                         alt="instagram"
                     />
                 </a>
                 <a>
                     <img
                         class="size-5"
-                        src="./images/icons/social_media/youtube.svg"
+                        src="images/icons/social_media/youtube.svg"
                         alt="youtube"
                     />
                 </a>

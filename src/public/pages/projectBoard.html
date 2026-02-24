@@ -7,7 +7,7 @@
         <title>CoCoLab - Project Board</title>
 
         <link rel="stylesheet" href="../output.css" />
-        <link rel="icon" type="image/webp" href="/images/brownie.webp" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
 
         <script type="module">
             import { selectByTable, getUser } from "/main.js";
@@ -28,7 +28,7 @@
                     <div class="text-xl">${project.project_name}</div>
                     <div>${project.details}</div>
                     <a
-                        href="/pages/${page}?id=${project.id}"
+                        href="pages/${page}?id=${project.id}"
                         target="_blank"
                         class="btn btn-outline"
                     >
@@ -71,13 +71,24 @@
                         </h1>
                     </a>
                     <div class="navbar-end">
-                        <button class="btn btn-ghost btn-circle">
+                        <button class="btn btn-ghost btn-circle" id="account">
                             <img
                                 class="account"
                                 src="../images/icons/user.svg"
                                 alt="User Account"
                             />
                         </button>
+                        <script defer type="module">
+                            import { getUser } from "./main.js";
+                            document
+                                .getElementById("account")
+                                .addEventListener("click", async () => {
+                                    const user = getUser();
+                                    window.location.href = user
+                                        ? "pages/userSettings.html"
+                                        : "pages/auth.html";
+                                });
+                        </script>
                     </div>
                 </div>
             </div>
@@ -91,26 +102,15 @@
                 <ul class="menu bg-base-200 min-h-full w-80 p-4">
                     <!-- Sidebar content here -->
                     <li>
-                        <a href="./pages/projectBoard.html">Project Board</a>
+                        <a href="pages/projectBoard.html">Project Board</a>
                     </li>
                     <li>
-                        <a href="./pages/projectManager.html"
-                            >Project Manager</a
-                        >
+                        <a href="pages/projectManager.html">Project Manager</a>
                     </li>
                     <li>
-                        <a href="./pages/userSettings.html">User Settings</a>
-                    </li>
-                    <li>
-                        <a href="./pages/aboutDevs.html"
-                            >About the Developers</a
-                        >
-                    </li>
-                    <li>
-                        <a href="./pages/auth.html">Authentication</a>
+                        <a href="pages/aboutDevs.html">About the Developers</a>
                     </li>
                     <li><a href="pages/contactUs.html">Contact Us</a></li>
-                    <li><a href="pages/sitePlan.html">Site Plan</a></li>
                 </ul>
             </div>
         </header>
