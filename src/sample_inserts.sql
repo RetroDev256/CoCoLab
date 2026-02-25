@@ -2,17 +2,17 @@
 -- Run this file after running the tables.sql file to populate the database with sample data.
 
 -- USERS inserts
-INSERT INTO public.users (user_name, pw_salt, pw_hash, email, profile_url, phone_number) VALUES
-('dev_alice', '', '', 'alice@example.com', 'https://github.com/alice', '555-0101'),
-('coder_bob', '', '', 'bob@test.com', 'https://github.com/bob', '555-0102'),
-('charlie_pro', '', '', 'charlie@dev.org', NULL, '555-0103'),
-('dana_d', '', '', 'dana@cocolab.io', 'https://dana.me', NULL),
-('evan_sharp', '', '', 'evan@domain.com', NULL, '555-0105'),
-('fiona_f', '', '', 'fiona@web.com', 'https://fiona.dev', '555-0106'),
-('george_v', '', '', 'george@it.com', NULL, NULL),
-('hannah_b', '', '', 'hannah@code.com', 'https://hannah.io', '555-0108'),
-('ian_tech', '', '', 'ian@startup.com', NULL, '555-0109'),
-('julia_m', '', '', 'julia@ai.com', 'https://github.com/julia', '555-0110');
+INSERT INTO public.users (user_name, pw_salt, pw_hash, email) VALUES
+('dev_alice', '', '', 'alice@example.com'),
+('coder_bob', '', '', 'bob@test.com'),
+('charlie_pro', '', '', 'charlie@dev.org'),
+('dana_d', '', '', 'dana@cocolab.io'),
+('evan_sharp', '', '', 'evan@domain.com'),
+('fiona_f', '', '', 'fiona@web.com'),
+('george_v', '', '', 'george@it.com'),
+('hannah_b', '', '', 'hannah@code.com'),
+('ian_tech', '', '', 'ian@startup.com'),
+('julia_m', '', '', 'julia@ai.com');
 
 -- PROJECT inserts
 INSERT INTO public.project (project_name, max_people, completed, details, owner_id) VALUES
