@@ -16,16 +16,16 @@ INSERT INTO public.users (user_name, pw_salt, pw_hash, email, profile_url, phone
 
 -- PROJECT inserts
 INSERT INTO public.project (project_name, max_people, completed, details, owner_id) VALUES
-('Retro Game Engine', 4, 0, 'A 2D engine for pixel art games.', 1),
-('AI Chatbot', 3, 0, 'Natural language processor for support.', 2),
-('Crypto Wallet', 2, 0, 'Secure mobile wallet for assets.', 3),
-('Social Map', 10, 0, 'Geo-location social media app.', 4),
-('Fitness Tracker', 5, 0, 'Track workouts and calories.', 5),
-('Recipe Finder', 4, 0, 'Search meals by ingredients.', 6),
-('Code Linter', 3, 0, 'Automated tool for clean code.', 7),
-('Portfolio Builder', 2, 0, 'Drag and drop site builder.', 8),
-('Eco Monitor', 6, 0, 'IoT app for tracking home energy.', 9),
-('Music Streamer', 8, 0, 'Peer-to-peer audio platform.', 10);
+('Retro Game Engine', 4, false, 'A 2D engine for pixel art games.', 1),
+('AI Chatbot', 3, false, 'Natural language processor for support.', 2),
+('Crypto Wallet', 2, false, 'Secure mobile wallet for assets.', 3),
+('Social Map', 10, false, 'Geo-location social media app.', 4),
+('Fitness Tracker', 5, false, 'Track workouts and calories.', 5),
+('Recipe Finder', 4, false, 'Search meals by ingredients.', 6),
+('Code Linter', 3, false, 'Automated tool for clean code.', 7),
+('Portfolio Builder', 2, false, 'Drag and drop site builder.', 8),
+('Eco Monitor', 6, false, 'IoT app for tracking home energy.', 9),
+('Music Streamer', 8, false, 'Peer-to-peer audio platform.', 10);
 
 -- CATEGORY_TAGS inserts
 INSERT INTO public.category_tags (name) VALUES
