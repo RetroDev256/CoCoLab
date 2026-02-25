@@ -100,7 +100,7 @@ export function getToken() {
     return token;
 }
 
-export function getUser() {
+export function getUserId() {
     const token = getToken();
 
     if (token !== null) {
