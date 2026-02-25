@@ -81,8 +81,10 @@ export async function deleteByValue(table, field, value) {
 export function isValidURL(url) {
     try {
         new URL(url);
+        console.log("isValidURL: true");
         return true;
     } catch {
+        console.log("isValidURL: false");
         return false;
     }
 }
@@ -103,6 +105,7 @@ export function getUserId() {
     const token = getToken();
 
     if (token === null) {
+        // this is a normal case that is expected to happen
         console.log("getUserId: no JWT token");
         return null;
     }
