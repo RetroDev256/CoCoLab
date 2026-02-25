@@ -2599,6 +2599,19 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .input-ghost {
+    @layer daisyui.l1.l2 {
+      background-color: transparent;
+      box-shadow: none;
+      border-color: #0000;
+      &:focus, &:focus-within {
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        border-color: #0000;
+        box-shadow: none;
+      }
+    }
+  }
   .badge-outline {
     @layer daisyui.l1.l2 {
       color: var(--badge-color);
