@@ -150,16 +150,14 @@ async function getExistingUser(user_name, password) {
 }
 
 // Function creates a new user for the database from form data or whatnot.
-// The function is a thin wrapper around inserting into the pool, and simply
-// will create a salt for the user's password and hash the password.
+// The function is a thin wrapper around inserting into the pool.
 async function insertNewUser(user) {
     const pw_hash = await Bun.password.hash(user.password);
 
     // Insert the new user into the database, and return their record
     const result = await pool.query(
         "INSERT INTO users (user_name, pw_hash, email)\n" +
-            "VALUES ($1, $2, $3, $4)\n" +
-            "RETURNING *;",
+            "VALUES ($1, $2, $3) RETURNING *;",
         [user.user_name, pw_hash, user.email],
     );
 
