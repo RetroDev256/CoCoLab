@@ -87,7 +87,7 @@ export async function apiGet(url) {
         case 3: {
             if (parts[1] !== "SELECT") break;
             const table = esc_ident(parts[2]);
-            const query = `SELECT ${table} FROM ${table};`;
+            const query = `SELECT * FROM ${table};`;
             return Response.json((await pool.query(query)).rows);
         }
 
@@ -98,7 +98,7 @@ export async function apiGet(url) {
 
             switch (parts[1]) {
                 case "SELECT": {
-                    const query = `SELECT ${table} FROM ${table} WHERE id = ${id};`;
+                    const query = `SELECT * FROM ${table} WHERE id = ${id};`;
                     return Response.json((await pool.query(query)).rows);
                 }
                 case "DELETE": {
@@ -116,7 +116,7 @@ export async function apiGet(url) {
 
             switch (parts[1]) {
                 case "SELECT": {
-                    const query = `SELECT ${table} FROM ${table} WHERE ${field} = ${value};`;
+                    const query = `SELECT * FROM ${table} WHERE ${field} = ${value};`;
                     return Response.json((await pool.query(query)).rows);
                 }
                 case "DELETE": {

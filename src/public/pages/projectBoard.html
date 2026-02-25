@@ -13,6 +13,7 @@
             import { selectByTable, getUser } from "/main.js";
 
             const project_list = await selectByTable("project");
+            console.log(project_list);
             const listings = document.getElementById("listings");
             const user_id = getUser()?.id;
 
