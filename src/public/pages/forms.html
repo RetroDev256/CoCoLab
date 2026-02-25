@@ -3,10 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <!-- <link rel="stylesheet" href="./style/style.css" /> -->
+        <title>CoCoLab - Forms</title>
+
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
     </head>
     <body>
+        <coco-header></coco-header>
         <!-- This is a form to input project data into the DB -->
         <h3>Project creation input form:</h3>
         <form action="/api/project" method="POST">
@@ -102,5 +106,6 @@
             <button type="submit">Add Member</button>
         </form>
         <br />
+        <coco-footer></coco-footer>
     </body>
 </html>

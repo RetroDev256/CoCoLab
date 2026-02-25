@@ -3,10 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Authentication</title>
-        <!-- <link rel="stylesheet" href="../style/style.css" /> -->
+        <title>CoCoLab - Authentication</title>
+
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
     </head>
     <body>
+        <coco-header></coco-header>
         <!-- This is a form to input user data into the DB -->
         <h3>Signup form:</h3>
         <form id="SignupForm">
@@ -35,6 +39,8 @@
             <button type="submit">Signin</button>
         </form>
         <br />
+
+        <coco-footer></coco-footer>
     </body>
     <script defer type="module">
         import { saveToken, getUser } from "../main.js";

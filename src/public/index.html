@@ -7,6 +7,7 @@
 
         <link rel="stylesheet" href="output.css" />
         <link rel="icon" type="image/webp" href="images/brownie.webp" />
+        <script type="module" src="./main.js"></script>
 
         <meta name="author" content="CoCoLab Team" />
         <meta
@@ -16,73 +17,7 @@
     </head>
 
     <body>
-        <header class="drawer sticky top-0 z-10">
-            <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col">
-                <div class="navbar bg-base-300 w-full">
-                    <div class="navbar-start">
-                        <label
-                            for="nav-drawer"
-                            aria-label="open sidebar"
-                            class="btn btn-square btn-ghost"
-                        >
-                            <img src="images/icons/menu.svg" alt="Menu" />
-                        </label>
-                    </div>
-                    <a class="navbar-center gap-2 p-1" href="/">
-                        <img
-                            class="size-12"
-                            src="./images/logo.png"
-                            alt="CoCoLab Logo"
-                        />
-                        <h1 class="text-4xl tracking-tight font-bold">
-                            CoCo<span class="text-primary">Lab</span>
-                        </h1>
-                    </a>
-                    <div class="navbar-end">
-                        <button class="btn btn-ghost btn-circle" id="account">
-                            <img
-                                class="account"
-                                src="images/icons/user.svg"
-                                alt="User Account"
-                            />
-                        </button>
-                        <script defer type="module">
-                            import { getUser } from "./main.js";
-                            document
-                                .getElementById("account")
-                                .addEventListener("click", async () => {
-                                    const user = getUser();
-                                    window.location.href = user
-                                        ? "pages/userSettings.html"
-                                        : "pages/auth.html";
-                                });
-                        </script>
-                    </div>
-                </div>
-            </div>
-
-            <div class="drawer-side">
-                <label
-                    for="nav-drawer"
-                    aria-label="close sidebar"
-                    class="drawer-overlay"
-                ></label>
-                <ul class="menu bg-base-200 min-h-full w-80 p-4">
-                    <!-- Sidebar content here -->
-                    <li>
-                        <a href="pages/projectBoard.html">Project Board</a>
-                    </li>
-                    <li>
-                        <a href="pages/projectManager.html">Project Manager</a>
-                    </li>
-                    <li>
-                        <a href="pages/aboutDevs.html">About the Developers</a>
-                    </li>
-                    <li><a href="pages/contactUs.html">Contact Us</a></li>
-                </ul>
-            </div>
-        </header>
+        <coco-header></coco-header>
 
         <section
             class="hero min-h-screen"
@@ -100,112 +35,67 @@
             </div>
         </section>
 
-        <main class="m-4 md:m-8 p-4">
-            <div class="flex items-center justify-between gap-6 mb-3">
+        <a
+            id="brownie"
+            class="fixed z-50 transition-opacity"
+            href="https://alloc.dev/brownie/"
+        >
+            <img
+                src="./images/brownie.webp"
+                alt="Brownie Logo"
+                class="size-15"
+            />
+        </a>
+        <script defer src="../scripts/brownie.js"></script>
+
+        <main class="m-4 md:m-8 p-4 grid md:grid-cols-2 gap-12 items-start">
+            <section class="p-6 bg-base-200 rounded-box">
+                <h3 class="text-2xl font-bold text-primary mb-3">
+                    The Hub for Innovation
+                </h3>
+                <p class="text-lg leading-relaxed text-base-content/80 mb-6">
+                    CoCoLab is a premier collaboration hub where students meet
+                    businesses. Whether you're looking for fresh talent or your
+                    next big project, we provide the space to turn ideas into
+                    reality.
+                </p>
                 <a
                     class="btn btn-primary btn-lg shadow-lg hover:scale-105 transition-transform"
                     href="./pages/forms.html"
                 >
                     Start Networking
                 </a>
-                <a
-                    href="https://alloc.dev/brownie/"
-                    class="transition-transform hover:rotate-12 hover:scale-125"
-                >
-                    <div
-                        class="w-16 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2"
+            </section>
+
+            <section class="p-6 bg-base-200 rounded-box">
+                <h3 class="text-2xl font-bold text-primary mb-3">
+                    Intuitive & Fast
+                </h3>
+                <p class="text-lg leading-relaxed text-base-content/80 mb-6">
+                    Designed to be user-friendly, allowing you to manage
+                    projects and collaborate without the learning curve. It's as
+                    easy as:
+                </p>
+
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 font-medium">
+                        <span class="badge badge-primary badge-md">1</span>
+                        Create an account
+                    </li>
+                    <li class="flex items-center gap-3 font-medium">
+                        <span class="badge badge-primary badge-md">2</span>
+                        Share your vision
+                    </li>
+                    <li
+                        class="flex items-center gap-3 font-bold text-secondary"
                     >
-                        <img src="./images/brownie.webp" alt="Brownie Logo" />
-                    </div>
-                </a>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-12 items-start">
-                <section class="p-6 bg-base-200 rounded-box">
-                    <h3 class="text-2xl font-bold text-primary mb-3">
-                        The Hub for Innovation
-                    </h3>
-                    <p class="text-lg leading-relaxed text-base-content/80">
-                        CoCoLab is a premier collaboration hub where students
-                        meet businesses. Whether you're looking for fresh talent
-                        or your next big project, we provide the space to turn
-                        ideas into reality.
-                    </p>
-                </section>
-
-                <section class="p-6 bg-base-200 rounded-box">
-                    <h3 class="text-2xl font-bold text-primary mb-3">
-                        Intuitive & Fast
-                    </h3>
-                    <p
-                        class="text-lg leading-relaxed text-base-content/80 mb-6"
-                    >
-                        Designed to be user-friendly, allowing you to manage
-                        projects and collaborate without the learning curve.
-                        It's as easy as:
-                    </p>
-
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 font-medium">
-                            <span class="badge badge-primary badge-md">1</span>
-                            Create an account
-                        </li>
-                        <li class="flex items-center gap-3 font-medium">
-                            <span class="badge badge-primary badge-md">2</span>
-                            Share your vision
-                        </li>
-                        <li
-                            class="flex items-center gap-3 font-bold text-secondary"
-                        >
-                            <span class="badge badge-secondary badge-md"
-                                >✓</span
-                            >
-                            Get results!
-                        </li>
-                    </ul>
-                </section>
-            </div>
+                        <span class="badge badge-secondary badge-md">✓</span>
+                        Get results!
+                    </li>
+                </ul>
+            </section>
         </main>
 
-        <footer class="footer footer-center p-4 bg-base-300 mt-auto">
-            <aside class="grid-flow-col items-center">
-                <img
-                    class="size-10"
-                    src="./images/logo.png"
-                    alt="CoCoLab Logo"
-                />
-                <p class="px-2">
-                    &copy; <span id="year">2026</span> CoCoLab. All rights
-                    reserved.
-                </p>
-                <script>
-                    document.getElementById("year").textContent =
-                        new Date().getFullYear();
-                </script>
-            </aside>
-            <nav class="grid-flow-col gap-4">
-                <a>
-                    <img
-                        class="size-5"
-                        src="images/icons/social_media/facebook.svg"
-                        alt="facebook"
-                    />
-                </a>
-                <a>
-                    <img
-                        class="size-5"
-                        src="images/icons/social_media/instagram.svg"
-                        alt="instagram"
-                    />
-                </a>
-                <a>
-                    <img
-                        class="size-5"
-                        src="images/icons/social_media/youtube.svg"
-                        alt="youtube"
-                    />
-                </a>
-            </nav>
-        </footer>
+        <coco-footer></coco-footer>
     </body>
 </html>

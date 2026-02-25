@@ -1,115 +1,69 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CoCoLab - Contact Us</title>
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Contact Us</title>
-	<!-- <link rel="stylesheet" href="../style/contactUs.css" />
-	<link rel="stylesheet" href="../style/style.css" /> -->
-	<script type="module" src="../main.js"></script>
-</head>
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
+    </head>
 
-<body>
-	<header>
-      <div id="burger">
-        <img src="../images/burger.png" alt="Menu Icon" />
-      </div>
+    <body>
+        <coco-header></coco-header>
 
-      <div id="container">
-        <!-- Our logo functions as a quick navigation link back to the home page -->
-        <a id="logo" href="../index.html">
-          <img class="logo" src="../images/logo.png" alt="CoCoLab Logo" />
-        </a>
-        <a id="moddedtext" href="../index.html">
-          <h1>CoCoLab</h1>
-        </a>
-      </div>
+        <main>
+            <h1>Contact Us</h1>
+            <p>Have questions or feedback? We'd love to hear from you!</p>
 
-      <!-- This is a placeholder for the account drop down menu we were thinking of, if thats what we are doing, or we can just have it take us straight to a page. -->
-      <a id="account" href="../pages/userSettings.html">
-        <img
-          class="account"
-          src="../images/account_user.png"
-          alt="User Account Icon"
-        />
-      </a>
-      <nav class="side-menu">
-        <ul>
-          <!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
-          <li>
-            <a href="projectBoard.html">Project Board</a>
-          </li>
-          <li>
-            <a href="projectManager.html">Project Manager</a>
-          </li>
-          <li>
-            <a href="userSettings.html">User Settings</a>
-          </li>
-          <li>
-            <a href="aboutDevs.html">About the Developers</a>
-          </li>
-          <li><a href="contactUs.html">Contact Us</a></li>
-          <li><a href="sitePlan.html">Site Plan</a></li>
-          <!-- more tabs can be added as need arises -->
-        </ul>
-      </nav>
-    </header>
+            <!-- Contact Information -->
+            <section id="contact-info">
+                <h2>Get in Touch</h2>
+                <ul>
+                    <li>Email: contact@cocolab.com</li>
+                    <li>Phone: (555) 123-4567</li>
+                    <li>Address: 123 Collaboration St, Tech City, TC 12345</li>
+                </ul>
+            </section>
 
-	<main>
-		<h1>Contact Us</h1>
-		<p>Have questions or feedback? We'd love to hear from you!</p>
+            <!-- Basic Contact Form -->
+            <form id="contact-form">
+                <label for="name">Name:</label><br />
+                <input type="text" id="name" name="name" /><br /><br />
 
-		<!-- Contact Information -->
-		<section id="contact-info">
-			<h2>Get in Touch</h2>
-			<ul>
-				<li>Email: contact@cocolab.com</li>
-				<li>Phone: (555) 123-4567</li>
-				<li>
-					Address: 123 Collaboration St, Tech City, TC
-					12345
-				</li>
-			</ul>
+                <label for="email">Email:</label><br />
+                <input type="email" id="email" name="email" /><br /><br />
 
-			<!-- Basic Contact Form -->
-			<form id="contact-form">
-				<label for="name">Name:</label><br />
-				<input type="text" id="name" name="name" /><br /><br />
+                <label for="message">Message:</label><br />
+                <textarea id="message" name="message"></textarea><br /><br />
 
+                <!-- Submit Button -->
+                <button type="submit">Send Message</button>
+            </form>
+            <!-- Submit Button -->
+        </main>
 
-				<label for="email">Email:</label><br />
-				<input type="email" id="email" name="email" /><br /><br />
+        <coco-footer></coco-footer>
 
+        <script>
+            const menu = document.querySelector(".side-menu");
 
-				<label for="message">Message:</label><br />
-				<textarea id="message" name="message"></textarea><br /><br />
+            function toggleMenu() {
+                menu.classList.toggle("open");
+            }
 
+            document.addEventListener("click", (e) => {
+                if (!menu.contains(e.target) && !e.target.closest("#burger")) {
+                    menu.classList.remove("open");
+                }
+            });
 
-				<!-- Submit Button -->
-				<button type="submit">Send Message</button>
-			</form>
-			<!-- Submit Button -->
-	</main>
-
-<script>
-  const menu = document.querySelector('.side-menu');
-
-  function toggleMenu() {
-    menu.classList.toggle('open');
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !e.target.closest('#burger')) {
-      menu.classList.remove('open');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      menu.classList.remove('open');
-    }
-  });
-</script>
-</body>
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    menu.classList.remove("open");
+                }
+            });
+        </script>
+    </body>
 </html>

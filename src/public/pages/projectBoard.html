@@ -8,6 +8,7 @@
 
         <link rel="stylesheet" href="../output.css" />
         <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
 
         <script type="module">
             import { selectByTable, getUser } from "/main.js";
@@ -47,73 +48,7 @@
     </head>
 
     <body>
-        <header class="drawer sticky top-0 z-10">
-            <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col">
-                <div class="navbar bg-base-300 w-full">
-                    <div class="navbar-start">
-                        <label
-                            for="nav-drawer"
-                            aria-label="open sidebar"
-                            class="btn btn-square btn-ghost"
-                        >
-                            <img src="../images/icons/menu.svg" alt="Menu" />
-                        </label>
-                    </div>
-                    <a class="navbar-center gap-2 p-1" href="/">
-                        <img
-                            class="size-12"
-                            src="../images/logo.png"
-                            alt="CoCoLab Logo"
-                        />
-                        <h1 class="text-4xl tracking-tight font-bold">
-                            CoCo<span class="text-primary">Lab</span>
-                        </h1>
-                    </a>
-                    <div class="navbar-end">
-                        <button class="btn btn-ghost btn-circle" id="account">
-                            <img
-                                class="account"
-                                src="../images/icons/user.svg"
-                                alt="User Account"
-                            />
-                        </button>
-                        <script defer type="module">
-                            import { getUser } from "./main.js";
-                            document
-                                .getElementById("account")
-                                .addEventListener("click", async () => {
-                                    const user = getUser();
-                                    window.location.href = user
-                                        ? "pages/userSettings.html"
-                                        : "pages/auth.html";
-                                });
-                        </script>
-                    </div>
-                </div>
-            </div>
-
-            <div class="drawer-side">
-                <label
-                    for="nav-drawer"
-                    aria-label="close sidebar"
-                    class="drawer-overlay"
-                ></label>
-                <ul class="menu bg-base-200 min-h-full w-80 p-4">
-                    <!-- Sidebar content here -->
-                    <li>
-                        <a href="pages/projectBoard.html">Project Board</a>
-                    </li>
-                    <li>
-                        <a href="pages/projectManager.html">Project Manager</a>
-                    </li>
-                    <li>
-                        <a href="pages/aboutDevs.html">About the Developers</a>
-                    </li>
-                    <li><a href="pages/contactUs.html">Contact Us</a></li>
-                </ul>
-            </div>
-        </header>
+        <coco-header></coco-header>
 
         <main
             class="rounded-box m-4 md:m-8 p-4 shadow-xl bg-cover bg-center bg-no-repeat grow"
@@ -123,45 +58,6 @@
             <ul id="listings" class="list"></ul>
         </main>
 
-        <footer class="footer footer-center p-4 bg-base-300 mt-auto">
-            <aside class="grid-flow-col items-center">
-                <img
-                    class="size-10"
-                    src="../images/logo.png"
-                    alt="CoCoLab Logo"
-                />
-                <p class="px-2">
-                    &copy; <span id="year">2026</span> CoCoLab. All rights
-                    reserved.
-                </p>
-                <script>
-                    document.getElementById("year").textContent =
-                        new Date().getFullYear();
-                </script>
-            </aside>
-            <nav class="grid-flow-col gap-4">
-                <a>
-                    <img
-                        class="size-5"
-                        src="../images/icons/social_media/facebook.svg"
-                        alt="facebook"
-                    />
-                </a>
-                <a>
-                    <img
-                        class="size-5"
-                        src="../images/icons/social_media/instagram.svg"
-                        alt="instagram"
-                    />
-                </a>
-                <a>
-                    <img
-                        class="size-5"
-                        src="../images/icons/social_media/youtube.svg"
-                        alt="youtube"
-                    />
-                </a>
-            </nav>
-        </footer>
+        <coco-footer></coco-footer>
     </body>
 </html>
