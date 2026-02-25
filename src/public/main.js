@@ -90,24 +90,36 @@ export function isValidURL(url) {
 // ----------------------------------------------------- AUTHENTICATION HELPERS
 
 export function saveToken(token) {
-    console.log(`Saving token: ${token}`);
+    console.log("Saving JWT Token...");
     localStorage.setItem("token", token);
 }
 
 export function getToken() {
-    const token = localStorage.getItem("token");
-    console.log(`Loading token: "${token}"`);
-    return token;
+    console.log("Loading JWT Token...");
+    return localStorage.getItem("token");
 }
 
 export function getUserId() {
     const token = getToken();
 
-    if (token) {
-        console.log(`Token: "${token}"`);
-        const payload = token.split(".")[1];
-        return JSON.parse(payload)?.sub;
-    } else {
+    if (token === null) {
+        console.log("getUserId: no JWT token");
+        return null;
+    }
+
+    try {
+        // JWT token segments are split by '.'
+        const segments = token.split(".");
+        // The header, payload, and signature
+        if (segments.length != 3) return null;
+        // The payload is JSON encoded in base 64
+        const payload = JSON.parse(atob(segments[1]));
+        // The subject (or "sub") is the user ID
+        return payload.sub;
+    } catch {
+        // don't forget to clear an invalid token on error
+        console.log("getUserId: the JWT token is invalid");
+        localStorage.removeItem("token");
         return null;
     }
 }
