@@ -13,7 +13,6 @@
             import { selectByTable, getUserId } from "/main.js";
 
             const project_list = await selectByTable("project");
-            console.log(`Project List: ${JSON.stringify(project_list)}`)
             const listings = document.getElementById("listings");
             const user_id = getUserId();
 
