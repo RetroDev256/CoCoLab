@@ -3,70 +3,147 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>CoCoLab - Forms</title>
+
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
     </head>
     <body>
-        <!-- This is a form to input project data into the DB -->
-        <h3>Project creation input form:</h3>
-        <form action="/api/project" method="POST">
-            <input name="project_name" placeholder="Project name" required />
-            <br />
-            <input name="max_people" type="number" placeholder="Max people" required />
-            <br />
-            <input name="completed" type="number" placeholder="Completed?" required />
-            <br />
-            <input name="owner_id" type="number" placeholder="Owner ID" required />
-            <br />
-            <textarea name="details" placeholder="Details" required></textarea>
-            <br />
-            <button type="submit">Create Project</button>
-        </form>
-        <br />
+        <div id="coco_header"></div>
+        <main
+            class="container mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+            <div class="card shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Create New Project</h2>
+                    <form
+                        action="/api/project"
+                        method="POST"
+                        class="flex flex-col gap-4"
+                    >
+                        <input
+                            name="project_name"
+                            type="text"
+                            placeholder="Project name"
+                            class="input input-bordered w-full"
+                            required
+                        />
+                        <div class="flex gap-4">
+                            <input
+                                name="max_people"
+                                type="number"
+                                placeholder="Max people"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                            <input
+                                name="owner_id"
+                                type="number"
+                                placeholder="Owner ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                        </div>
+                        <textarea
+                            name="details"
+                            placeholder="Details"
+                            class="textarea textarea-bordered h-24"
+                            required
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">
+                            Create Project
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-        <!-- This is a form to input category tags into the DB -->
-        <h3>Category tag creation input form:</h3>
-        <form action="/api/category_tags" method="POST">
-            <input name="name" placeholder="Tag name" required />
-            <br />
-            <button type="submit">Create Tag</button>
-        </form>
-        <br />
+            <div class="card shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Create Category Tag</h2>
+                    <form
+                        action="/api/category_tags"
+                        method="POST"
+                        class="join mb-8"
+                    >
+                        <input
+                            name="name"
+                            placeholder="Tag name"
+                            class="input input-bordered join-item w-full"
+                            required
+                        />
+                        <button type="submit" class="btn join-item">
+                            Create
+                        </button>
+                    </form>
+                    <h2 class="card-title mb-4">Attach Tag to Project</h2>
+                    <form
+                        action="/api/project"
+                        method="POST"
+                        class="flex flex-col gap-4"
+                    >
+                        <div class="flex gap-4">
+                            <input
+                                name="project_id"
+                                type="number"
+                                placeholder="Project ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                            <br />
+                            <input
+                                name="tag_id"
+                                type="number"
+                                placeholder="Tag ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Attach Tag to Project
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-        <!-- This is a form to input project tags into the DB -->
-        <h3>Project tag creation input form:</h3>
-        <form action="/api/projects_tags" method="POST">
-            <input name="project_id" type="number" placeholder="Project ID" required />
-            <br />
-            <input name="tag_id" type="number" placeholder="Tag ID" required />
-            <br />
-            <button type="submit">Attach Tag to Project</button>
-        </form>
-        <br />
+            <div class="card shadow-xl border border-base-300">
+                <div class="card-body">
+                    <form
+                        action="/api/project"
+                        method="POST"
+                        class="flex flex-col gap-4"
+                    >
+                        <div class="flex gap-4">
+                            <input
+                                name="project_id"
+                                type="number"
+                                placeholder="Project ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                            <br />
+                            <input
+                                name="user_id"
+                                type="number"
+                                placeholder="User ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                        </div>
+                        <input
+                            name="role"
+                            placeholder="Role"
+                            class="input input-bordered w-full"
+                            required
+                        />
+                        <button type="submit" class="btn btn-primary">
+                            Add Project Member
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
 
-        <!-- This is a form to input project member data into the DB -->
-        <h3>Project member creation input form:</h3>
-        <form action="/api/project_members" method="POST">
-            <input name="user_id" type="number" placeholder="User ID" required />
-            <br />
-            <input name="project_id" type="number" placeholder="Project ID" required />
-            <br />
-            <input name="role" placeholder="Role" required />
-            <br />
-            <button type="submit">Add Member</button>
-        </form>
-        <br />
-
-        <!-- This is a form to input project request data into the DB -->
-        <h3>Project request creation input form:</h3>
-        <form action="/api/project_requests" method="POST">
-            <input name="user_id" type="number" placeholder="User ID" required />
-            <br />
-            <input name="project_id" type="number" placeholder="Project ID" required />
-            <br />
-            <input name="role" placeholder="Role" required />
-            <br />
-            <button type="submit">Add Member</button>
-        </form>
-        <br />
+        <div id="coco_footer"></div>
     </body>
 </html>

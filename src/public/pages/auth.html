@@ -1,11 +1,87 @@
 <!doctype html>
 <html lang="en">
+<<<<<<< HEAD
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+||||||| e6fcba9
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Authentication</title>
+		<link rel="stylesheet" href="../style/style.css" />
+	</head>
+	<body>
+		<!-- This is a form to input user data into the DB -->
+		<h3>Signup form:</h3>
+		<form id="SignupForm">
+			<input name="username" placeholder="User name" required />
+			<br />
+			<input name="password" placeholder="Password" required />
+			<br />
+			<input name="email" placeholder="Email" required />
+			<br />
+			<input name="profile_url" placeholder="Profile URL" />
+			<br />
+			<input name="phone_number" placeholder="Phone number" />
+			<br />
+			<input name="other_link" placeholder="Other link" />
+			<br />
+			<button type="submit">Signup</button>
+		</form>
+		<br />
+=======
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CoCoLab - Authentication</title>
+>>>>>>> main
 
+<<<<<<< HEAD
         <title>Authentication</title>
+||||||| e6fcba9
+		<h3>Signin form:</h3>
+		<form id="SigninForm">
+			<input name="username" placeholder="User name" required />
+			<br />
+			<input name="password" placeholder="Password" required />
+			<br />
+			<button type="submit">Signin</button>
+		</form>
+		<br />
+	</body>
+	<script defer type="module">
+		import { saveToken, getUser } from '../main.js'
+		const user = getUser()
+		console.log(user)
+		document
+			.getElementById('SignupForm')
+			.addEventListener('submit', async (e) => {
+				e.preventDefault()
+				const formData = new FormData(e.target)
+				const response = await fetch(
+					'https://coco.alloc.dev/api/signup',
+					{
+						method: 'POST',
+						body: formData,
+					},
+				)
+				if (response.ok) {
+					const json = await response.json()
+					saveToken(json.token)
+					window.location.href = '/'
+				}
+			})
+=======
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
+    </head>
+    <body>
+        <div id="coco_header"></div>
+>>>>>>> main
 
+<<<<<<< HEAD
         <link rel="stylesheet" href="../style/style.css" />
 
         <script type="module">
@@ -70,4 +146,151 @@
         </form>
         <br />
     </body>
+||||||| e6fcba9
+		document
+			.getElementById('SigninForm')
+			.addEventListener('submit', async (e) => {
+				e.preventDefault()
+				const formData = new FormData(e.target)
+				const response = await fetch(
+					'https://coco.alloc.dev/api/signin',
+					{
+						method: 'POST',
+						body: formData,
+					},
+				)
+				if (response.ok) {
+					const json = await response.json()
+					saveToken(json.token)
+					window.location.href = '/'
+				}
+			})
+	</script>
+=======
+        <main role="tablist" class="tabs tabs-lift self-center">
+            <input
+                type="radio"
+                name="auth_tabs"
+                class="tab"
+                aria-label="Signin"
+                checked
+            />
+            <div role="tabpanel" class="tab-content border-base-300 p-6">
+                <form id="SigninForm" class="flex flex-col gap-4">
+                    <input
+                        name="username"
+                        placeholder="User name"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        class="input input-bordered"
+                        required
+                    />
+                    <button type="submit" class="btn btn-primary">
+                        Signin
+                    </button>
+                </form>
+            </div>
+
+            <input
+                type="radio"
+                name="auth_tabs"
+                class="tab"
+                aria-label="Signup"
+            />
+            <div role="tabpanel" class="tab-content border-base-300 p-6">
+                <form id="SignupForm" class="flex flex-col gap-4">
+                    <input
+                        name="username"
+                        placeholder="User name"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="profile_url"
+                        placeholder="Profile URL"
+                        class="input input-ghost"
+                    />
+
+                    <input
+                        name="phone_number"
+                        placeholder="Phone number"
+                        class="input input-ghost"
+                    />
+
+                    <input
+                        name="other_link"
+                        placeholder="Other link"
+                        class="input input-ghost"
+                    />
+                    <button type="submit" class="btn btn-primary">
+                        Signup
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <div id="coco_footer"></div>
+    </body>
+    <script defer type="module">
+        import { saveToken, getUser } from "../main.js";
+        const user = getUser();
+        console.log(user);
+        document
+            .getElementById("SignupForm")
+            .addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const response = await fetch(
+                    "https://coco.alloc.dev/api/signup",
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+                if (response.ok) {
+                    const json = await response.json();
+                    saveToken(json.token);
+                    window.location.href = "/";
+                }
+            });
+
+        document
+            .getElementById("SigninForm")
+            .addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const response = await fetch(
+                    "https://coco.alloc.dev/api/signin",
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+                if (response.ok) {
+                    const json = await response.json();
+                    saveToken(json.token);
+                    window.location.href = "/";
+                }
+            });
+    </script>
+>>>>>>> main
 </html>
