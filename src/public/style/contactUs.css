@@ -64,7 +64,7 @@ header {
     justify-self: center;
 }
 
-.side-menu {
+#side_menu {
   position: fixed;
   top: 0;
   left: -220px;              /* hide off-screen */
@@ -76,7 +76,7 @@ header {
   z-index: 1000;
 }
 
-.side-menu.open {
+#side_menu.open {
   left: 0;
 }
 

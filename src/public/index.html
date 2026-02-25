@@ -34,7 +34,7 @@
             <a id="account" href="./pages/userSettings.html">
                 <img class="account" src="./images/account_user.png" alt="User Account Icon" />
             </a>
-            <nav class="side-menu">
+            <nav id="side_menu">
                 <ul>
                     <!-- We can add this nav to the top of most pages too, it just doesn't make sense on the account management page -->
                     <li>
@@ -118,25 +118,5 @@
                 document.getElementById("year").textContent = new Date().getFullYear();
             </script>
         </footer>
-
-        <script>
-            const menu = document.querySelector(".side-menu");
-
-            function toggleMenu() {
-                menu.classList.toggle("open");
-            }
-
-            document.addEventListener("click", (e) => {
-                if (!menu.contains(e.target) && !e.target.closest("#burger")) {
-                    menu.classList.remove("open");
-                }
-            });
-
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") {
-                    menu.classList.remove("open");
-                }
-            });
-        </script>
     </body>
 </html>

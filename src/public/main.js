@@ -1,7 +1,7 @@
 // --------------------------------------------------------------- BURGER LOGIC
 
 const burger = document.getElementById("burger");
-const side_menu = document.getElementById("side-menu");
+const side_menu = document.getElementById("side_menu");
 
 export function openMenu() {
     side_menu.classList.add("open");
@@ -13,7 +13,7 @@ export function closeMenu() {
 
 if (burger !== null) {
     // The menu can be opened if and only if the burger is clicked
-    burger.addEventListener("click", (e) => toggleMenu());
+    burger.addEventListener("click", (e) => openMenu());
 
     // The menu can be closed if we did not click on the burger
     document.addEventListener("click", (event) => {
