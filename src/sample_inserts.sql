@@ -3,16 +3,16 @@
 
 -- USERS inserts
 INSERT INTO public.users (user_name, pw_salt, pw_hash, email, profile_url, phone_number) VALUES
-('dev_alice', '\x1a', '\x2b', 'alice@example.com', 'https://github.com/alice', '555-0101'),
-('coder_bob', '\x3c', '\x4d', 'bob@test.com', 'https://github.com/bob', '555-0102'),
-('charlie_pro', '\x5e', '\x6f', 'charlie@dev.org', NULL, '555-0103'),
-('dana_d', '\x7g', '\x8h', 'dana@cocolab.io', 'https://dana.me', NULL),
-('evan_sharp', '\x9i', '\x0j', 'evan@domain.com', NULL, '555-0105'),
-('fiona_f', '\x1k', '\x2l', 'fiona@web.com', 'https://fiona.dev', '555-0106'),
-('george_v', '\x3m', '\x4n', 'george@it.com', NULL, NULL),
-('hannah_b', '\x5o', '\x6p', 'hannah@code.com', 'https://hannah.io', '555-0108'),
-('ian_tech', '\x7q', '\x8r', 'ian@startup.com', NULL, '555-0109'),
-('julia_m', '\x9s', '\x0t', 'julia@ai.com', 'https://github.com/julia', '555-0110');
+('dev_alice', '', '', 'alice@example.com', 'https://github.com/alice', '555-0101'),
+('coder_bob', '', '', 'bob@test.com', 'https://github.com/bob', '555-0102'),
+('charlie_pro', '', '', 'charlie@dev.org', NULL, '555-0103'),
+('dana_d', '', '', 'dana@cocolab.io', 'https://dana.me', NULL),
+('evan_sharp', '', '', 'evan@domain.com', NULL, '555-0105'),
+('fiona_f', '', '', 'fiona@web.com', 'https://fiona.dev', '555-0106'),
+('george_v', '', '', 'george@it.com', NULL, NULL),
+('hannah_b', '', '', 'hannah@code.com', 'https://hannah.io', '555-0108'),
+('ian_tech', '', '', 'ian@startup.com', NULL, '555-0109'),
+('julia_m', '', '', 'julia@ai.com', 'https://github.com/julia', '555-0110');
 
 -- PROJECT inserts
 INSERT INTO public.project (project_name, max_people, details, owner_id) VALUES
