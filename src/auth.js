@@ -156,8 +156,8 @@ async function insertNewUser(user) {
 
     // Insert the new user into the database, and return their record
     const result = await pool.query(
-        "INSERT INTO users (user_name, pw_hash, email)\n" +
-            "VALUES ($1, $2, $3) RETURNING *;",
+        `INSERT INTO users (user_name, pw_hash, email)
+        VALUES ($1, $2, $3) RETURNING *;`,
         [user.user_name, pw_hash, user.email],
     );
 

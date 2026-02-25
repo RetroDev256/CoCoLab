@@ -104,6 +104,7 @@ export function getUserId() {
     const token = getToken();
 
     if (token !== null) {
+        console.log(`Token: "${token}"`);
         const payload = token.split(".")[1];
         return JSON.parse(atob(payload))?.sub;
     } else {

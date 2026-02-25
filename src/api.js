@@ -4,7 +4,7 @@ import { authRoutes } from "./auth.js";
 // Provides limited SQL injection protection for SQL identifiers -
 // USE THIS WHENEVER YOU WILL USE UNKNOWN DATA IN AN SQL QUERY
 export function escapeIdentifier(sql_identifier) {
-    return `"${String(v).replace(/"/g, '""')}"`;
+    return `"${String(sql_identifier).replace(/"/g, '""')}"`;
 }
 
 // Exposes POST endpoints under /api/ for each SQL table
