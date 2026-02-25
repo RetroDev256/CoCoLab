@@ -12,9 +12,10 @@
     </head>
 
     <body>
+        
         <coco-header></coco-header>
 
-        <main class="card w-full max-w-2xl shadow-xl self-center">
+        <header class="card w-full max-w-2xl shadow-xl self-center">
             <div class="card-body">
                 <h1 class="card-title text-3xl font-bold project-title">
                     Project
@@ -57,8 +58,22 @@
                     </button>
                 </div>
             </div>
-        </main>
+        </header>
 
+            <!-- Insert date if there is one, or just put none instead -->
+            <h3>Deadline: None</h3>
+            <h3 class="people-needed">Number of people needed: 0</h3>
+            <h3 class="people-have">Spots filled: 0</h3>
+            <!--If this is same as above number, join project button should be visible but faded/disabled-->
+
+            <button id="join-project">Join this Project</button>
+            <!--clicking this will trigger a popup that lets you verify and send your info-->
+            <button id="return-search">Back to search</button>
+            <p class="join-success"></p>
+            <!--Ideally on y index as the project, just to the right.-->
+            <!--clickable, looks like a hyperlink but really just closes the tab and goes back to projectBoard-->
+        </div>
+    </main>
         <coco-footer></coco-footer>
         <script type="module" defer src="../scripts/project.js"></script>
     </body>

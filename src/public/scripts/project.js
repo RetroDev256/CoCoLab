@@ -142,8 +142,10 @@ async function sendInformation() {
             })
         });
         console.log(response);
-        //This will need to say something better
-        join_message.innerHTML = response;
+        if (response.ok) {
+            join_message.innerHTML = "Request sent successfully";
+        }
+        else {join_message.innerHTML = "Error occured. Try request again later."};
     }
     else {
         console.log("You are not logged in. Please log in before joining any projects.");
