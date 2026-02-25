@@ -12,48 +12,57 @@
     <body>
         <coco-header></coco-header>
 
-        <main>
-            <h1>About the Developers</h1>
-
-            <!-- Developer Information -->
-            <section id="developer-info">
-                <h2>Meet Our Team</h2>
-
-                <!-- Developer 1 -->
-                <div class="developer">
-                    <h3>Developer 1</h3>
-                    <p>Biography and information about Developer 1.</p>
+        <main class="container mx-auto p-12">
+            <h1 class="text-4xl font-extrabold text-center mb-12">
+                Meet Our Team
+            </h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div
+                    class="card shadow-md border border-base-200 hover:shadow-lg transition-shadow"
+                >
+                    <div class="card-body items-center text-center">
+                        <div class="avatar avatar-placeholder mb-4">
+                            <div
+                                class="bg-neutral text-neutral-content rounded-full w-24"
+                            >
+                                <span class="text-3xl">EP</span>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Eric Petersen</h3>
+                        <p class="text-sm opacity-70 italic">
+                            Zig programmer and Trackmania enthusiast
+                        </p>
+                        <div class="card-actions mt-4">
+                            <button class="btn btn-sm btn-outline">
+                                Profile
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Developer 2 -->
-                <div class="developer">
-                    <h3>Developer 2</h3>
-                    <p>Biography and information about Developer 2.</p>
+                <div
+                    class="card shadow-md border border-base-200 hover:shadow-lg transition-shadow"
+                >
+                    <div class="card-body items-center text-center">
+                        <div class="avatar avatar-placeholder mb-4">
+                            <div
+                                class="bg-neutral text-neutral-content rounded-full w-24"
+                            >
+                                <span class="text-3xl">AE</span>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Anson Eyre</h3>
+                        <p class="text-sm opacity-70 italic">
+                            The Merge Manager Mastermind. Minecraft and
+                            Satisfactory enthusiast
+                        </p>
+                        <div class="card-actions mt-4">
+                            <button class="btn btn-sm btn-outline">
+                                Profile
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Developer 3 -->
-                <div class="developer">
-                    <h3>Developer 3</h3>
-                    <p>Biography and information about Developer 3.</p>
-                </div>
-
-                <!-- Developer 4 -->
-                <div class="developer">
-                    <h3>Developer 4</h3>
-                    <p>Biography and information about Developer 4.</p>
-                </div>
-
-                <!-- Developer 5 -->
-                <div class="developer">
-                    <h3>Eric Petersen</h3>
-                    <p>Zig programmer and Trackmania enthusiast.</p>
-                </div>
-
-                <!-- Add more developers as needed -->
-            </section>
-
-            <!-- Mission Statement -->
-            <!-- Placeholder for mission statement if needed -->
+            </div>
         </main>
 
         <coco-footer></coco-footer>

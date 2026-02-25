@@ -13,57 +13,68 @@
     <body>
         <coco-header></coco-header>
 
-        <main>
-            <h1>Contact Us</h1>
-            <p>Have questions or feedback? We'd love to hear from you!</p>
-
-            <!-- Contact Information -->
-            <section id="contact-info">
-                <h2>Get in Touch</h2>
-                <ul>
-                    <li>Email: contact@cocolab.com</li>
-                    <li>Phone: (555) 123-4567</li>
-                    <li>Address: 123 Collaboration St, Tech City, TC 12345</li>
-                </ul>
-            </section>
-
-            <!-- Basic Contact Form -->
-            <form id="contact-form">
-                <label for="name">Name:</label><br />
-                <input type="text" id="name" name="name" /><br /><br />
-
-                <label for="email">Email:</label><br />
-                <input type="email" id="email" name="email" /><br /><br />
-
-                <label for="message">Message:</label><br />
-                <textarea id="message" name="message"></textarea><br /><br />
-
-                <!-- Submit Button -->
-                <button type="submit">Send Message</button>
-            </form>
-            <!-- Submit Button -->
+        <main class="hero grow bg-base-200">
+            <div class="hero-content flex-col lg:flex-row gap-12">
+                <div class="text-center lg:text-left max-w-md">
+                    <h1 class="text-5xl font-bold">Contact Us</h1>
+                    <p class="py-6">
+                        Have questions or feedback? We'd love to hear from you!
+                        Our team is ready to help you collaborate.
+                    </p>
+                    <ul class="space-y-2 opacity-80">
+                        <li>
+                            <span class="font-bold">Email:</span>
+                            contact@cocolab.com
+                        </li>
+                        <li>
+                            <span class="font-bold">Phone:</span> (555) 123-4567
+                        </li>
+                    </ul>
+                </div>
+                <div
+                    class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100"
+                >
+                    <form id="contact-form" class="card-body">
+                        <div class="form-control">
+                            <label class="label"
+                                ><span class="label-text">Name</span></label
+                            >
+                            <input
+                                type="text"
+                                name="name"
+                                class="input input-bordered"
+                                required
+                            />
+                        </div>
+                        <div class="form-control">
+                            <label class="label"
+                                ><span class="label-text">Email</span></label
+                            >
+                            <input
+                                type="email"
+                                name="email"
+                                class="input input-bordered"
+                                required
+                            />
+                        </div>
+                        <div class="form-control">
+                            <label class="label"
+                                ><span class="label-text">Message</span></label
+                            >
+                            <textarea
+                                name="message"
+                                class="textarea textarea-bordered h-24"
+                                required
+                            ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-6">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
         </main>
 
         <coco-footer></coco-footer>
-
-        <script>
-            const menu = document.querySelector(".side-menu");
-
-            function toggleMenu() {
-                menu.classList.toggle("open");
-            }
-
-            document.addEventListener("click", (e) => {
-                if (!menu.contains(e.target) && !e.target.closest("#burger")) {
-                    menu.classList.remove("open");
-                }
-            });
-
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") {
-                    menu.classList.remove("open");
-                }
-            });
-        </script>
     </body>
 </html>

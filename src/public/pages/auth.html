@@ -11,34 +11,70 @@
     </head>
     <body>
         <coco-header></coco-header>
-        <!-- This is a form to input user data into the DB -->
-        <h3>Signup form:</h3>
-        <form id="SignupForm">
-            <input name="username" placeholder="User name" required />
-            <br />
-            <input name="password" placeholder="Password" required />
-            <br />
-            <input name="email" placeholder="Email" required />
-            <br />
-            <input name="profile_url" placeholder="Profile URL" />
-            <br />
-            <input name="phone_number" placeholder="Phone number" />
-            <br />
-            <input name="other_link" placeholder="Other link" />
-            <br />
-            <button type="submit">Signup</button>
-        </form>
-        <br />
 
-        <h3>Signin form:</h3>
-        <form id="SigninForm">
-            <input name="username" placeholder="User name" required />
-            <br />
-            <input name="password" placeholder="Password" required />
-            <br />
-            <button type="submit">Signin</button>
-        </form>
-        <br />
+        <main role="tablist" class="tabs tabs-lift self-center">
+            <input
+                type="radio"
+                name="auth_tabs"
+                class="tab"
+                aria-label="Signin"
+                checked
+            />
+            <div role="tabpanel" class="tab-content border-base-300 p-6">
+                <form id="SigninForm" class="flex flex-col gap-4">
+                    <input
+                        name="username"
+                        placeholder="User name"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        class="input input-bordered"
+                        required
+                    />
+                    <button type="submit" class="btn btn-primary">
+                        Signin
+                    </button>
+                </form>
+            </div>
+
+            <input
+                type="radio"
+                name="auth_tabs"
+                class="tab"
+                aria-label="Signup"
+            />
+            <div role="tabpanel" class="tab-content border-base-300 p-6">
+                <form id="SignupForm" class="flex flex-col gap-4">
+                    <input
+                        name="username"
+                        placeholder="User name"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        class="input input-bordered"
+                        required
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        class="input input-bordered"
+                        required
+                    />
+                    <button type="submit" class="btn btn-primary">
+                        Signup
+                    </button>
+                </form>
+            </div>
+        </main>
 
         <coco-footer></coco-footer>
     </body>
