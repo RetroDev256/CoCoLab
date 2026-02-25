@@ -1,6 +1,5 @@
 -- SERVER: "psql -U retrodev -d coco -f tables.sql" to reset the DB
 -- Drop tables in reverse dependency order to avoid foreign key conflicts
-
 DROP TABLE IF EXISTS public.project_requests CASCADE;
 
 DROP TABLE IF EXISTS public.project_members CASCADE;
@@ -21,9 +20,6 @@ CREATE TABLE
     pw_salt BYTEA NOT NULL,
     pw_hash BYTEA NOT NULL,
     email TEXT NOT NULL,
-    profile_url TEXT,
-    phone_number TEXT,
-    other_link TEXT,
     created_at TIMESTAMP
     WITH
       TIME ZONE NOT NULL DEFAULT NOW ()
