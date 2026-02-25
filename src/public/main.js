@@ -1,30 +1,32 @@
-// put client side stuff here
+// --------------------------------------------------------------- BURGER LOGIC
 
-// toggle menu script for the burger menu
-      const menu = document.querySelector(".side-menu");
+const burger = document.getElementById("burger");
+const side_menu = document.getElementById("side-menu");
 
-	  document.getElementById("burger").addEventListener("click", (e) => {
-		toggleMenu();
-	  });
+export function openMenu() {
+    side_menu.classList.add("open");
+}
 
-      export function toggleMenu() {
-        menu.classList.toggle("open");
-      }
+export function closeMenu() {
+    side_menu.classList.remove("open");
+}
 
-      document.addEventListener("click", (e) => {
-        if (!menu.contains(e.target) && !e.target.closest("#burger")) {
-          menu.classList.remove("open");
-        }
-      });
+if (burger !== null) {
+    // The menu can be opened if and only if the burger is clicked
+    burger.addEventListener("click", (e) => toggleMenu());
 
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          menu.classList.remove("open");
-        }
-      });
+    // The menu can be closed if we did not click on the burger
+    document.addEventListener("click", (event) => {
+        if (!burger.contains(event.target)) closeMenu();
+    });
 
+    // The menu can be closed if we pressed escape
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+    });
+}
 
-
+// ----------------------------------------------------------- DATABASE HELPERS
 
 // Returns a list of all JS objects in a table
 export async function selectByTable(table) {
@@ -85,7 +87,8 @@ export function isValidURL(url) {
     }
 }
 
-// Authentication
+// ----------------------------------------------------- AUTHENTICATION HELPERS
+
 export function saveToken(token) {
     console.log(`Saving token: ${token}`);
     localStorage.setItem("token", token);
