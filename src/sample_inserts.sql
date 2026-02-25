@@ -2,17 +2,17 @@
 -- Run this file after running the tables.sql file to populate the database with sample data.
 
 -- USERS inserts
-INSERT INTO public.users (user_name, pw_salt, pw_hash, email) VALUES
-('dev_alice', '', '', 'alice@example.com'),
-('coder_bob', '', '', 'bob@test.com'),
-('charlie_pro', '', '', 'charlie@dev.org'),
-('dana_d', '', '', 'dana@cocolab.io'),
-('evan_sharp', '', '', 'evan@domain.com'),
-('fiona_f', '', '', 'fiona@web.com'),
-('george_v', '', '', 'george@it.com'),
-('hannah_b', '', '', 'hannah@code.com'),
-('ian_tech', '', '', 'ian@startup.com'),
-('julia_m', '', '', 'julia@ai.com');
+INSERT INTO public.users (user_name, pw_hash, email) VALUES
+('dev_alice', '', 'alice@example.com'),
+('coder_bob', '', 'bob@test.com'),
+('charlie_pro', '', 'charlie@dev.org'),
+('dana_d', '', 'dana@cocolab.io'),
+('evan_sharp', '', 'evan@domain.com'),
+('fiona_f', '', 'fiona@web.com'),
+('george_v', '', 'george@it.com'),
+('hannah_b', '', 'hannah@code.com'),
+('ian_tech', '', 'ian@startup.com'),
+('julia_m', '', 'julia@ai.com');
 
 -- PROJECT inserts
 INSERT INTO public.project (project_name, max_people, completed, details, owner_id) VALUES
