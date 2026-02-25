@@ -6,11 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CoCoLab - Project Board</title>
 
-        <link rel="stylesheet" href="/style/style.css" />
-        <link rel="icon" type="image/webp" href="/images/brownie.webp" />
+        <link rel="stylesheet" href="../output.css" />
+        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
+        <script type="module" src="../main.js"></script>
 
         <script type="module">
-            import { selectByTable,  getUser} from "/main.js";
+            import { selectByTable, getUser } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
@@ -18,18 +19,27 @@
 
             let listing_html = "";
             for (const project of project_list) {
-
                 let page = "project.html";
                 if (user_id !== null && user_id == project.owner_id) {
                     page = "project-ownerView.html";
                 }
 
                 listing_html += `
-				<li class="job-posting">
-					<a href="/pages/${page}?id=${project.id}" target="_blank">
-						${project.project_name}
-					</a>
-				</li>
+                <li class="list-row">
+                    <div class="text-xl">${project.project_name}</div>
+                    <div>${project.details}</div>
+                    <a
+                        href="pages/${page}?id=${project.id}"
+                        target="_blank"
+                        class="btn btn-outline"
+                    >
+                        view<img
+                            src="../images/icons/open-new-window.svg"
+                            alt="view"
+                            class="ml-2"
+                        />
+                    </a>
+                </li>
 				`;
             }
 
@@ -37,25 +47,17 @@
         </script>
     </head>
 
-    <body class="job-board-page">
-        <header class="job-header">
-            <nav class="job-nav">
-                <a id="logo" href="/">
-                    <img class="logo" src="/images/brownie.webp" alt="CoCoLab Logo" />
-                </a>
-                <a id="account" href="userSettings.html">
-                    <img class="account" src="/images/account_user.png" alt="User Account Icon" />
-                </a>
-            </nav>
-        </header>
+    <body>
+        <coco-header></coco-header>
 
-        <main class="job-board">
-            <h1>Projects:</h1>
-            <ol id="listings"></ol>
+        <main
+            class="rounded-box m-4 md:m-8 p-4 shadow-xl bg-cover bg-center bg-no-repeat grow"
+            style="background-image: url(../images/board.jpg)"
+        >
+            <h1 class="w-full text-center text-4xl font-bold">Projects:</h1>
+            <ul id="listings" class="list"></ul>
         </main>
 
-        <footer>
-            <p>&copy; CoCoLab. All rights reserved.</p>
-        </footer>
+        <coco-footer></coco-footer>
     </body>
 </html>
