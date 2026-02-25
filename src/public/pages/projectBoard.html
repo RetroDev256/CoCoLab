@@ -10,11 +10,11 @@
         <link rel="icon" type="image/webp" href="/images/brownie.webp" />
 
         <script type="module">
-            import { selectByTable, getUser } from "/main.js";
+            import { selectByTable, getUserId } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
-            const user_id = getUser()?.id;
+            const user_id = getUserId();
 
             let listing_html = "";
             for (const project of project_list) {
