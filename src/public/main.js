@@ -96,17 +96,17 @@ export function saveToken(token) {
 
 export function getToken() {
     const token = localStorage.getItem("token");
-    console.log(`Loading token: ${token}`);
+    console.log(`Loading token: "${token}"`);
     return token;
 }
 
 export function getUserId() {
     const token = getToken();
 
-    if (token !== null) {
+    if (token) {
         console.log(`Token: "${token}"`);
         const payload = token.split(".")[1];
-        return JSON.parse(atob(payload))?.sub;
+        return JSON.parse(payload)?.sub;
     } else {
         return null;
     }

@@ -23,7 +23,7 @@
 
                 // If you are the owner of a project, use the owner page
                 let page = "project.html";
-                if (user_id !== null && user_id == project.owner_id) {
+                if (user_id === project.owner_id) {
                     page = "project-ownerView.html";
                 }
 
