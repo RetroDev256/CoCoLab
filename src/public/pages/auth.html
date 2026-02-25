@@ -1,34 +1,16 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Authentication</title>
-		<link rel="stylesheet" href="../style/style.css" />
-	</head>
-	<body>
-		<!-- This is a form to input user data into the DB -->
-		<h3>Signup form:</h3>
-		<form id="SignupForm">
-			<input name="username" placeholder="User name" required />
-			<br />
-			<input name="password" placeholder="Password" required />
-			<br />
-			<input name="email" placeholder="Email" required />
-			<br />
-			<input name="profile_url" placeholder="Profile URL" />
-			<br />
-			<input name="phone_number" placeholder="Phone number" />
-			<br />
-			<input name="other_link" placeholder="Other link" />
-			<br />
-			<button type="submit">Signup</button>
-		</form>
-		<br />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Authentication</title>
+
+        <link rel="stylesheet" href="../style/style.css" />
 
         <script type="module">
             import { saveToken, getUser } from "../main.js";
-			
+
             const user = getUser();
             console.log(user);
             document.getElementById("SignupForm").addEventListener("submit", async (e) => {
@@ -60,7 +42,27 @@
             });
         </script>
     </head>
+
     <body>
+        <!-- This is a form to input user data into the DB -->
+        <h3>Signup form:</h3>
+        <form id="SignupForm">
+            <input name="username" placeholder="User name" required />
+            <br />
+            <input name="password" placeholder="Password" required />
+            <br />
+            <input name="email" placeholder="Email" required />
+            <br />
+            <input name="profile_url" placeholder="Profile URL" />
+            <br />
+            <input name="phone_number" placeholder="Phone number" />
+            <br />
+            <input name="other_link" placeholder="Other link" />
+            <br />
+            <button type="submit">Signup</button>
+        </form>
+        <br />
+        
         <!-- This is a form to input user data into the DB -->
         <h3>Signup form:</h3>
         <form id="SignupForm">
