@@ -9,86 +9,64 @@
         <link rel="stylesheet" href="../style/style.css" />
 
         <script type="module">
-            import { saveToken, getUser } from "../main.js";
+            import { saveToken, getUserId } from "../main.js";
 
-            const user = getUser();
-            console.log(user);
-            document.getElementById("SignupForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const response = await fetch("https://coco.alloc.dev/api/signup", {
-                    method: "POST",
-                    body: formData,
-                });
-                if (response.ok) {
-                    const json = await response.json();
-                    saveToken(json.token);
-                    window.location.href = "/";
-                }
-            });
+            // Get the current user ID
+            const user_id = getUserId();
+            console.log(`Current user ID: ${user_id}`);
 
-            document.getElementById("SigninForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const response = await fetch("https://coco.alloc.dev/api/signin", {
-                    method: "POST",
-                    body: formData,
-                });
-                if (response.ok) {
-                    const json = await response.json();
-                    saveToken(json.token);
+            // Modify a form to do something with an endpoint instead
+            function attachAuthHandler(form_id, endpoint) {
+                const form = document.getElementById(form_id);
+                if (form === null) return;
+
+                form.addEventListener("submit", async (event) => {
+                    // Prevent the form from submitting as normal
+                    event.preventDefault();
+
+                    // Submit the data as normal, capturing the response
+                    const data = new FormData(form);
+                    const path = `https://coco.alloc.dev/api/${endpoint}`;
+                    const response = await fetch(path, { method: "POST", body: data });
+
+                    if (!response.ok) {
+                        // handle response errors
+                        console.error("Authentication failed");
+                        return;
+                    }
+
+                    // Save the token in local storage for authentication
+                    saveToken((await response.json()).token);
                     window.location.href = "/";
-                }
-            });
+                });
+            }
+
+            // Route sign_up and sign_in to respective endpoints
+            attachAuthHandler("sign_up", "sign_up");
+            attachAuthHandler("sign_in", "sign_in");
         </script>
     </head>
 
     <body>
-        <!-- This is a form to input user data into the DB -->
-        <h3>Signup form:</h3>
-        <form id="SignupForm">
-            <input name="username" placeholder="User name" required />
+        <h3>Sign-up form:</h3>
+        <form id="sign_up" method="post">
+            <input name="user_name" placeholder="User name" required />
             <br />
-            <input name="password" placeholder="Password" required />
+            <input type="password" name="password" placeholder="Password" required />
             <br />
-            <input name="email" placeholder="Email" required />
+            <input type="email" name="email" placeholder="Email" required />
             <br />
-            <input name="profile_url" placeholder="Profile URL" />
-            <br />
-            <input name="phone_number" placeholder="Phone number" />
-            <br />
-            <input name="other_link" placeholder="Other link" />
-            <br />
-            <button type="submit">Signup</button>
-        </form>
-        <br />
-        
-        <!-- This is a form to input user data into the DB -->
-        <h3>Signup form:</h3>
-        <form id="SignupForm">
-            <input name="username" placeholder="User name" required />
-            <br />
-            <input name="password" placeholder="Password" required />
-            <br />
-            <input name="email" placeholder="Email" required />
-            <br />
-            <input name="profile_url" placeholder="Profile URL" />
-            <br />
-            <input name="phone_number" placeholder="Phone number" />
-            <br />
-            <input name="other_link" placeholder="Other link" />
-            <br />
-            <button type="submit">Signup</button>
+            <button type="submit">sign-up</button>
         </form>
         <br />
 
-        <h3>Signin form:</h3>
-        <form id="SigninForm">
-            <input name="username" placeholder="User name" required />
+        <h3>Sign-in form:</h3>
+        <form id="sign_in" method="post">
+            <input name="user_name" placeholder="User name" required />
             <br />
-            <input name="password" placeholder="Password" required />
+            <input type="password" name="password" placeholder="Password" required />
             <br />
-            <button type="submit">Signin</button>
+            <button type="submit">sign-in</button>
         </form>
         <br />
     </body>
