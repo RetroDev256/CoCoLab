@@ -23,7 +23,9 @@ async function getPrivateKey() {
 
     // Generate a new key (it does not exist)
     console.log("Generating a new JWT auth key...");
-    const { privateKey } = await generateKeyPair("RS256");
+    const { privateKey } = await generateKeyPair("RS256", {
+        extractable: true, // not sure why I need this but ok
+    });
 
     // Save the key to the file, also return it ig
     const pem_string = await exportPKCS8(privateKey);
