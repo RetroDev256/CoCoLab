@@ -31,13 +31,13 @@
 
                     if (!response.ok) {
                         // handle response errors
-                        console.error("Authentication failed");
+                        alert("Authentication failed.");
                         return;
                     }
 
                     // Save the token in local storage for authentication
                     saveToken((await response.json()).token);
-                    window.location.href = "/";
+                    alert("Successfully logged in.");
                 });
             }
 
