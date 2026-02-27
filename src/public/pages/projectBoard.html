@@ -19,24 +19,24 @@
 
             let listing_html = "";
             for (const project of project_list) {
-                let page = "project.html";
-                if (user_id !== null && user_id == project.owner_id) {
-                    page = "project-ownerView.html";
-                }
+                const is_owner =
+                    user_id !== null && user_id == project.owner_id;
 
                 listing_html += `
                 <li class="list-row">
-                    <div class="text-xl">${project.project_name}</div>
-                    <div>${project.details}</div>
+                    <div class="font-bold">
+                        <div>${project.project_name}</div>
+                        <div class="text-xs uppercase">${project.owner_id} - ${project.max_people} ${is_owner ? " - (Owner)" : ""}</div>
+                    </div>
+                    <div class="text-center">${project.details}</div>
                     <a
-                        href="pages/${page}?id=${project.id}"
+                        href="pages/${is_owner ? "project-ownerView.html" : "project.html"}?id=${project.id}"
                         target="_blank"
-                        class="btn btn-outline"
+                        class="btn btn-square btn-ghost"
                     >
-                        view<img
+                        <img
                             src="../images/icons/open-new-window.svg"
                             alt="view"
-                            class="ml-2"
                         />
                     </a>
                 </li>
@@ -51,7 +51,7 @@
         <coco-header></coco-header>
 
         <main
-            class="rounded-box m-4 md:m-8 p-4 shadow-xl bg-cover bg-center bg-no-repeat grow"
+            class="grow rounded-box m-4 md:m-8 p-4 shadow-xl bg-repeat bg-size-[auto_500px]"
             style="background-image: url(../images/board.jpg)"
         >
             <h1 class="w-full text-center text-4xl font-bold">Projects:</h1>
