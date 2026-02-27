@@ -26,7 +26,7 @@ let global_project_id = 0;
 //Also load whether anyone has requested to join this project
 async function init() {
     //ONLY UNTIL CSS is in place!!!!!!
-    loadRequestModal();
+    loadFakeRequestModal();
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
     global_project_id = project_id;
@@ -186,6 +186,21 @@ async function getJoinRequests(project_id) {
     if (requests.length != 0) {
         loadRequestModal(requests);
     }
+}
+
+function loadFakeRequestModal() {
+    //const requests = await selectByValue("project_requests", "project_id", global_project_id);
+    const requestModal = document.querySelector("#request-modal-container");
+    const requests = ["silly", "pretend", "oops"];
+    const requestModalHTML = requestTemplate(requests);
+
+    console.log("HELLO DID WE GET HERE");
+    
+    requestModal.innerHTML = requestModalHTML;
+
+    document.querySelector(".accept-button").addEventListener("click", closeModal);
+    document.querySelector(".reject-button").addEventListener("click", closeModal);
+    document.querySelector(".close-modal").addEventListener("click", closeModal);
 }
 
 function loadRequestModal(requests) {
