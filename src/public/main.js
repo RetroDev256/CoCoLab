@@ -130,7 +130,6 @@ export function getUserId() {
 // --------------------------------------------- PER-PAGE NAVIGATION AND FOOTER
 
 const dir = new URL(".", import.meta.url).href;
-
 document.getElementById("coco_header").innerHTML = `
 <header class="drawer sticky top-0 z-10">
     <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
@@ -148,7 +147,7 @@ document.getElementById("coco_header").innerHTML = `
                 </h1>
             </a>
             <div class="navbar-end">
-                <a class="btn btn-ghost btn-circle" href="#">
+                <a class="btn btn-ghost btn-circle" href="${dir}${getUserId() ? "pages/userSettings.html" : "pages/auth.html"}">
                     <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
                 </a>
             </div>
@@ -159,7 +158,6 @@ document.getElementById("coco_header").innerHTML = `
         <ul class="menu bg-base-200 min-h-full w-80 p-4">
             <!-- Sidebar content here -->
             <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
-            <li> <a href="${dir}pages/projectManager.html">Project Manager</a> </li>
             <li> <a href="${dir}pages/aboutDevs.html">About the Developers</a> </li>
             <li> <a href="${dir}pages/contactUs.html">Contact Us</a> </li>
         </ul>
