@@ -3,138 +3,84 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CoCoLab - Authentication</title>
+        <title>Authentication</title>
+        <link rel="stylesheet" href="../style/style.css" />
 
-        <link rel="stylesheet" href="../output.css" />
-        <link rel="icon" type="image/webp" href="../images/brownie.webp" />
-        <script type="module" src="../main.js"></script>
+        <script type="module">
+            import { saveToken, getUserId } from "../main.js";
+
+            // Get the current user ID
+            const user_id = getUserId();
+            console.log(`Current user ID: ${user_id}`);
+
+            // Modify a form to do something with an endpoint instead
+            function attachAuthHandler(form_id, endpoint) {
+                const form = document.getElementById(form_id);
+                if (form === null) return;
+
+                form.addEventListener("submit", async (event) => {
+                    // Prevent the form from submitting as normal
+                    event.preventDefault();
+
+                    // Submit the data as normal, capturing the response
+                    const data = new FormData(form);
+                    const path = `https://coco.alloc.dev/api/${endpoint}`;
+                    const response = await fetch(path, {
+                        method: "POST",
+                        body: data,
+                    });
+
+                    if (!response.ok) {
+                        // handle response errors
+                        console.log("Authentication failure.");
+                        return;
+                    }
+
+                    // Save the token in local storage for authentication
+                    saveToken(await response.json());
+                    console.log("Successfully logged in.");
+                });
+            }
+
+            // Route sign_up and sign_in to respective endpoints
+            attachAuthHandler("sign_up", "sign_up");
+            attachAuthHandler("sign_in", "sign_in");
+        </script>
     </head>
+
     <body>
-        <coco-header></coco-header>
-
-        <main role="tablist" class="tabs tabs-lift self-center">
+        <h3>Sign-up form:</h3>
+        <form id="sign_up" method="post">
+            <input name="user_name" placeholder="User name" required />
+            <br />
             <input
-                type="radio"
-                name="auth_tabs"
-                class="tab"
-                aria-label="Signin"
-                checked
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
             />
-            <div role="tabpanel" class="tab-content border-base-300 p-6">
-                <form id="SigninForm" class="flex flex-col gap-4">
-                    <input
-                        name="username"
-                        placeholder="User name"
-                        class="input input-bordered"
-                        required
-                    />
-                    <input
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        class="input input-bordered"
-                        required
-                    />
-                    <button type="submit" class="btn btn-primary">
-                        Signin
-                    </button>
-                </form>
-            </div>
+            <br />
+            <input type="email" name="email" placeholder="Email" required />
+            <br />
+            <button type="submit">sign-up</button>
+        </form>
+        <br />
 
+        <h3>Sign-in form:</h3>
+        <form id="sign_in" method="post">
+            <input name="user_name" placeholder="User name" required />
+            <br />
             <input
-                type="radio"
-                name="auth_tabs"
-                class="tab"
-                aria-label="Signup"
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
             />
-            <div role="tabpanel" class="tab-content border-base-300 p-6">
-                <form id="SignupForm" class="flex flex-col gap-4">
-                    <input
-                        name="username"
-                        placeholder="User name"
-                        class="input input-bordered"
-                        required
-                    />
-                    <input
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        class="input input-bordered"
-                        required
-                    />
-                    <input
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        class="input input-bordered"
-                        required
-                    />
-                    <input
-                        name="profile_url"
-                        placeholder="Profile URL"
-                        class="input input-ghost"
-                    />
+            <br />
+            <button type="submit">sign-in</button>
+        </form>
+        <br />
 
-                    <input
-                        name="phone_number"
-                        placeholder="Phone number"
-                        class="input input-ghost"
-                    />
-
-                    <input
-                        name="other_link"
-                        placeholder="Other link"
-                        class="input input-ghost"
-                    />
-                    <button type="submit" class="btn btn-primary">
-                        Signup
-                    </button>
-                </form>
-            </div>
-        </main>
-
-        <coco-footer></coco-footer>
+        <div id="coco_footer"></div>
     </body>
-    <script defer type="module">
-        import { saveToken, getUser } from "../main.js";
-        const user = getUser();
-        console.log(user);
-        document
-            .getElementById("SignupForm")
-            .addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const response = await fetch(
-                    "https://coco.alloc.dev/api/signup",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
-                if (response.ok) {
-                    const json = await response.json();
-                    saveToken(json.token);
-                    window.location.href = "/";
-                }
-            });
-
-        document
-            .getElementById("SigninForm")
-            .addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const response = await fetch(
-                    "https://coco.alloc.dev/api/signin",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
-                if (response.ok) {
-                    const json = await response.json();
-                    saveToken(json.token);
-                    window.location.href = "/";
-                }
-            });
-    </script>
 </html>

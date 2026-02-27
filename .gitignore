@@ -1,3 +1,4 @@
+src/auth_key.pem
 node_modules/
 bun.lock
 .env.*
