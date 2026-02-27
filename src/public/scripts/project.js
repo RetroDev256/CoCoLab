@@ -3,10 +3,11 @@
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL, getUser } from "../main.js";
+import { selectById, selectByValue, isValidURL, getUserId } from "../main.js";
 //For use in creating project request
 let global_project_id = 0;
-let current_user = getUser();
+let current_user_id = getUserId();
+const current_user = await selectById("users", current_user_id);
 // console.log(`Current User: ${current_user}`);
 
 // When page loads, show information for this specific project requested by the user
@@ -65,7 +66,10 @@ async function renderProject(project) {
 
     const join_project = document.getElementById("#join-project");
     //Basic logic for disabling the Join Project button if project is full
-    if (total_helpers >= project.max_people || current_user === null) //greater than shouldn't be possible but could be
+    if (
+        total_helpers >= project.max_people ||
+        current_user === null
+    ) //greater than shouldn't be possible but could be
     {
         join_project.disabled = true;
     }
@@ -91,7 +95,11 @@ async function getOwnerData(owner_id) {
 // Returns html for rendering tags associated with this project
 async function getTagsTemplate(project_id) {
     // Get the list of all projects_tags for that project_id
-    const tag_list = await selectByValue("projects_tags", "project_id", project_id);
+    const tag_list = await selectByValue(
+        "projects_tags",
+        "project_id",
+        project_id,
+    );
 
     if (tag_list.length === 0) {
         console.log(`There are no tags for project ${project_id}`);
@@ -115,7 +123,11 @@ async function getTagName(tag_id) {
 
 // Returns the number of helpers that are already on the project
 async function getHelpersTotal(project_id) {
-    const members = await selectByValue("project_members", "project_id", project_id);
+    const members = await selectByValue(
+        "project_members",
+        "project_id",
+        project_id,
+    );
     return members.length;
 }
 
@@ -128,22 +140,27 @@ async function sendInformation() {
     const join_message = document.querySelector(".join-success");
 
     //user has to exist, otherwise this will not run
-    if(current_user !== null) {
+    if (current_user !== null) {
         //Here we only need the ID- the contact information can be fetched using it later
-        const response = await fetch("https://coco.alloc.dev/api/project_requests", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+        const response = await fetch(
+            "https://coco.alloc.dev/api/project_requests",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: current_user.id,
+                    project_id: global_project_id,
+                    role: "requester",
+                }),
             },
-            body: JSON.stringify({
-                user_id: current_user.id,
-                project_id: global_project_id,
-                role: "requester"
-            })
-        });
+        );
         console.log(response);
-        //This will need to say something better
-        join_message.innerHTML = response;
+        if (response.ok) {
+            join_message.innerHTML = "Request sent successfully";
+        }
+        else {join_message.innerHTML = "Error occured. Try request again later."};
     }
     else {
         console.log("You are not logged in. Please log in before joining any projects.");

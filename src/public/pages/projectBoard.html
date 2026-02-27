@@ -11,17 +11,20 @@
         <script type="module" src="../main.js"></script>
 
         <script type="module">
-            import { selectByTable, getUser } from "/main.js";
+            import { selectByTable, getUserId } from "/main.js";
 
             const project_list = await selectByTable("project");
             const listings = document.getElementById("listings");
-            const user_id = getUser()?.id;
+            const user_id = getUserId();
 
             let listing_html = "";
             for (const project of project_list) {
                 const is_owner =
                     user_id !== null && user_id == project.owner_id;
+                // Do not include completed projects inside of the listing
+                if (project.completed) continue;
 
+                // Add a list eleement to the projects list for each project
                 listing_html += `
                 <li class="list-row">
                     <div class="font-bold">
@@ -48,7 +51,7 @@
     </head>
 
     <body>
-        <coco-header></coco-header>
+        <div id="coco_header"></div>
 
         <main
             class="grow rounded-box m-4 md:m-8 p-4 shadow-xl bg-repeat bg-size-[auto_500px]"
@@ -58,6 +61,6 @@
             <ul id="listings" class="list"></ul>
         </main>
 
-        <coco-footer></coco-footer>
+        <div id="coco_footer"></div>
     </body>
 </html>
