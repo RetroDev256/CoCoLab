@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "start": "bun run src/server.js",
+        "dev": "bun run start & bun run tailwind",
+        "start": "cd src && bun run server.js",
         "tailwind": "bunx @tailwindcss/cli -i ./src/public/input.css -o ./src/public/output.css --watch"
     },
     "dependencies": {
@@ -13,7 +14,7 @@
         "@tailwindcss/cli": "^4.2.1"
     },
     "name": "cocolab",
-    "module": "src/server.js",
+    "module": "./src/server.js",
     "type": "module",
     "private": true
 }

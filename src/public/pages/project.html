@@ -14,66 +14,18 @@
     <body>
         <div id="coco_header"></div>
 
-        <header class="card w-full max-w-2xl shadow-xl self-center">
-            <div class="card-body">
-                <h1 class="card-title text-3xl font-bold project-title">
-                    Project
-                </h1>
-                <h3 class="text-sm opacity-70 project-owner">
-                    Created by 'insert user here'
-                </h3>
-
-                <div class="flex flex-wrap gap-2 my-4 project-tags">
-                    <div class="badge badge-outline">Tag 1</div>
-                    <div class="badge badge-outline">Tag 2</div>
-                </div>
-
-                <div class="divider">Project Details</div>
-                <p class="project-details leading-relaxed">
-                    Load project details from table in database
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-sm">
-                    <div class="stat p-2 bg-base-200 rounded-box">
-                        <div class="stat-title text-xs">Deadline</div>
-                        <div class="stat-value text-base">None</div>
-                    </div>
-                    <div class="stat p-2 bg-base-200 rounded-box">
-                        <div class="stat-title text-xs">Needed</div>
-                        <div class="stat-value text-base people-needed">0</div>
-                    </div>
-                    <div class="stat p-2 bg-base-200 rounded-box">
-                        <div class="stat-title text-xs">Filled</div>
-                        <div class="stat-value text-base people-have">0</div>
-                    </div>
-                </div>
-
-                <div class="card-actions justify-end mt-4">
-                    <button id="return-search" class="btn btn-ghost">
-                        Back to search
-                    </button>
-                    <button id="join-project" class="btn btn-primary">
-                        Join this Project
-                    </button>
+        <main class="card w-full max-w-2xl shadow-xl self-center">
+            <div class="card-body" id="project">
+                <div class="flex justify-center gap-4">
+                    <h2 class="text-3xl">Loading...</h2>
+                    <span class="loading loading-spinner loading-md"></span>
                 </div>
             </div>
-        </header>
+        </main>
 
-            <!-- Insert date if there is one, or just put none instead -->
-            <h3>Deadline: None</h3>
-            <h3 class="people-needed">Number of people needed: 0</h3>
-            <h3 class="people-have">Spots filled: 0</h3>
-            <!--If this is same as above number, join project button should be visible but faded/disabled-->
+        <div id="coco_footer"></div>
+        <div id="toast-container" class="toast"></div>
 
-            <button id="join-project">Join this Project</button>
-            <!--clicking this will trigger a popup that lets you verify and send your info-->
-            <button id="return-search">Back to search</button>
-            <p class="join-success"></p>
-            <!--Ideally on y index as the project, just to the right.-->
-            <!--clickable, looks like a hyperlink but really just closes the tab and goes back to projectBoard-->
-        </div>
-    </main>
-        <coco-footer></coco-footer>
         <script type="module" defer src="../scripts/project.js"></script>
     </body>
 </html>

@@ -3,7 +3,13 @@
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL, getUserId } from "../main.js";
+import {
+    selectById,
+    selectByValue,
+    isValidURL,
+    getUserId,
+    toast,
+} from "../main.js";
 //For use in creating project request
 let global_project_id = 0;
 let current_user_id = getUserId();
@@ -28,53 +34,52 @@ async function init() {
 init();
 
 async function renderProject(project) {
-    //Project title
-    const title = document.querySelector(".project-title");
-    const titleHead = document.querySelector(".project-title-head");
-    title.innerHTML = project.project_name;
-    titleHead.innerHTML = project.project_name;
-
-    //User who created it, along with a link to that user's profile
-    //This calls a separate function that makes call to owner endpoint and gets that owner's name and hyperlink
-    const owner_info = await getOwnerData(project.owner_id);
-    const user = document.querySelector(".project-owner");
-    user.innerHTML = owner_info;
+    const renderElder = document.getElementById("project");
     global_project_id = project.owner_id;
 
-    //array of tags associated with this project
-    //Calls a separate function that will call the project-tags table and get that information
+    const owner_info = await getOwnerData(project.owner_id);
     const tags_info = await getTagsTemplate(project.id);
-    const project_tags = document.querySelector(".project-tags");
-    project_tags.innerHTML = tags_info;
-
-    //Details about this project
-    const details = document.querySelector(".project-details");
-    details.innerHTML = project.details;
-
-    //The deadline for this project, if there is one
-    //Currently not implementing this, so deadline will always be none
-
-    //How many people are needed to help
-    const needed = document.querySelector(".people-needed");
-    needed.innerHTML = `Number of people needed: ${project.max_people}`;
-
-    //How many people are already helping on the project
-    //Separate function will call endpoint and total them up
-    const helpers = document.querySelector(".people-have");
     const total_helpers = await getHelpersTotal(project.id);
-    helpers.innerHTML = `Spots filled: ${total_helpers}`;
 
-    const join_project = document.getElementById("#join-project");
-    //Basic logic for disabling the Join Project button if project is full
-    if (
-        total_helpers >= project.max_people ||
-        current_user === null
-    ) //greater than shouldn't be possible but could be
-    {
-        join_project.disabled = true;
-    }
-    //Should above happen for if current student has already joined the project too?
-    //We'd need a way to get current user's id and compare it internally if that's the case
+    renderElder.innerHTML = ` <h1 class="card-title text-3xl font-bold project-title">
+                    ${project.project_name}
+                </h1>
+                <h3 class="text-sm opacity-70 project-owner">
+                    Created by ${owner_info}
+                </h3>
+
+                <div class="flex flex-wrap gap-2 my-4 project-tags">
+                    ${tags_info}
+                </div>
+
+                <div class="divider">Project Details</div>
+                <p class="project-details leading-relaxed">
+                    ${project.details}
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-sm">
+                    <div class="stat p-2 bg-base-200 rounded-box">
+                        <div class="stat-title text-xs">Deadline</div>
+                        <div class="stat-value text-base">None</div>
+                    </div>
+                    <div class="stat p-2 bg-base-200 rounded-box">
+                        <div class="stat-title text-xs">Needed</div>
+                        <div class="stat-value text-base people-needed">${project.max_people}</div>
+                    </div>
+                    <div class="stat p-2 bg-base-200 rounded-box">
+                        <div class="stat-title text-xs">Filled</div>
+                        <div class="stat-value text-base people-have">${total_helpers}</div>
+                    </div>
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a id="return-search" class="btn btn-ghost" href="projectBoard.html">
+                        Back to search
+                    </a>
+                    <button id="join-project" class="btn btn-primary" ${total_helpers >= project.max_people || current_user_id === null ? "disabled" : ""} onclick="sendInformation()">
+                        Join this Project
+                    </button>
+                </div>`;
 }
 
 // Returns html for owner information
@@ -98,7 +103,7 @@ async function getTagsTemplate(project_id) {
     const tag_list = await selectByValue(
         "projects_tags",
         "project_id",
-        project_id,
+        project_id
     );
 
     if (tag_list.length === 0) {
@@ -109,7 +114,7 @@ async function getTagsTemplate(project_id) {
     for (const tag of tag_list) {
         // Get the name of that tag by its ID
         const tag_name = await getTagName(tag.tag_id);
-        html += `<p class="tag">${tag_name}</p>\n`;
+        html += `<div class="badge badge-outline">${tag_name}</div>\n`;
     }
 
     return html;
@@ -126,7 +131,7 @@ async function getHelpersTotal(project_id) {
     const members = await selectByValue(
         "project_members",
         "project_id",
-        project_id,
+        project_id
     );
     return members.length;
 }
@@ -137,7 +142,8 @@ async function getHelpersTotal(project_id) {
 //This will need some sort of API call to make a record with this user's ID and project owner's ID
 async function sendInformation() {
     console.log("Simulating sending information...");
-    const join_message = document.querySelector(".join-success");
+    const join_project = document.getElementById("join-project");
+    join_project.disabled = true;
 
     //user has to exist, otherwise this will not run
     if (current_user !== null) {
@@ -154,29 +160,20 @@ async function sendInformation() {
                     project_id: global_project_id,
                     role: "requester",
                 }),
-            },
+            }
         );
         console.log(response);
         if (response.ok) {
-            join_message.innerHTML = "Request sent successfully";
+            toast("Request sent successfully");
+        } else {
+            toast("Error occured. Try request again later.", "error");
+            join_project.disabled = false;
         }
-        else {join_message.innerHTML = "Error occured. Try request again later."};
+    } else {
+        toast(
+            "You are not logged in. Please log in before joining any projects.",
+            "error"
+        );
+        join_project.disabled = false;
     }
-    else {
-        console.log("You are not logged in. Please log in before joining any projects.");
-        join_message.innerHTML = "You are not logged in. Please log in before joining any projects.";
-    }
-
-    //In the future the button should be automatically disabled for a user who has already requested to join the project
-    const join_project = document.getElementById("#join-project");
-    join_project.disabled = true;
 }
-
-function close() {
-    window.close();
-}
-
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);

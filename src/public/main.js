@@ -182,3 +182,58 @@ document.getElementById("coco_footer").innerHTML = `
         </a>
     </nav>
 </footer>`;
+
+const typeMap = {
+    success: {
+        alertClass: "alert-success",
+        icon: "check.svg",
+    },
+    error: {
+        alertClass: "alert-error",
+        icon: "xmark.svg",
+    },
+    warning: {
+        alertClass: "alert-warning",
+        icon: "warning-triangle.svg",
+    },
+    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    neutral: {
+        alertClass: "alert-neutral",
+    },
+};
+
+export function toast(message, type = "neutral", duration = 5000) {
+    const container = document.getElementById("toast-container");
+
+    const { alertClass, icon } = typeMap[type] || typeMap.neutral;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "toast-item alert " + alertClass;
+
+    wrapper.innerHTML = `
+        ${icon ? `<img src="${dir}/images/icons/${icon}" alt="Icon" />` : ""}
+        <span class="text-sm font-medium flex-1">${message}</span>
+        <button onclick="dismissToast(this)" class="btn btn-ghost btn-xs btn-circle justify-self-end">✕</button>
+      `;
+
+    container.appendChild(wrapper);
+
+    // Trigger enter animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => wrapper.classList.add("show"));
+    });
+
+    // Auto dismiss
+    const timer = setTimeout(() => dismissToast(null, wrapper), duration);
+    wrapper._timer = timer;
+}
+
+export function dismissToast(btn, wrapper) {
+    const el = wrapper || btn.closest(".toast-item");
+    if (!el || el._dismissing) return;
+    el._dismissing = true;
+    clearTimeout(el._timer);
+    el.classList.remove("show");
+    el.classList.add("hide");
+    el.addEventListener("transitionend", () => el.remove(), { once: true });
+}
