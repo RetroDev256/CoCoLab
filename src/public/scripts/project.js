@@ -45,10 +45,10 @@ async function renderProject(project) {
                     ${project.project_name}
                 </h1>
                 <h3 class="text-sm opacity-70 project-owner">
-                    Created by ${owner_info}
+                    ${owner_info}
                 </h3>
 
-                <div class="flex flex-wrap gap-2 my-4 project-tags">
+                <div class="flex flex-wrap gap-2 project-tags">
                     ${tags_info}
                 </div>
 
@@ -57,11 +57,7 @@ async function renderProject(project) {
                     ${project.details}
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-sm">
-                    <div class="stat p-2 bg-base-200 rounded-box">
-                        <div class="stat-title text-xs">Deadline</div>
-                        <div class="stat-value text-base">None</div>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 text-sm">
                     <div class="stat p-2 bg-base-200 rounded-box">
                         <div class="stat-title text-xs">Needed</div>
                         <div class="stat-value text-base people-needed">${project.max_people}</div>
@@ -140,7 +136,7 @@ async function getHelpersTotal(project_id) {
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
 //This will need some sort of API call to make a record with this user's ID and project owner's ID
-async function sendInformation() {
+export async function sendInformation() {
     console.log("Simulating sending information...");
     const join_project = document.getElementById("join-project");
     join_project.disabled = true;
