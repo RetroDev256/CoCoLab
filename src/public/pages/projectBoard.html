@@ -19,30 +19,18 @@
 
             let listing_html = "";
             for (const project of project_list) {
+                const is_owner =
+                    user_id !== null && user_id == project.owner_id;
                 // Do not include completed projects inside of the listing
                 if (project.completed) continue;
-
-                // If you are the owner of a project, use the owner page
-                let page = "project.html";
-                if (user_id === project.owner_id) {
-                    page = "project-ownerView.html";
-                }
 
                 // Add a list eleement to the projects list for each project
                 listing_html += `
                 <li class="list-row">
-                    <div class="text-xl">${project.project_name}</div>
-                    <div>${project.details}</div>
-                    <a
-                        href="pages/${page}?id=${project.id}"
-                        target="_blank"
-                        class="btn btn-outline"
-                    >
-                        view<img
-                            src="../images/icons/open-new-window.svg"
-                            alt="view"
-                            class="ml-2"
-                        />
+                    <a href="pages/${is_owner ? "project-ownerView.html" : "project.html"}?id=${project.id}" class="flex items-center gap-4">
+                        <div class="font-bold">${project.project_name}</div>
+                        <div class="text-xs uppercase">${project.owner_id} - ${project.max_people} ${is_owner ? " - (Owner)" : ""}</div>
+                        <div class="text-center">${project.details}</div>
                     </a>
                 </li>
 				`;
@@ -56,10 +44,23 @@
         <div id="coco_header"></div>
 
         <main
-            class="rounded-box m-4 md:m-8 p-4 shadow-xl bg-cover bg-center bg-no-repeat grow"
+            class="grow rounded-box m-4 md:m-8 p-4 shadow-xl bg-repeat bg-size-[auto_500px]"
             style="background-image: url(../images/board.jpg)"
         >
-            <h1 class="w-full text-center text-4xl font-bold">Projects:</h1>
+            <div class="flex justify-between w-full">
+                <h1 class="text-4xl font-bold">Projects:</h1>
+                <button class="btn" onclick="new_project_modal.showModal()">
+                    New Project
+                </button>
+                <dialog id="new_project_modal" class="modal">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg">New Project</h3>
+                        <p>Fill out the form below to create a new project.</p>
+                        <!-- Insert form here -->
+                    </div>
+                </dialog>
+            </div>
+
             <ul id="listings" class="list"></ul>
         </main>
 
