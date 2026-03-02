@@ -24,7 +24,7 @@ let global_project_id = 0;
 
 // When page loads, show information for this specific project requested by the user
 //Also load whether anyone has requested to join this project
-async function init() {
+export async function init() {
     //ONLY UNTIL CSS is in place!!!!!!
     loadFakeRequestModal();
     const params = new URLSearchParams(window.location.search);
@@ -42,7 +42,7 @@ async function init() {
 
 init();
 
-async function renderProject(project) {
+export async function renderProject(project) {
     //Project title
     const title = document.querySelector(".project-title");
     const titleHead = document.querySelector(".project-title-head");
@@ -96,7 +96,7 @@ async function renderProject(project) {
 }
 
 // Returns html for owner information
-async function getOwnerData(owner_id) {
+export async function getOwnerData(owner_id) {
     const owner = await selectById("users", owner_id);
 
     // Handle the case where we can't find a user with that ID
@@ -111,7 +111,7 @@ async function getOwnerData(owner_id) {
 }
 
 // Returns html for rendering tags associated with this project
-async function getTagsTemplate(project_id) {
+export async function getTagsTemplate(project_id) {
     // Get the list of all projects_tags for that project_id
     const tag_list = await selectByValue(
         "projects_tags",
@@ -134,13 +134,13 @@ async function getTagsTemplate(project_id) {
 }
 
 // Get the name of a tag based on its ID
-async function getTagName(tag_id) {
+export async function getTagName(tag_id) {
     const tag = await selectById("category_tags", tag_id);
     return tag ? tag.name : "INVALID_TAG";
 }
 
 // Returns the number of helpers that are already on the project
-async function getHelpersTotal(project_id) {
+export async function getHelpersTotal(project_id) {
     const members = await selectByValue(
         "project_members",
         "project_id",
@@ -149,7 +149,7 @@ async function getHelpersTotal(project_id) {
     return members.length;
 }
 
-async function getPeopleTemplate(project_id) {
+export async function getPeopleTemplate(project_id) {
     const members = await selectByValue(
         "project_members",
         "project_id",
@@ -171,12 +171,12 @@ async function getPeopleTemplate(project_id) {
     return html;
 }
 
-async function getPersonDetails(user_id) {
+export async function getPersonDetails(user_id) {
     const person = await selectById("users", user_id);
     return person ? person : "INVALID_PERSON";
 }
 
-async function getJoinRequests(project_id) {
+export async function getJoinRequests(project_id) {
     //will need a way to get the id of the current person using the page?
     const requests = await selectByValue(
         "project_requests",
@@ -188,13 +188,11 @@ async function getJoinRequests(project_id) {
     }
 }
 
-function loadFakeRequestModal() {
+export function loadFakeRequestModal() {
     //const requests = await selectByValue("project_requests", "project_id", global_project_id);
     const requestModal = document.querySelector("#request-modal-container");
     const requests = ["silly", "pretend", "oops"];
     const requestModalHTML = requestTemplate(requests);
-
-    console.log("HELLO DID WE GET HERE");
     
     requestModal.innerHTML = requestModalHTML;
 
@@ -203,7 +201,7 @@ function loadFakeRequestModal() {
     document.querySelector(".close-modal").addEventListener("click", closeModal);
 }
 
-function loadRequestModal(requests) {
+export function loadRequestModal(requests) {
     //const requests = await selectByValue("project_requests", "project_id", global_project_id);
     const requestModal = document.querySelector("#request-modal-container");
     const requestModalHTML = requestTemplate(requests);
@@ -221,7 +219,7 @@ function loadRequestModal(requests) {
         .addEventListener("click", closeModal);
 }
 
-function requestTemplate(requests) {
+export function requestTemplate(requests) {
     let people = ``;
     //use when css is done
     //     for (const request of requests) {
@@ -242,7 +240,7 @@ function requestTemplate(requests) {
 //will "accept" the request to join this project, adding user info to project_members
 //This will cause the user in question to show up onscreen WITH contact information
 //will also delete record from project_requests and close the modal
-async function acceptRequest(requests) {
+export async function acceptRequest(requests) {
     for (const request in requests) {
         //Add user
         const addResult = await fetch(
@@ -281,7 +279,7 @@ async function acceptRequest(requests) {
 
 //will "reject" the request to join, so info is not added
 //still deletes record from project_requests and closes the modal
-async function rejectRequest(requests) {
+export async function rejectRequest(requests) {
     for (const request in requests) {
         const result = await deleteByValue(
             "project_requests",
@@ -297,7 +295,7 @@ async function rejectRequest(requests) {
 
 //For project owners, they can mark a project as complete. That will make it so the project won't show
 //on the project board. It will print a notice of success, then disable the button
-async function completeProject() {
+export async function completeProject() {
     const current_project = await selectById("project", global_project_id);
     const response = await fetch("https://coco.alloc.dev/api/project", {
         method: "PUT",
@@ -346,7 +344,7 @@ async function completeProject() {
 //             </div>`
 // }
 
-function closeModal() {
+export function closeModal() {
     let element = document.querySelector(".completion-modal");
     if (element) {
         element.remove();
