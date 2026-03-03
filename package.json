@@ -2,7 +2,7 @@
     "scripts": {
         "dev": "bun run start & bun run tailwind",
         "start": "cd src && bun run server.js",
-        "tailwind": "bunx @tailwindcss/cli -i ./src/public/input.css -o ./src/public/output.css --watch"
+        "tailwind": "cd src && bunx @tailwindcss/cli -i ./public/input.css -o ./public/output.css --watch"
     },
     "dependencies": {
         "jose": "^6.1.3",
