@@ -176,7 +176,9 @@ function close() {
     window.close();
 }
 
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);
+if (typeof document !== 'undefined') {
+    const return_search = document.querySelector("#return-search");
+    return_search.addEventListener("click", close);
+    const join_project = document.querySelector("#join-project");
+    join_project.addEventListener("click", sendInformation);
+}

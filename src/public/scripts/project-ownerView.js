@@ -40,7 +40,9 @@ export async function init() {
     await renderProject(project);
 }
 
-init();
+if (typeof document !== 'undefined') {
+    init();
+}
 
 export async function renderProject(project) {
     //Project title
@@ -360,7 +362,9 @@ function close() {
     window.close();
 }
 
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const complete_project = document.querySelector("#complete-project");
-complete_project.addEventListener("click", completeProject);
+if (typeof document !== 'undefined') {
+    const return_search = document.querySelector("#return-search");
+    return_search.addEventListener("click", close);
+    const complete_project = document.querySelector("#complete-project");
+    complete_project.addEventListener("click", completeProject);
+}
