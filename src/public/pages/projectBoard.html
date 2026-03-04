@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../output.css" />
         <link rel="icon" type="image/webp" href="../images/brownie.webp" />
         <script type="module" src="../main.js"></script>
+        <script type="module" src="../scripts/project.js"></script>
 
         <script type="module">
             import { selectTable, getUserId } from "/main.js";
@@ -64,6 +65,7 @@
                     >
                         <input
                             name="project_name"
+                            id="project_name_input"
                             type="text"
                             placeholder="Project name"
                             class="input input-bordered w-full"
@@ -73,20 +75,22 @@
                             <input
                                 name="max_people"
                                 type="number"
+                                id="max_people_input"
                                 placeholder="Max people"
                                 class="input input-bordered w-full"
                                 required
                             />
-                            <input
+                            <!-- <input
                                 name="owner_id"
                                 type="number"
                                 placeholder="Owner ID"
                                 class="input input-bordered w-full"
                                 required
-                            />
+                            /> -->
                         </div>
                         <textarea
                             name="details"
+                            id="details_input"
                             placeholder="Details"
                             class="textarea textarea-bordered h-24"
                             required

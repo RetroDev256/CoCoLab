@@ -318,18 +318,32 @@ async function completeProject(btn) {
 
     toast("You completed this project!! Good job :)");
 }
-function createProject() {
-    const createButton = document.querySelector("create-project-button");
-    createButton.addEventListener("click", async (event) => {
-        // i dont know if i need the preventDefault
-        event.preventDefault();
-        getUserId();
-        
+async function createProject() {
+        const tabledata = {
+            project_name: document.querySelector("#project_name_input").value,
+            max_people: document.querySelector("#max_people_input").value,
+            details: document.querySelector("#details_input").value,
+            owner_id: getUserId()
+        };
 
-    });
+        try {
+            const response = await insert("project", tabledata);
+            console.log("Project created successfully:", response);
+            alert("Project created successfully!");
+        }
+        catch (error) {
+            console.error("Error creating project:", error);
+            alert("Error creating project. Please try again.");
+        }
+
 }
 
 const return_search = document.querySelector("#return-search");
 return_search.addEventListener("click", close);
 const join_project = document.querySelector("#join-project");
 join_project.addEventListener("click", sendInformation);
+const createButton = document.querySelector("create-project-button");
+    createButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+        await createProject();
+    });
