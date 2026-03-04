@@ -65,7 +65,7 @@ async function renderProject(project) {
                 Complete Project
             </button>`;
         } else if (
-            members.some((member) => member.user_id === current_user_id)
+            members.some((member) => member.user.id === current_user_id)
         ) {
             return "";
         } else {
