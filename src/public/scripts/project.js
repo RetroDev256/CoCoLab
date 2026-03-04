@@ -318,3 +318,18 @@ async function completeProject(btn) {
 
     toast("You completed this project!! Good job :)");
 }
+function createProject() {
+    const createButton = document.querySelector("create-project-button");
+    createButton.addEventListener("click", async (event) => {
+        // i dont know if i need the preventDefault
+        event.preventDefault();
+        getUserId();
+        
+
+    });
+}
+
+const return_search = document.querySelector("#return-search");
+return_search.addEventListener("click", close);
+const join_project = document.querySelector("#join-project");
+join_project.addEventListener("click", sendInformation);

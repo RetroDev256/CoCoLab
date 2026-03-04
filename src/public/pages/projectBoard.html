@@ -57,6 +57,44 @@
                         <h3 class="font-bold text-lg">New Project</h3>
                         <p>Fill out the form below to create a new project.</p>
                         <!-- Insert form here -->
+                        <form
+                        action="/api/project"
+                        method="POST"
+                        class="flex flex-col gap-4"
+                    >
+                        <input
+                            name="project_name"
+                            type="text"
+                            placeholder="Project name"
+                            class="input input-bordered w-full"
+                            required
+                        />
+                        <div class="flex gap-4">
+                            <input
+                                name="max_people"
+                                type="number"
+                                placeholder="Max people"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                            <input
+                                name="owner_id"
+                                type="number"
+                                placeholder="Owner ID"
+                                class="input input-bordered w-full"
+                                required
+                            />
+                        </div>
+                        <textarea
+                            name="details"
+                            placeholder="Details"
+                            class="textarea textarea-bordered h-24"
+                            required
+                        ></textarea>
+                        <button type="submit" id="create-project-button" class="btn btn-primary">
+                            Create Project
+                        </button>
+                    </form>
                     </div>
                     <form method="dialog" class="modal-backdrop">
                         <button>close</button>
