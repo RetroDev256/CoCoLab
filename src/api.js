@@ -14,7 +14,7 @@ export async function apiPost(url, data) {
     if (response) return response;
 
     // ----------------------------------------------------- INSERTING PROJECTS
-    if (url.pathname === "/api/project") {
+    if (url.pathname === "/API/project") {
         const result = await pool.query(
             `INSERT INTO project (project_name, max_people, completed, details, owner_id)
             VALUES ($1, $2, $3, $4, $5)
@@ -25,7 +25,7 @@ export async function apiPost(url, data) {
                 data.completed,
                 data.details,
                 data.owner_id,
-            ],
+            ]
         );
 
         // Return HTTP "successfully created" & the created row
@@ -33,12 +33,12 @@ export async function apiPost(url, data) {
     }
 
     // ------------------------------------------------ INSERTING CATEGORY TAGS
-    if (url.pathname === "/api/category_tags") {
+    if (url.pathname === "/API/category_tags") {
         const result = await pool.query(
             `INSERT INTO category_tags (name)
             VALUES ($1)
             RETURNING *;`,
-            [data.name],
+            [data.name]
         );
 
         // Return HTTP "successfully created" & the created row
@@ -46,12 +46,12 @@ export async function apiPost(url, data) {
     }
 
     // ------------------------------------------------- INSERTING PROJECT TAGS
-    if (url.pathname === "/api/projects_tags") {
+    if (url.pathname === "/API/projects_tags") {
         const result = await pool.query(
             `INSERT INTO projects_tags (project_id, tag_id)
             VALUES ($1, $2)
             RETURNING *;`,
-            [data.project_id, data.tag_id],
+            [data.project_id, data.tag_id]
         );
 
         // Return HTTP "successfully created" & the created row
@@ -59,12 +59,12 @@ export async function apiPost(url, data) {
     }
 
     // ---------------------------------------------- INSERTING PROJECT MEMBERS
-    if (url.pathname === "/api/project_members") {
+    if (url.pathname === "/API/project_members") {
         const result = await pool.query(
             `INSERT INTO project_members (user_id, project_id, role)
             VALUES ($1, $2, $3)
             RETURNING *;`,
-            [data.user_id, data.project_id, data.role],
+            [data.user_id, data.project_id, data.role]
         );
 
         // Return HTTP "successfully created" & the created row
@@ -72,12 +72,12 @@ export async function apiPost(url, data) {
     }
 
     // ---------------------------------------------- INSERTING PROJECT MEMBERS
-    if (url.pathname === "/api/project_requests") {
+    if (url.pathname === "/API/project_requests") {
         const result = await pool.query(
             `INSERT INTO project_requests (user_id, project_id, role)
             VALUES ($1, $2, $3)
             RETURNING *;`,
-            [data.user_id, data.project_id, data.role],
+            [data.user_id, data.project_id, data.role]
         );
 
         // Return HTTP "successfully created" & the created row
@@ -87,58 +87,140 @@ export async function apiPost(url, data) {
     return null;
 }
 
-// Exposes GET endpoints under /API/ for each SQL table
+// Exposes PUT endpoints under /API/ for updating rows by ID
+export async function apiPut(url, data) {
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (parts[0] !== "API") return null;
+
+    const fields = Object.keys(data);
+    if (fields.length === 0) {
+        return Response.json(
+            { error: "No fields provided to update" },
+            { status: 400 }
+        );
+    }
+
+    switch (parts.length) {
+        // /API/TABLE/ID --- Update row by id
+        case 3: {
+            const table = escapeIdentifier(parts[1]);
+            const id = parts[2];
+
+            // Build SET clause: "field1" = $1, "field2" = $2, ...
+            const setClauses = fields.map(
+                (field, i) => `${escapeIdentifier(field)} = $${i + 1}`
+            );
+            const values = fields.map((f) => data[f]);
+            values.push(id); // id goes last as the final parameter
+
+            const query = `UPDATE ${table} SET ${setClauses.join(", ")} WHERE id = $${values.length} RETURNING *;`;
+            const result = await pool.query(query, values);
+
+            if (result.rows.length === 0) {
+                return Response.json(
+                    { error: "Row not found" },
+                    { status: 404 }
+                );
+            }
+            return Response.json(result.rows[0]);
+        }
+
+        // /API/TABLE/FIELD/VALUE --- Update row where field = value
+        case 4: {
+            const table = escapeIdentifier(parts[1]);
+            const field = escapeIdentifier(parts[2]);
+            const value = parts[3];
+
+            // Build SET clause: "field1" = $1, "field2" = $2, ...
+            const setClauses = fields.map(
+                (field, i) => `${escapeIdentifier(field)} = $${i + 1}`
+            );
+            const values = fields.map((f) => data[f]);
+            values.push(value); // value goes last as the final parameter
+
+            const query = `UPDATE ${table} SET ${setClauses.join(", ")} WHERE ${field} = $1 RETURNING *;`;
+            const result = await pool.query(query, values);
+
+            if (result.rows.length === 0) {
+                return Response.json(
+                    { error: "Row not found" },
+                    { status: 404 }
+                );
+            }
+            return Response.json(result.rows[0]);
+        }
+    }
+
+    return null;
+}
+
+// Exposes DELETE endpoints under /API
+export async function apiDelete(url) {
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (parts[0] !== "API") return null;
+
+    switch (parts.length) {
+        // /API/TABLE --- Delete all values from a table
+        case 2: {
+            const table = escapeIdentifier(parts[1]);
+            const query = `DELETE FROM ${table} RETURNING *;`;
+            const rows = (await pool.query(query)).rows;
+            return Response.json(rows);
+        }
+
+        // /API/TABLE/ID --- Delete by id
+        case 3: {
+            const table = escapeIdentifier(parts[1]);
+            const id = parts[2];
+            const query = `DELETE FROM ${table} WHERE id = $1 RETURNING *;`;
+            const rows = (await pool.query(query, [id])).rows;
+            return Response.json(rows);
+        }
+
+        // /API/TABLE/FIELD/VALUE --- Delete where field = value
+        case 4: {
+            const table = escapeIdentifier(parts[1]);
+            const field = escapeIdentifier(parts[2]);
+            const value = parts[3];
+            const query = `DELETE FROM ${table} WHERE ${field} = $1 RETURNING *;`;
+            const rows = (await pool.query(query, [value])).rows;
+            return Response.json(rows);
+        }
+    }
+
+    return null;
+}
+
+// Exposes GET endpoints under /API
 export async function apiGet(url) {
     // --- /API/TABLE/ID would parse to ["API", "TABLE", "ID"]
     const parts = url.pathname.split("/").filter(Boolean);
     if (parts[0] !== "API") return null;
 
     switch (parts.length) {
-        // /API/SELECT/TABLE --- Get all values from a table
-        case 3: {
-            if (parts[1] !== "SELECT") break;
-            const table = escapeIdentifier(parts[2]);
+        // /API/TABLE --- Get all values from a table
+        case 2: {
+            const table = escapeIdentifier(parts[1]);
             const query = `SELECT * FROM ${table};`;
             return Response.json((await pool.query(query)).rows);
         }
 
-        // /API/SELECT/TABLE/ID --- Get values from a table matching an ID
-        // /API/DELETE/TABLE/ID --- Delete values from a table matching ID
-        case 4: {
-            const table = escapeIdentifier(parts[2]);
+        // /API/TABLE/ID --- Get values from a table matching an ID
+        case 3: {
+            const table = escapeIdentifier(parts[1]);
             const id = parts[3];
-
-            switch (parts[1]) {
-                case "SELECT": {
-                    const query = `SELECT * FROM ${table} WHERE id = $1;`;
-                    return Response.json((await pool.query(query, [id])).rows);
-                }
-                case "DELETE": {
-                    const query = `DELETE FROM ${table} WHERE id = $1;`;
-                    return Response.json((await pool.query(query, [id])).rows);
-                }
-            }
+            const query = `SELECT * FROM ${table} WHERE id = $1;`;
+            return Response.json((await pool.query(query, [id])).rows);
         }
 
-        // /API/SELECT/TABLE/FIELD/VALUE --- Select from table, field == value
-        // /API/DELETE/TABLE/FIELD/VALUE --- Delete from table, field == value
-        case 5: {
-            const table = escapeIdentifier(parts[2]);
-            const field = escapeIdentifier(parts[3]);
+        // /API/TABLE/FIELD/VALUE --- Select from table, field == value
+        case 4: {
+            const table = escapeIdentifier(parts[1]);
+            const field = escapeIdentifier(parts[2]);
             const value = parts[4];
-
-            switch (parts[1]) {
-                case "SELECT": {
-                    const query = `SELECT * FROM ${table} WHERE ${field} = $1;`;
-                    const rows = (await pool.query(query, [value])).rows;
-                    return Response.json(rows);
-                }
-                case "DELETE": {
-                    const query = `DELETE FROM ${table} WHERE ${field} = $1;`;
-                    const rows = (await pool.query(query, [value])).rows;
-                    return Response.json(rows);
-                }
-            }
+            const query = `SELECT * FROM ${table} WHERE ${field} = $1;`;
+            const rows = (await pool.query(query, [value])).rows;
+            return Response.json(rows);
         }
     }
 

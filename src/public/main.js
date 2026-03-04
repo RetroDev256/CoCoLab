@@ -1,58 +1,15 @@
-// --------------------------------------------------------------------- BURGER
-
-const burger = document.getElementById("burger");
-const side_menu = document.getElementById("side_menu");
-
-export function openMenu() {
-    side_menu.classList.add("open");
-}
-
-export function closeMenu() {
-    side_menu.classList.remove("open");
-}
-
-if (burger !== null) {
-    // The menu can be opened if and only if the burger is clicked
-    burger.addEventListener("click", (e) => openMenu());
-
-    // The menu can be closed if we did not click on the burger
-    document.addEventListener("click", (event) => {
-        if (!burger.contains(event.target)) closeMenu();
-    });
-
-    // The menu can be closed if we pressed escape
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-    });
-}
-
 // ----------------------------------------------------------- DATABASE HELPERS
 
+const url = "https://coco.alloc.dev";
 // Returns a list of all JS objects in a table
-export async function selectByTable(table) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}`;
+export async function selectTable(table) {
+    const path = `${url}/API/${table}`;
     return await (await fetch(path)).json();
 }
 
 // Returns either a single JS object, or null
 export async function selectById(table, id) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}/${id}`;
-    const response = await fetch(path);
-    const json = await response.json();
-
-    if (json.length === 0) {
-        return null;
-    } else {
-        return json[0];
-    }
-}
-
-// Returns either a single JS object, or null
-export async function deleteById(table, id) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/DELETE/${table}/${id}`;
+    const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
     const json = await response.json();
 
@@ -65,28 +22,66 @@ export async function deleteById(table, id) {
 
 // Returns a list based on a table, field, and value
 export async function selectByValue(table, field, value) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}/${field}/${value}`;
+    const path = `${url}/API/${table}/${field}/${value}`;
     return await (await fetch(path)).json();
+}
+
+// Returns either a single JS object, or null
+export async function deleteById(table, id) {
+    const path = `${url}/API/${table}/${id}`;
+    const response = await fetch(path, { method: "DELETE" });
+    const json = await response.json();
+
+    if (json.length === 0) {
+        return null;
+    } else {
+        return json[0];
+    }
 }
 
 // Returns a list based on a table, field, and value
 export async function deleteByValue(table, field, value) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/DELETE/${table}/${field}/${value}`;
-    return await (await fetch(path)).json();
+    const path = `${url}/API/${table}/${field}/${value}`;
+    return await (await fetch(path, { method: "DELETE" })).json();
 }
 
-// Used when rendering owners of projects
-export function isValidURL(url) {
-    try {
-        new URL(url);
-        console.log("isValidURL: true");
-        return true;
-    } catch {
-        console.log("isValidURL: false");
-        return false;
-    }
+export async function insert(table, data) {
+    const path = `${url}/API/${table}`;
+    return await (
+        await fetch(path, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
+}
+
+export async function updateById(table, id, data) {
+    const path = `${url}/API/${table}/${id}`;
+    return await (
+        await fetch(path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
+}
+
+export async function updateByValue(table, field, value, data) {
+    const path = `${url}/API/${table}/${field}/${value}`;
+    return await (
+        await fetch(path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
 }
 
 // ----------------------------------------------------- AUTHENTICATION HELPERS
@@ -182,3 +177,58 @@ document.getElementById("coco_footer").innerHTML = `
         </a>
     </nav>
 </footer>`;
+
+const typeMap = {
+    success: {
+        alertClass: "alert-success",
+        icon: "check.svg",
+    },
+    error: {
+        alertClass: "alert-error",
+        icon: "xmark.svg",
+    },
+    warning: {
+        alertClass: "alert-warning",
+        icon: "warning-triangle.svg",
+    },
+    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    neutral: {
+        alertClass: "alert-neutral",
+    },
+};
+
+export function toast(message, type = "neutral", duration = 5000) {
+    const container = document.getElementById("toast-container");
+
+    const { alertClass, icon } = typeMap[type] || typeMap.neutral;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "toast-item alert " + alertClass;
+
+    wrapper.innerHTML = `
+        ${icon ? `<img src="${dir}/images/icons/${icon}" alt="Icon" />` : ""}
+        <span class="text-sm font-medium flex-1">${message}</span>
+        <button onclick="dismissToast(this)" class="btn btn-ghost btn-xs btn-circle justify-self-end">✕</button>
+      `;
+
+    container.appendChild(wrapper);
+
+    // Trigger enter animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => wrapper.classList.add("show"));
+    });
+
+    // Auto dismiss
+    const timer = setTimeout(() => dismissToast(null, wrapper), duration);
+    wrapper._timer = timer;
+}
+
+export function dismissToast(btn, wrapper) {
+    const el = wrapper || btn.closest(".toast-item");
+    if (!el || el._dismissing) return;
+    el._dismissing = true;
+    clearTimeout(el._timer);
+    el.classList.remove("show");
+    el.classList.add("hide");
+    el.addEventListener("transitionend", () => el.remove(), { once: true });
+}

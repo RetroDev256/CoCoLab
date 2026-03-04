@@ -3,12 +3,18 @@
 // and use it to populate the page
 
 // Helper functions for the API in the root main.js (client-side) file
-import { selectById, selectByValue, isValidURL, getUserId } from "../main.js";
-//For use in creating project request
-let global_project_id = 0;
+import {
+    selectById,
+    selectByValue,
+    getUserId,
+    toast,
+    updateById,
+    deleteById,
+    insert,
+} from "../main.js";
+
 let current_user_id = getUserId();
-const current_user = await selectById("users", current_user_id);
-// console.log(`Current User: ${current_user}`);
+let global_project_id = 0;
 
 // When page loads, show information for this specific project requested by the user
 async function init() {
@@ -27,156 +33,288 @@ async function init() {
 
 init();
 
+function renderUser(user) {
+    return ` <div class="flex gap-2 rounded-box bg-base-200 p-3">
+                    <div class="avatar avatar-placeholder">
+                        <div class="bg-neutral text-neutral-content size-10 rounded-full">
+                            <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm opacity-70">${user.user_name}</span>
+                        <span class="text-sm opacity-70">${user.email}</span>
+                    </div>
+                </div>`;
+}
+
 async function renderProject(project) {
-    //Project title
-    const title = document.querySelector(".project-title");
-    const titleHead = document.querySelector(".project-title-head");
-    title.innerHTML = project.project_name;
-    titleHead.innerHTML = project.project_name;
+    const renderElder = document.getElementById("project");
 
-    //User who created it, along with a link to that user's profile
-    //This calls a separate function that makes call to owner endpoint and gets that owner's name and hyperlink
-    const owner_info = await getOwnerData(project.owner_id);
-    const user = document.querySelector(".project-owner");
-    user.innerHTML = owner_info;
-    global_project_id = project.owner_id;
+    const owner = await getUser(project.owner_id);
+    const members = await getMembers(project.id);
 
-    //array of tags associated with this project
-    //Calls a separate function that will call the project-tags table and get that information
-    const tags_info = await getTagsTemplate(project.id);
-    const project_tags = document.querySelector(".project-tags");
-    project_tags.innerHTML = tags_info;
+    const is_owner = current_user_id === project.owner_id;
 
-    //Details about this project
-    const details = document.querySelector(".project-details");
-    details.innerHTML = project.details;
-
-    //The deadline for this project, if there is one
-    //Currently not implementing this, so deadline will always be none
-
-    //How many people are needed to help
-    const needed = document.querySelector(".people-needed");
-    needed.innerHTML = `Number of people needed: ${project.max_people}`;
-
-    //How many people are already helping on the project
-    //Separate function will call endpoint and total them up
-    const helpers = document.querySelector(".people-have");
-    const total_helpers = await getHelpersTotal(project.id);
-    helpers.innerHTML = `Spots filled: ${total_helpers}`;
-
-    const join_project = document.getElementById("#join-project");
-    //Basic logic for disabling the Join Project button if project is full
-    if (
-        total_helpers >= project.max_people ||
-        current_user === null
-    ) //greater than shouldn't be possible but could be
-    {
-        join_project.disabled = true;
+    async function renderActions() {
+        if (current_user_id === null) {
+            return "";
+        }
+        if (is_owner) {
+            return `${await renderRequests(project.id)}
+            <button id="complete-project" class="btn btn-primary" ${project.completed ? "disabled" : ""}>
+                Complete Project
+            </button>`;
+        } else if (
+            members.some((member) => member.user_id === current_user_id)
+        ) {
+            return "";
+        } else {
+            return `
+            <button id="join-project" class="btn btn-primary" ${members.length >= project.max_people ? "disabled" : ""}>
+                Join this Project
+            </button>`;
+        }
     }
-    //Should above happen for if current student has already joined the project too?
-    //We'd need a way to get current user's id and compare it internally if that's the case
+
+    renderElder.innerHTML = ` <h1 class="card-title text-3xl font-bold">
+                    ${project.project_name}
+                </h1>
+                <div class="flex flex-wrap gap-2">
+                    
+                    ${await renderTags(project.id)}
+                </div>
+                <h3 class="text-2xl font-semibold mt-4">Project Details</h3>
+                <p class="project-details leading-relaxed">
+                    ${project.details}
+                </p>
+
+                <h3 class="text-2xl font-semibold mt-4">Project Members</h3>
+                <div class="flex items-center gap-4">
+                    <span>${members.length} of ${project.max_people} people </span>
+                    <progress class="progress w-20" value="${members.length}" max="${project.max_people}"></progress>
+                    <span>${(members.length / project.max_people) * 100}% filled</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                    <div class="indicator">
+                        <span class="indicator-item indicator-center badge badge-primary">Owner</span>
+                        ${renderUser(owner)}
+                    </div>
+                    ${members
+                        .map(
+                            (member) => `<div class="indicator">
+                            <span class="indicator-item indicator-center badge">${member.role}</span>
+                            ${renderUser(member.user)}
+                        </div>`
+                        )
+                        .join("")}
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a id="return-search" class="btn btn-ghost" href="projectBoard.html">
+                        Back to search
+                    </a>
+                    ${await renderRequests()}
+                    ${await renderActions()}
+                </div>`;
+
+    addListeners();
 }
 
-// Returns html for owner information
-async function getOwnerData(owner_id) {
-    const owner = await selectById("users", owner_id);
-
-    // Handle the case where we can't find a user with that ID
-    if (owner === null) return `Unknown project owner`;
-
-    // Render the HTML depending on if the profile URL is valid
-    if (isValidURL(owner.profile_url)) {
-        return `Created By: <a href="${owner.profile_url}">${owner.user_name}</a>`;
-    } else {
-        return `Created By: ${owner.user_name}`;
-    }
-}
-
-// Returns html for rendering tags associated with this project
-async function getTagsTemplate(project_id) {
+async function renderTags() {
     // Get the list of all projects_tags for that project_id
-    const tag_list = await selectByValue(
+    const tag_ids = await selectByValue(
         "projects_tags",
         "project_id",
-        project_id,
+        global_project_id
     );
 
-    if (tag_list.length === 0) {
-        console.log(`There are no tags for project ${project_id}`);
+    if (tag_ids.length === 0) {
+        console.log(`There are no tags for project ${global_project_id}`);
+        return "";
     }
 
-    let html = ``;
-    for (const tag of tag_list) {
-        // Get the name of that tag by its ID
-        const tag_name = await getTagName(tag.tag_id);
-        html += `<p class="tag">${tag_name}</p>\n`;
+    const tag_names = await Promise.all(
+        tag_ids.map(async ({ tag_id }) => {
+            const tag = await selectById("category_tags", tag_id);
+            return tag ? tag.name : "INVALID_TAG";
+        })
+    );
+
+    return tag_names
+        .map((tag) => `<div class="badge badge-outline">${tag}</div>\n`)
+        .join("");
+}
+
+async function renderRequests() {
+    const requests = await getJoinRequests();
+
+    if (requests.length === 0) {
+        return "";
     }
 
-    return html;
+    return `
+    <button class="btn" onclick="request_modal.showModal()">
+        ${requests.length} Join Request${requests.length > 1 ? "s" : ""}
+    </button>
+    <dialog id="request_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Join Requests</h3>
+            <ul class="list">
+            ${requests
+                .map(
+                    (request) => `
+                    <li class="list-row items-center">
+                       ${renderUser(request.user)}
+                       ${request.role}
+                        <button class="btn btn-square btn-primary accept-button" value="${request.id}">
+                            <img src="../images/icons/check.svg" alt="Accept" />
+                        </button>
+                        <button class="btn btn-square btn-secondary reject-button" value="${request.id}">
+                            <img src="../images/icons/xmark.svg" alt="Reject" />
+                        </button>
+                    </li>
+                `
+                )
+                .join("")}
+            </ul>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    `;
 }
 
-// Get the name of a tag based on its ID
-async function getTagName(tag_id) {
-    const tag = await selectById("category_tags", tag_id);
-    return tag ? tag.name : "INVALID_TAG";
+async function getUser(user_id) {
+    return selectById("users", user_id);
 }
 
-// Returns the number of helpers that are already on the project
-async function getHelpersTotal(project_id) {
-    const members = await selectByValue(
+async function getMembers() {
+    const project_members = await selectByValue(
         "project_members",
         "project_id",
-        project_id,
+        global_project_id
     );
-    return members.length;
+    return await Promise.all(
+        project_members.map(async (project) => {
+            const user = await getUser(project.user_id);
+            return { user, role: project.role };
+        })
+    );
+}
+
+async function getJoinRequests() {
+    const requests = await selectByValue(
+        "project_requests",
+        "project_id",
+        global_project_id
+    );
+    return await Promise.all(
+        requests.map(async (request) => {
+            const user = await getUser(request.user_id);
+            return { user, role: request.role };
+        })
+    );
+}
+
+function addListeners() {
+    const join_project_btn = document.getElementById("join-project");
+    if (join_project_btn)
+        join_project_btn.addEventListener("click", (e) => request(e.target));
+    const accept_request_btns = document.querySelectorAll(".accept-button");
+    for (const btn of accept_request_btns) {
+        btn.addEventListener("click", (e) => acceptRequest(e.target));
+    }
+    const reject_request_btns = document.querySelectorAll(".reject-button");
+    for (const btn of reject_request_btns) {
+        btn.addEventListener("click", (e) => rejectRequest(e.target));
+    }
+    const complete_project_btn = document.getElementById("complete-project");
+    if (complete_project_btn)
+        complete_project_btn.addEventListener("click", (e) =>
+            completeProject(e.target)
+        );
 }
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
-//This will need some sort of API call to make a record with this user's ID and project owner's ID
-async function sendInformation() {
-    console.log("Simulating sending information...");
-    const join_message = document.querySelector(".join-success");
+async function request(btn) {
+    btn.disabled = true;
 
-    //user has to exist, otherwise this will not run
-    if (current_user !== null) {
-        //Here we only need the ID- the contact information can be fetched using it later
-        const response = await fetch(
-            "https://coco.alloc.dev/api/project_requests",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    user_id: current_user.id,
-                    project_id: global_project_id,
-                    role: "requester",
-                }),
-            },
-        );
+    try {
+        const response = insert("project_requests", {
+            user_id: current_user_id,
+            project_id: global_project_id,
+            role: "requester",
+        });
         console.log(response);
-        if (response.ok) {
-            join_message.innerHTML = "Request sent successfully";
-        }
-        else {join_message.innerHTML = "Error occured. Try request again later."};
-    }
-    else {
-        console.log("You are not logged in. Please log in before joining any projects.");
-        join_message.innerHTML = "You are not logged in. Please log in before joining any projects.";
+    } catch (err) {
+        console.log(err);
+        toast("Error occurred. Try request again later.", "error");
+        btn.disabled = false;
+        return;
     }
 
-    //In the future the button should be automatically disabled for a user who has already requested to join the project
-    const join_project = document.getElementById("#join-project");
-    join_project.disabled = true;
+    toast("Request sent successfully");
 }
 
-function close() {
-    window.close();
+async function acceptRequest(btn) {
+    const request_id = btn.value;
+    btn.disabled = true;
+    try {
+        const request = await selectById("project_requests", request_id);
+        //Add member
+        const addResult = await insert("project_members", request);
+        console.log(addResult);
+
+        //Delete Request
+        const result = await deleteById("project_requests", request_id);
+        console.log(result);
+    } catch (err) {
+        console.log(err);
+        toast("Error occurred. Try request again later.", "error");
+        btn.disabled = false;
+        return;
+    }
+
+    toast("Successfully accepted project member");
+
+    //Get user to show up onscreen
 }
 
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);
+async function rejectRequest(btn) {
+    const request_id = btn.value;
+    btn.disabled = true;
+    try {
+        const result = await deleteById("project_requests", request_id);
+        console.log(result);
+    } catch (err) {
+        console.log(err);
+        toast("Error occurred. Try request again later.", "error");
+        btn.disabled = false;
+        return;
+    }
+
+    toast("Successfully rejected project member");
+    // remove user from rendered page
+}
+
+//For project owners, they can mark a project as complete. That will make it so the project won't show
+//on the project board. It will print a notice of success, then disable the button
+async function completeProject(btn) {
+    btn.disabled = true;
+    try {
+        const response = await updateById("project", global_project_id, {
+            completed: true,
+        });
+        console.log(response);
+    } catch (err) {
+        console.log(err);
+        toast("Error occurred. Try request again later.", "error");
+        btn.disabled = false;
+        return;
+    }
+
+    toast("You completed this project!! Good job :)");
+}
