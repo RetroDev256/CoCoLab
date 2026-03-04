@@ -11,6 +11,7 @@ export async function selectTable(table) {
 export async function selectById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
+    console.log(response);
     const json = await response.json();
 
     if (json.length === 0) {
@@ -125,6 +126,13 @@ export function getUserId() {
 // --------------------------------------------- PER-PAGE NAVIGATION AND FOOTER
 
 const dir = new URL(".", import.meta.url).href;
+
+let user_href = "pages/auth.html";
+const user_id = getUserId();
+if (user_id !== null) {
+    user_href = `pages/user.html?id=${user_id}`;
+}
+
 document.getElementById("coco_header").innerHTML = `
 <header class="drawer sticky top-0 z-10">
     <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
@@ -142,7 +150,7 @@ document.getElementById("coco_header").innerHTML = `
                 </h1>
             </a>
             <div class="navbar-end">
-                <a class="btn btn-ghost btn-circle" href="${dir}${getUserId() ? "pages/userSettings.html" : "pages/auth.html"}">
+                <a class="btn btn-ghost btn-circle" href="${dir}${user_href}">
                     <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
                 </a>
             </div>
@@ -191,7 +199,10 @@ const typeMap = {
         alertClass: "alert-warning",
         icon: "warning-triangle.svg",
     },
-    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    info: {
+        alertClass: "alert-info",
+        icon: "info-circle.svg",
+    },
     neutral: {
         alertClass: "alert-neutral",
     },
