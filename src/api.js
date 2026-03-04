@@ -200,6 +200,7 @@ export async function apiGet(url) {
     switch (parts.length) {
         // /API/TABLE --- Get all values from a table
         case 2: {
+            console.log(`GET /API/${parts[1]}...`);
             const table = escapeIdentifier(parts[1]);
             const query = `SELECT * FROM ${table};`;
             return Response.json((await pool.query(query)).rows);
@@ -207,6 +208,7 @@ export async function apiGet(url) {
 
         // /API/TABLE/ID --- Get values from a table matching an ID
         case 3: {
+            console.log(`GET /API/${parts[1]}/${parts[2]}...`);
             const table = escapeIdentifier(parts[1]);
             const id = parts[2];
             const query = `SELECT * FROM ${table} WHERE id = $1;`;
@@ -215,6 +217,7 @@ export async function apiGet(url) {
 
         // /API/TABLE/FIELD/VALUE --- Select from table, field == value
         case 4: {
+            console.log(`GET /API/${parts[1]}/${parts[2]}/${parts[3]}...`);
             const table = escapeIdentifier(parts[1]);
             const field = escapeIdentifier(parts[2]);
             const value = parts[3];

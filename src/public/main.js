@@ -11,6 +11,7 @@ export async function selectTable(table) {
 export async function selectById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
+    console.log(response);
     const json = await response.json();
 
     if (json.length === 0) {
@@ -206,7 +207,10 @@ const typeMap = {
         alertClass: "alert-warning",
         icon: "warning-triangle.svg",
     },
-    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    info: {
+        alertClass: "alert-info",
+        icon: "info-circle.svg",
+    },
     neutral: {
         alertClass: "alert-neutral",
     },
