@@ -212,7 +212,7 @@ async function getJoinRequests() {
     return await Promise.all(
         requests.map(async (request) => {
             const user = await getUser(request.user_id);
-            return { user, role: request.role };
+            return { user, ...request };
         })
     );
 }
@@ -243,7 +243,7 @@ async function request(btn) {
     btn.disabled = true;
 
     try {
-        const response = insert("project_requests", {
+        const response = await insert("project_requests", {
             user_id: current_user_id,
             project_id: global_project_id,
             role: "requester",
