@@ -1,31 +1,16 @@
 
 // ----------------------------------------------------------- DATABASE HELPERS
 
+const url = "https://coco.alloc.dev";
 // Returns a list of all JS objects in a table
-export async function selectByTable(table) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}`;
+export async function selectTable(table) {
+    const path = `${url}/API/${table}`;
     return await (await fetch(path)).json();
 }
 
 // Returns either a single JS object, or null
 export async function selectById(table, id) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}/${id}`;
-    const response = await fetch(path);
-    const json = await response.json();
-
-    if (json.length === 0) {
-        return null;
-    } else {
-        return json[0];
-    }
-}
-
-// Returns either a single JS object, or null
-export async function deleteById(table, id) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/DELETE/${table}/${id}`;
+    const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
     const json = await response.json();
 
@@ -38,28 +23,66 @@ export async function deleteById(table, id) {
 
 // Returns a list based on a table, field, and value
 export async function selectByValue(table, field, value) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/SELECT/${table}/${field}/${value}`;
+    const path = `${url}/API/${table}/${field}/${value}`;
     return await (await fetch(path)).json();
+}
+
+// Returns either a single JS object, or null
+export async function deleteById(table, id) {
+    const path = `${url}/API/${table}/${id}`;
+    const response = await fetch(path, { method: "DELETE" });
+    const json = await response.json();
+
+    if (json.length === 0) {
+        return null;
+    } else {
+        return json[0];
+    }
 }
 
 // Returns a list based on a table, field, and value
 export async function deleteByValue(table, field, value) {
-    const url = "https://coco.alloc.dev";
-    const path = `${url}/API/DELETE/${table}/${field}/${value}`;
-    return await (await fetch(path)).json();
+    const path = `${url}/API/${table}/${field}/${value}`;
+    return await (await fetch(path, { method: "DELETE" })).json();
 }
 
-// Used when rendering owners of projects
-export function isValidURL(url) {
-    try {
-        new URL(url);
-        console.log("isValidURL: true");
-        return true;
-    } catch {
-        console.log("isValidURL: false");
-        return false;
-    }
+export async function insert(table, data) {
+    const path = `${url}/API/${table}`;
+    return await (
+        await fetch(path, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
+}
+
+export async function updateById(table, id, data) {
+    const path = `${url}/API/${table}/${id}`;
+    return await (
+        await fetch(path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
+}
+
+export async function updateByValue(table, field, value, data) {
+    const path = `${url}/API/${table}/${field}/${value}`;
+    return await (
+        await fetch(path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+    ).json();
 }
 
 // ----------------------------------------------------- AUTHENTICATION HELPERS

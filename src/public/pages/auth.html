@@ -51,7 +51,7 @@
         </script>
     </head>
 
-    <body>
+    <body class="bg-base-200">
         <div id="coco_header"></div>
 
         <main role="tablist" class="tabs tabs-lift self-center">
@@ -59,10 +59,13 @@
                 type="radio"
                 name="auth_tabs"
                 class="tab"
-                aria-label="Signin"
+                aria-label="Sign in"
                 checked
             />
-            <div role="tabpanel" class="tab-content border-base-300 p-6">
+            <div
+                role="tabpanel"
+                class="tab-content border-base-300 p-6 bg-base-100"
+            >
                 <form id="sign_in" method="post" class="flex flex-col gap-4">
                     <input
                         name="user_name"
@@ -78,7 +81,7 @@
                         required
                     />
                     <button type="submit" class="btn btn-primary">
-                        Signin
+                        Sign in
                     </button>
                 </form>
             </div>
@@ -87,9 +90,12 @@
                 type="radio"
                 name="auth_tabs"
                 class="tab"
-                aria-label="Signup"
+                aria-label="Sign up"
             />
-            <div role="tabpanel" class="tab-content border-base-300 p-6">
+            <div
+                role="tabpanel"
+                class="tab-content border-base-300 p-6 bg-base-100"
+            >
                 <form id="sign_up" method="post" class="flex flex-col gap-4">
                     <input
                         name="user_name"
@@ -112,7 +118,7 @@
                         required
                     />
                     <button type="submit" class="btn btn-primary">
-                        Signup
+                        Sign up
                     </button>
                 </form>
             </div>
