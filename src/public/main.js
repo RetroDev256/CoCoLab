@@ -87,14 +87,42 @@ export async function updateByValue(table, field, value, data) {
 
 // ----------------------------------------------------- AUTHENTICATION HELPERS
 
+// Safe storage wrapper: prefer browser localStorage, otherwise provide a
+// test-friendly fallback on globalThis.__testLocalStorage.
+const _ls = (function () {
+    try {
+        if (typeof localStorage !== 'undefined' && localStorage) return localStorage;
+    } catch (_) {}
+    if (typeof globalThis !== 'undefined') {
+        if (!globalThis.__testLocalStorage) {
+            globalThis.__testLocalStorage = { _data: {} };
+            globalThis.__testLocalStorage.getItem = function (k) {
+                return Object.prototype.hasOwnProperty.call(this._data, k) ? this._data[k] : null;
+            };
+            globalThis.__testLocalStorage.setItem = function (k, v) {
+                this._data[k] = String(v);
+            };
+            globalThis.__testLocalStorage.removeItem = function (k) {
+                delete this._data[k];
+            };
+        }
+        return globalThis.__testLocalStorage;
+    }
+    const mem = { _data: {} };
+    mem.getItem = function (k) { return Object.prototype.hasOwnProperty.call(this._data, k) ? this._data[k] : null; };
+    mem.setItem = function (k, v) { this._data[k] = String(v); };
+    mem.removeItem = function (k) { delete this._data[k]; };
+    return mem;
+})();
+
 export function saveToken(token) {
     console.log("Saving JWT Token...");
-    localStorage.setItem("token", token);
+    try { _ls.setItem("token", token); } catch (_) {}
 }
 
 export function getToken() {
     console.log("Loading JWT Token...");
-    return localStorage.getItem("token");
+    try { return _ls.getItem("token"); } catch (_) { return null; }
 }
 
 export function getUserId() {
@@ -115,10 +143,10 @@ export function getUserId() {
         const payload = JSON.parse(atob(segments[1]));
         // The subject (or "sub") is the user ID
         return payload.sub;
-    } catch {
+    } catch (err) {
         // don't forget to clear an invalid token on error
-        console.log("getUserId: the JWT token is invalid");
-        localStorage.removeItem("token");
+        console.log("getUserId: the JWT token is invalid", err && err.message ? err.message : err);
+        try { _ls.removeItem("token"); } catch (_) {}
         return null;
     }
 }
@@ -178,4 +206,59 @@ if (typeof document !== 'undefined') {
             </a>
         </nav>
     </footer>`;
+}
+
+const typeMap = {
+    success: {
+        alertClass: "alert-success",
+        icon: "check.svg",
+    },
+    error: {
+        alertClass: "alert-error",
+        icon: "xmark.svg",
+    },
+    warning: {
+        alertClass: "alert-warning",
+        icon: "warning-triangle.svg",
+    },
+    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    neutral: {
+        alertClass: "alert-neutral",
+    },
+};
+
+export function toast(message, type = "neutral", duration = 5000) {
+    const container = document.getElementById("toast-container");
+
+    const { alertClass, icon } = typeMap[type] || typeMap.neutral;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "toast-item alert " + alertClass;
+
+    wrapper.innerHTML = `
+        ${icon ? `<img src="${dir}/images/icons/${icon}" alt="Icon" />` : ""}
+        <span class="text-sm font-medium flex-1">${message}</span>
+        <button onclick="dismissToast(this)" class="btn btn-ghost btn-xs btn-circle justify-self-end">✕</button>
+      `;
+
+    container.appendChild(wrapper);
+
+    // Trigger enter animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => wrapper.classList.add("show"));
+    });
+
+    // Auto dismiss
+    const timer = setTimeout(() => dismissToast(null, wrapper), duration);
+    wrapper._timer = timer;
+}
+
+export function dismissToast(btn, wrapper) {
+    const el = wrapper || btn.closest(".toast-item");
+    if (!el || el._dismissing) return;
+    el._dismissing = true;
+    clearTimeout(el._timer);
+    el.classList.remove("show");
+    el.classList.add("hide");
+    el.addEventListener("transitionend", () => el.remove(), { once: true });
 }

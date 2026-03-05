@@ -31,7 +31,9 @@ export async function init() {
     await renderProject(project);
 }
 
-init();
+if (typeof window !== 'undefined') {
+    init();
+}
 
 export function renderUser(user) {
     return ` <div class="flex gap-2 rounded-box bg-base-200 p-3">
@@ -217,7 +219,7 @@ export async function getJoinRequests() {
     );
 }
 
-function addListeners() {
+export function addListeners() {
     const join_project_btn = document.getElementById("join-project");
     if (join_project_btn)
         join_project_btn.addEventListener("click", (e) => request(e.target));
@@ -239,7 +241,7 @@ function addListeners() {
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
-async function request(btn) {
+export async function request(btn) {
     btn.disabled = true;
 
     try {
@@ -259,7 +261,7 @@ async function request(btn) {
     toast("Request sent successfully");
 }
 
-async function acceptRequest(btn) {
+export async function acceptRequest(btn) {
     const request_id = btn.value;
     btn.disabled = true;
     try {
@@ -283,7 +285,7 @@ async function acceptRequest(btn) {
     //Get user to show up onscreen
 }
 
-async function rejectRequest(btn) {
+export async function rejectRequest(btn) {
     const request_id = btn.value;
     btn.disabled = true;
     try {
@@ -302,7 +304,7 @@ async function rejectRequest(btn) {
 
 //For project owners, they can mark a project as complete. That will make it so the project won't show
 //on the project board. It will print a notice of success, then disable the button
-async function completeProject(btn) {
+export async function completeProject(btn) {
     btn.disabled = true;
     try {
         const response = await updateById("project", global_project_id, {
