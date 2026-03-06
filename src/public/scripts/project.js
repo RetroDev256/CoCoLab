@@ -323,7 +323,7 @@ async function createProject() {
             project_name: document.querySelector("#project_name_input").value,
             max_people: document.querySelector("#max_people_input").value,
             details: document.querySelector("#details_input").value,
-            owner_id: getUserId()
+            owner_id: getUserId().value
         };
 
         try {
