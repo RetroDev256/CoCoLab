@@ -142,7 +142,7 @@ async function getExistingUser(user_name, password) {
     const users = (await pool.query(query, [user_name])).rows;
 
     for (const user of users) {
-        const matches = Bun.password.verifyPassword(password, user.pw_hash);
+        const matches = Bun.password.verify(password, user.pw_hash);
         if (await matches) return user; // return the user if they match
     }
 
