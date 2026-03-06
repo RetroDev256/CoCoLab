@@ -34,24 +34,24 @@ async function init() {
 init();
 
 function renderUser(user) {
-    return ` <div class="flex gap-2 rounded-box bg-base-200 p-3">
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-neutral text-neutral-content size-10 rounded-full">
-                            <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
-                        </div>
+    return `<div class="flex gap-2 rounded-box bg-base-200 p-3">
+                <div class="avatar avatar-placeholder">
+                    <div class="bg-neutral text-neutral-content size-10 rounded-full">
+                        <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm opacity-70">${user.user_name}</span>
-                        <span class="text-sm opacity-70">${user.email}</span>
-                    </div>
-                </div>`;
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm opacity-70">${user.user_name}</span>
+                    <span class="text-sm opacity-70">${user.email}</span>
+                </div>
+            </div>`;
 }
 
 async function renderProject(project) {
     const renderElder = document.getElementById("project");
 
     const owner = await getUser(project.owner_id);
-    const members = await getMembers(project.id);
+    const members = await getMembers();
 
     const is_owner = current_user_id === project.owner_id;
 
@@ -69,25 +69,22 @@ async function renderProject(project) {
         ) {
             return "";
         } else {
-            return `
-            <button id="join-project" class="btn btn-primary" ${members.length >= project.max_people ? "disabled" : ""}>
+            return `<button id="join-project" class="btn btn-primary" ${members.length >= project.max_people ? "disabled" : ""}>
                 Join this Project
             </button>`;
         }
     }
 
-    renderElder.innerHTML = ` <h1 class="card-title text-3xl font-bold">
+    renderElder.innerHTML = `<h1 class="card-title text-3xl font-bold">
                     ${project.project_name}
                 </h1>
                 <div class="flex flex-wrap gap-2">
-                    
-                    ${await renderTags(project.id)}
+                    ${await renderTags()}
                 </div>
                 <h3 class="text-2xl font-semibold mt-4">Project Details</h3>
                 <p class="project-details leading-relaxed">
                     ${project.details}
                 </p>
-
                 <h3 class="text-2xl font-semibold mt-4">Project Members</h3>
                 <div class="flex items-center gap-4">
                     <span>${members.length} of ${project.max_people} people </span>
@@ -108,12 +105,10 @@ async function renderProject(project) {
                         )
                         .join("")}
                 </div>
-
                 <div class="card-actions justify-end mt-4">
                     <a id="return-search" class="btn btn-ghost" href="projectBoard.html">
                         Back to search
                     </a>
-                    ${await renderRequests()}
                     ${await renderActions()}
                 </div>`;
 
@@ -220,19 +215,21 @@ async function getJoinRequests() {
 function addListeners() {
     const join_project_btn = document.getElementById("join-project");
     if (join_project_btn)
-        join_project_btn.addEventListener("click", (e) => request(e.target));
+        join_project_btn.addEventListener("click", (e) =>
+            request(e.currentTarget)
+        );
     const accept_request_btns = document.querySelectorAll(".accept-button");
     for (const btn of accept_request_btns) {
-        btn.addEventListener("click", (e) => acceptRequest(e.target));
+        btn.addEventListener("click", (e) => acceptRequest(e.currentTarget));
     }
     const reject_request_btns = document.querySelectorAll(".reject-button");
     for (const btn of reject_request_btns) {
-        btn.addEventListener("click", (e) => rejectRequest(e.target));
+        btn.addEventListener("click", (e) => rejectRequest(e.currentTarget));
     }
     const complete_project_btn = document.getElementById("complete-project");
     if (complete_project_btn)
         complete_project_btn.addEventListener("click", (e) =>
-            completeProject(e.target)
+            completeProject(e.currentTarget)
         );
 }
 
@@ -265,7 +262,11 @@ async function acceptRequest(btn) {
     try {
         const request = await selectById("project_requests", request_id);
         //Add member
-        const addResult = await insert("project_members", request);
+        const addResult = await insert("project_members", {
+            project_id: request.project_id,
+            user_id: request.user_id,
+            role: request.role,
+        });
         console.log(addResult);
 
         //Delete Request
