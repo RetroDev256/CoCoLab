@@ -65,7 +65,7 @@ async function renderProject(project) {
                 Complete Project
             </button>`;
         } else if (
-            members.some((member) => member.user.id === current_user_id)
+            members.some((member) => member.user_id === current_user_id)
         ) {
             return "";
         } else {
@@ -212,7 +212,7 @@ async function getJoinRequests() {
     return await Promise.all(
         requests.map(async (request) => {
             const user = await getUser(request.user_id);
-            return { user, ...request };
+            return { user, role: request.role };
         })
     );
 }
@@ -243,7 +243,7 @@ async function request(btn) {
     btn.disabled = true;
 
     try {
-        const response = await insert("project_requests", {
+        const response = insert("project_requests", {
             user_id: current_user_id,
             project_id: global_project_id,
             role: "requester",
@@ -318,32 +318,3 @@ async function completeProject(btn) {
 
     toast("You completed this project!! Good job :)");
 }
-async function createProject() {
-        const tabledata = {
-            project_name: document.querySelector("#project_name_input").value,
-            max_people: document.querySelector("#max_people_input").value,
-            details: document.querySelector("#details_input").value,
-            owner_id: getUserId()
-        };
-
-        try {
-            const response = await insert("project", tabledata);
-            console.log("Project created successfully:", response);
-            alert("Project created successfully!");
-        }
-        catch (error) {
-            console.error("Error creating project:", error);
-            alert("Error creating project. Please try again.");
-        }
-
-}
-
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);
-const createButton = document.querySelector("#create-project-button");
-    createButton.addEventListener("click", async (event) => {
-        event.preventDefault();
-        await createProject();
-    });
