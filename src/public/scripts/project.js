@@ -319,12 +319,14 @@ async function completeProject(btn) {
     toast("You completed this project!! Good job :)");
 }
 async function createProject() {
+        console.log("Started createProject function")
         const tabledata = {
             project_name: document.querySelector("#project_name_input").value,
             max_people: document.querySelector("#max_people_input").value,
             details: document.querySelector("#details_input").value,
             owner_id: getUserId()
         };
+        console.log("table filled")
 
         try {
             const response = await insert("project", tabledata);
@@ -343,7 +345,7 @@ return_search.addEventListener("click", close);
 const join_project = document.querySelector("#join-project");
 join_project.addEventListener("click", sendInformation);
 const createButton = document.querySelector("#create-project-button");
-    createButton.addEventListener("click", async (event) => {
+    createButton.addEventListener("submit", async (event) => {
         event.preventDefault();
         await createProject();
     });
