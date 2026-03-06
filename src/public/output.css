@@ -1985,6 +1985,9 @@
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
+  .h-40 {
+    height: calc(var(--spacing) * 40);
+  }
   .min-h-full {
     min-height: 100%;
   }

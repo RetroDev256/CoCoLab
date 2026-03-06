@@ -29,6 +29,7 @@ Bun.serve({
                     const file = Bun.file(`./public${path}`);
                     if (await file.exists()) return cors(new Response(file));
                     api_response = await apiGet(url);
+                    break;
                 case "OPTIONS":
                     api_response = await apiOptions();
                     break;
