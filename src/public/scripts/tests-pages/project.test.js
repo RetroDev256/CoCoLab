@@ -1,19 +1,21 @@
 import { vi } from 'vitest';
 
-// Mock ../main.js before importing project.js so project.js uses these implementations
-vi.mock('../main.js', () => {
-  return {
-    // selectByValue: return empty array for invalid ids (0, -1), otherwise return a member row for id 1
-    selectByValue: vi.fn(async (table, field, value) => {
-      if (value === 0 || value === -1 || value == null) return [];
-      if (value === 1) return [{ user_id: 1, role: 'member' }];
-      return [];
-    }),
-  };
-});
+// // Mock ../../main.js (src/public/main.js) before importing project.js so project.js uses these implementations
+// vi.mock('../../main.js', () => {
+//   return {
+//     // selectByValue: return empty array for invalid ids (0, -1), otherwise return a member row for id 1
+//     selectByValue: vi.fn(async (table, field, value) => {
+//       if (value === 0 || value === -1 || value == null) return [];
+//       if (value === 1) return [{ user_id: 1, role: 'member' }];
+//       return [];
+//     }),
+//   };
+// });
 
 import { describe, it , expect } from 'vitest';
-import { getUser, renderUser, getMembers } from '../project.js';
+import * as main from '../../main.js';
+import { getUser, renderUser, getMembers, getJoinRequests } from '../project.js';
+//import { selectByValue } from '../../main.js';
 
 describe('getUser', () => {
     it("null returns undefined", async () => {
@@ -68,23 +70,41 @@ describe('renderUser', () => {
 
 describe('getMembers', () => {
     it('when project id is invalid getMembers resolves to empty array (mocked)', async () => {
-        // The mocked selectByValue treats -1 as invalid
-        // To test that, call the function after temporarily setting global_project_id
-        // project.getMembers uses the internal global_project_id; since we can't set it
-        // without changing code, we rely on the default 0 (already covered) or use
-        // the mock behavior. This case is redundant with the first test but kept for clarity.
-        await expect(getMembers()).resolves.toStrictEqual([]);
+    // The spy makes selectByValue return [] for the default/global id.
+    vi.spyOn(main, 'selectByValue').mockResolvedValueOnce([]);
+    await expect(getMembers()).resolves.toStrictEqual([]);
     });
 
     it('returns project members for valid project id', async () => {
+        // Arrange: make selectByValue return a single member row, and selectById return the user
+        vi.spyOn(main, 'selectByValue').mockResolvedValueOnce([{ user_id: 1, role: 'member' }]);
+        vi.spyOn(main, 'selectById').mockResolvedValueOnce({ id: '1', user_name: 'dev_alice', pw_hash: { type: 'Buffer', data: [] }, email: 'alice@example.com', created_at: '2026-02-25T07:23:39.098Z' });
 
+        const result = await getMembers();
+
+        // Assert: getMembers returns [{ user: <user object>, role }]
+        expect(result).toEqual([
+            { user: { id: '1', user_name: 'dev_alice', pw_hash: { type: 'Buffer', data: [] }, email: 'alice@example.com', created_at: '2026-02-25T07:23:39.098Z' }, role: 'member' },
+        ]);
     });
 });
-// describe('renderUser', () => {
-//     it("null returns undefined", () => {
-//         
-//     })
-// })
+
+
+describe('getJoinRequests', () => {
+    it("null returns empty array", async () => {
+        await expect(getJoinRequests()).resolves.toStrictEqual([]);
+    });
+
+    it('returns requests for valid project id', async () => {
+        vi.spyOn(main, 'selectByValue').mockResolvedValueOnce([{ user_id: 1, role: 'requester' }]);
+
+        const result = await getJoinRequests();
+
+        expect(result).toEqual([
+            { user: { id: '1', user_name: 'dev_alice', pw_hash: { type: 'Buffer', data: [] }, email: 'alice@example.com', created_at: '2026-02-25T07:23:39.098Z' }, role: 'requester', user_id: 1 },
+        ]);
+    })
+})
 // describe('renderUser', () => {
 //     it("null returns undefined", () => {
         

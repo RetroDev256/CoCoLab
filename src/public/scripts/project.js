@@ -340,12 +340,14 @@ async function createProject() {
 
 }
 
-const return_search = document.querySelector("#return-search");
-return_search.addEventListener("click", close);
-const join_project = document.querySelector("#join-project");
-join_project.addEventListener("click", sendInformation);
-const createButton = document.querySelector("create-project-button");
-    createButton.addEventListener("click", async (event) => {
-        event.preventDefault();
-        await createProject();
-    });
+if (typeof document !== 'undefined') {
+    const return_search = document.querySelector("#return-search");
+    return_search.addEventListener("click", close);
+    const join_project = document.querySelector("#join-project");
+    join_project.addEventListener("click", sendInformation);
+    const createButton = document.querySelector("create-project-button");
+        createButton.addEventListener("click", async (event) => {
+            event.preventDefault();
+            await createProject();
+        });
+}
