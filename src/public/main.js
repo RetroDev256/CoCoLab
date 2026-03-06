@@ -12,6 +12,7 @@ export async function selectTable(table) {
 export async function selectById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
+    console.log(response);
     const json = await response.json();
 
     if (json.length === 0) {
@@ -154,7 +155,9 @@ export function getUserId() {
 // --------------------------------------------- PER-PAGE NAVIGATION AND FOOTER
 if (typeof document !== 'undefined') {
     const dir = new URL(".", import.meta.url).href;
-    document.getElementById("coco_header").innerHTML = `
+    const header = document.getElementById("coco_header");
+if (header) {
+    header.innerHTML = `
     <header class="drawer sticky top-0 z-10">
         <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
@@ -171,9 +174,17 @@ if (typeof document !== 'undefined') {
                     </h1>
                 </a>
                 <div class="navbar-end">
-                    <a class="btn btn-ghost btn-circle" href="${dir}${getUserId() ? "pages/userSettings.html" : "pages/auth.html"}">
+                ${
+                getUserId()
+                    ? `<a class="btn btn-ghost btn-circle" href="${dir}pages/userSettings.html">
                         <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
-                    </a>
+                    </a>`
+                    : `<a class="btn btn-ghost" href="${dir}pages/auth.html">
+                            Sign in
+                        <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                        </a>`
+            }
+                
                 </div>
             </div>
         </div>
@@ -181,14 +192,18 @@ if (typeof document !== 'undefined') {
             <label for="nav-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
             <ul class="menu bg-base-200 min-h-full w-80 p-4">
                 <!-- Sidebar content here -->
-                <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
+                <li> <a href="${dir}">Home</a> </li>
+            <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
                 <li> <a href="${dir}pages/aboutDevs.html">About the Developers</a> </li>
                 <li> <a href="${dir}pages/contactUs.html">Contact Us</a> </li>
             </ul>
         </div>
     </header>`;
-    
-    document.getElementById("coco_footer").innerHTML = `
+    }
+
+    const footer = document.getElementById("coco_footer");
+if (footer) {
+    footer.innerHTML = `
     <footer class="footer footer-center p-4 bg-base-300 mt-auto">
         <aside class="grid-flow-col items-center">
             <img class="size-10" src="${dir}/images/logo.png" alt="CoCoLab Logo" />
@@ -207,6 +222,7 @@ if (typeof document !== 'undefined') {
         </nav>
     </footer>`;
 }
+}
 
 const typeMap = {
     success: {
@@ -221,7 +237,10 @@ const typeMap = {
         alertClass: "alert-warning",
         icon: "warning-triangle.svg",
     },
-    info: { alertClass: "alert-info", icon: "info-circle.svg" },
+    info: {
+        alertClass: "alert-info",
+        icon: "info-circle.svg",
+    },
     neutral: {
         alertClass: "alert-neutral",
     },
