@@ -11,7 +11,6 @@ export async function selectTable(table) {
 export async function selectById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path);
-    console.log(response);
     const json = await response.json();
 
     if (json.length === 0) {
@@ -220,7 +219,7 @@ if (typeof document !== "undefined") {
     </div>
     <div class="drawer-side">
         <label for="nav-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-200 min-h-full w-80 p-4">>
+        <ul class="menu bg-base-200 min-h-full w-80 p-4">
             <li> <a href="${dir}">Home</a> </li>
         <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
             <li> <a href="${dir}pages/aboutDevs.html">About the Developers</a> </li>
