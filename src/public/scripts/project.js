@@ -38,7 +38,7 @@ if (typeof window !== "undefined") {
 export function renderUser(user) {
     const show_email =
         current_user_id === project.owner_id || current_user_id === user.id;
-    return ` <div class="flex gap-2 rounded-box bg-base-200 p-3 w-full">
+    return `<div class="flex gap-2 rounded-box bg-base-200 p-3 w-full">
                     <div class="avatar avatar-placeholder">
                         <div class="bg-neutral text-neutral-content size-10 rounded-full">
                             <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
@@ -65,6 +65,9 @@ export async function renderProject(project) {
         }
         if (is_owner) {
             return `${await renderRequests(project.id)}
+            <button id="delete-project" class="btn btn-outline"">
+                Delete Project
+            </button>
             <button id="complete-project" class="btn btn-primary" ${project.completed ? "disabled" : ""}>
                 Complete Project
             </button>`;
@@ -95,14 +98,14 @@ export async function renderProject(project) {
                     <progress class="progress w-20" value="${members.length}" max="${project.max_people}"></progress>
                     <span>${(members.length / project.max_people) * 100}% filled</span>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                    <div class="indicator w-full">
+                <div class="flex flex-wrap gap-4 mt-2">
+                    <div class="indicator">
                         <span class="indicator-item indicator-center badge badge-primary">Owner</span>
                         ${renderUser(owner)}
                     </div>
                     ${members
                         .map(
-                            (member) => `<div class="indicator w-full">
+                            (member) => `<div class="indicator">
                             <span class="indicator-item indicator-center badge">${member.role}</span>
                             ${renderUser(member.user)}
                         </div>`
@@ -235,6 +238,11 @@ export function addListeners() {
         complete_project_btn.addEventListener("click", (e) =>
             completeProject(e.currentTarget)
         );
+    const delete_project_btn = document.getElementById("delete-project");
+    if (delete_project_btn)
+        delete_project_btn.addEventListener("click", (e) =>
+            deleteProject(e.currentTarget)
+        );
 }
 
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
@@ -323,32 +331,18 @@ export async function completeProject(btn) {
 
     toast("You completed this project!! Good job :)");
 }
-async function createProject() {
-    const tabledata = {
-        project_name: document.querySelector("#project_name_input").value,
-        max_people: document.querySelector("#max_people_input").value,
-        details: document.querySelector("#details_input").value,
-        owner_id: getUserId(),
-    };
 
+export async function deleteProject(btn) {
+    btn.disabled = true;
     try {
-        const response = await insert("project", tabledata);
-        console.log("Project created successfully:", response);
-        alert("Project created successfully!");
-    } catch (error) {
-        console.error("Error creating project:", error);
-        alert("Error creating project. Please try again.");
+        const response = await deleteById("project", global_project.id);
+        console.log(response);
+    } catch (err) {
+        console.log(err);
+        toast("Error occurred. Try request again later.", "error");
+        btn.disabled = false;
+        return;
     }
-}
 
-if (typeof document !== "undefined") {
-    const return_search = document.querySelector("#return-search");
-    return_search.addEventListener("click", close);
-    const join_project = document.querySelector("#join-project");
-    join_project.addEventListener("click", sendInformation);
-    const createButton = document.querySelector("create-project-button");
-    createButton.addEventListener("click", async (event) => {
-        event.preventDefault();
-        await createProject();
-    });
+    toast("You deleted this project. :(");
 }

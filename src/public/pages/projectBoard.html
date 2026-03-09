@@ -9,24 +9,22 @@
         <link rel="stylesheet" href="../output.css" />
         <link rel="icon" type="image/webp" href="../images/brownie.webp" />
         <script type="module" src="../main.js"></script>
-        <script type="module" src="../scripts/project.js"></script>
 
-        <script type="module">
-            import { selectTable, getUserId } from "/main.js";
+        <script type="module" defer>
+            import { selectTable, getUserId, insert, toast } from "/main.js";
 
-            const project_list = await selectTable("project");
-            const listings = document.getElementById("listings");
+            const projects = await selectTable("project");
             const user_id = getUserId();
 
-            let listing_html = "";
-            for (const project of project_list) {
+            let projects_html = "";
+            for (const project of projects) {
                 const is_owner =
                     user_id !== null && user_id == project.owner_id;
                 // Do not include completed projects inside of the listing
                 if (project.completed) continue;
 
                 // Add a list eleement to the projects list for each project
-                listing_html += `
+                projects_html += `
                 <li class="list-row">
                     <a href="project.html?id=${project.id}" class="flex items-center gap-4">
                         <div class="font-bold">${project.project_name}</div>
@@ -36,8 +34,50 @@
                 </li>
 				`;
             }
+            document.getElementById("projects").innerHTML = projects_html;
 
-            listings.innerHTML = listing_html;
+            const tag_list = await selectTable("category_tags");
+            let tag_list_html = "";
+            for (const tag of tag_list) {
+                tag_list_html += `<input class="btn" type="checkbox" name="tags" value="${tag.id}" aria-label="${tag.name}"/>`;
+            }
+            document.getElementById("tag-list").innerHTML = tag_list_html;
+
+            document
+                .getElementById("new_project_form")
+                .addEventListener("submit", async (event) => {
+                    event.preventDefault();
+                    if (!user_id) {
+                        toast("Please log in to create a project.", "error");
+                        return;
+                    }
+                    const data = new FormData(new_project_form);
+
+                    try {
+                        const project = await insert("project", {
+                            project_name: data.get("project_name"),
+                            details: data.get("details"),
+                            max_people: data.get("max_people"),
+                            owner_id: user_id,
+                            completed: false,
+                        });
+                        console.log("Project", project);
+                        for (const tag_id of data.getAll("tags")) {
+                            const tag = await insert("projects_tags", {
+                                project_id: project.id,
+                                tag_id: tag_id,
+                            });
+                            console.log("Tag to project:", tag);
+                        }
+                        toast("Project created successfully!", "success");
+                    } catch (error) {
+                        console.error("Error creating project:", error);
+                        toast(
+                            "Error creating project. Please try again.",
+                            "error"
+                        );
+                    }
+                });
         </script>
     </head>
 
@@ -54,51 +94,42 @@
                     New Project
                 </button>
                 <dialog id="new_project_modal" class="modal">
-                    <div class="modal-box">
+                    <div class="modal-box flex flex-col gap-4">
                         <h3 class="font-bold text-lg">New Project</h3>
-                        <p>Fill out the form below to create a new project.</p>
-                        <!-- Insert form here -->
-                        <form
-                        action="/api/project"
-                        method="POST"
-                        class="flex flex-col gap-4"
-                    >
-                        <input
-                            name="project_name"
-                            id="project_name_input"
-                            type="text"
-                            placeholder="Project name"
-                            class="input input-bordered w-full"
-                            required
-                        />
-                        <div class="flex gap-4">
+                        <form class="flex flex-col gap-4" id="new_project_form">
                             <input
-                                name="max_people"
-                                type="number"
-                                id="max_people_input"
-                                placeholder="Max people"
+                                name="project_name"
+                                type="text"
+                                placeholder="Project name"
                                 class="input input-bordered w-full"
                                 required
                             />
-                            <!-- <input
-                                name="owner_id"
-                                type="number"
-                                placeholder="Owner ID"
-                                class="input input-bordered w-full"
+                            <textarea
+                                name="details"
+                                placeholder="Details"
+                                class="textarea textarea-bordered min-h-24 w-full"
                                 required
-                            /> -->
-                        </div>
-                        <textarea
-                            name="details"
-                            id="details_input"
-                            placeholder="Details"
-                            class="textarea textarea-bordered h-24"
-                            required
-                        ></textarea>
-                        <button type="submit" id="create-project-button" class="btn btn-primary">
-                            Create Project
-                        </button>
-                    </form>
+                            ></textarea>
+                            <div
+                                class="flex flex-wrap gap-4"
+                                id="tag-list"
+                            ></div>
+                            <label class="label">
+                                <span class="label-text">Max people</span>
+                                <input
+                                    name="max_people"
+                                    type="number"
+                                    placeholder="Max people"
+                                    class="input input-bordered w-full"
+                                    value="5"
+                                    required
+                                />
+                            </label>
+
+                            <button type="submit" class="btn btn-primary">
+                                Create Project
+                            </button>
+                        </form>
                     </div>
                     <form method="dialog" class="modal-backdrop">
                         <button>close</button>
@@ -106,9 +137,10 @@
                 </dialog>
             </div>
 
-            <ul id="listings" class="list"></ul>
+            <ul id="projects" class="list"></ul>
         </main>
 
         <div id="coco_footer"></div>
+        <div id="toast-container" class="toast"></div>
     </body>
 </html>
