@@ -11,123 +11,74 @@
         <script type="module" src="../main.js"></script>
 
         <script type="module" defer>
-                    import { selectTable, getUserId, insert, toast } from "/main.js";
-                <script type="module" defer>
-                    import { selectTable, getUserId, insert, toast } from "/main.js";
+            import { selectTable, getUserId, insert, toast } from "/main.js";
 
-                    const projects = await selectTable("project");
-                    const projects = await selectTable("project");
-                    const user_id = getUserId();
+            const projects = await selectTable("project");
+            const user_id = getUserId();
 
-                    let projects_html = "";
-                    for (const project of projects) {
-                    let projects_html = "";
-                    for (const project of projects) {
-                        const is_owner =
-                            user_id !== null && user_id == project.owner_id;
-                        // Do not include completed projects inside of the listing
-                        if (project.completed) continue;
+            let projects_html = "";
+            for (const project of projects) {
+                const is_owner =
+                    user_id !== null && user_id == project.owner_id;
+                // Do not include completed projects inside of the listing
+                if (project.completed) continue;
 
-                        // Add a list eleement to the projects list for each project
-                        projects_html += `
-                        projects_html += `
-                        <li class="list-row">
-                            <a href="project.html?id=${project.id}" class="flex items-center gap-4">
-                                <div class="font-bold">${project.project_name}</div>
-                                <div class="text-xs uppercase">${project.max_people} ${is_owner ? " - (Owner)" : ""}</div>
-                                <div class="text-center">${project.details}</div>
-                            </a>
-                        </li>
-            `;
+                // Add a list eleement to the projects list for each project
+                projects_html += `
+                <li class="list-row">
+                    <a href="project.html?id=${project.id}" class="flex items-center gap-4">
+                        <div class="font-bold">${project.project_name}</div>
+                        <div class="text-xs uppercase">${project.max_people} ${is_owner ? " - (Owner)" : ""}</div>
+                        <div class="text-center">${project.details}</div>
+                    </a>
+                </li>
+				`;
+            }
+            document.getElementById("projects").innerHTML = projects_html;
+
+            const tag_list = await selectTable("category_tags");
+            let tag_list_html = "";
+            for (const tag of tag_list) {
+                tag_list_html += `<input class="btn" type="checkbox" name="tags" value="${tag.id}" aria-label="${tag.name}"/>`;
+            }
+            document.getElementById("tag-list").innerHTML = tag_list_html;
+
+            document
+                .getElementById("new_project_form")
+                .addEventListener("submit", async (event) => {
+                    event.preventDefault();
+                    if (!user_id) {
+                        toast("Please log in to create a project.", "error");
+                        return;
                     }
-                    document.getElementById("projects").innerHTML = projects_html;
+                    const data = new FormData(new_project_form);
 
-                    const tag_list = await selectTable("category_tags");
-                    let tag_list_html = "";
-                    for (const tag of tag_list) {
-                        tag_list_html += `<input class="btn" type="checkbox" name="tags" value="${tag.id}" aria-label="${tag.name}"/>`;
-                    }
-                    document.getElementById("tag-list").innerHTML = tag_list_html;
-
-                    document
-                        .getElementById("new_project_form")
-                        .addEventListener("submit", async (event) => {
-                            event.preventDefault();
-                            if (!user_id) {
-                                toast("Please log in to create a project.", "error");
-                                return;
-                            }
-                            const data = new FormData(new_project_form);
-
-                            try {
-                                const project = await insert("project", {
-                                    project_name: data.get("project_name"),
-                                    details: data.get("details"),
-                                    max_people: data.get("max_people"),
-                                    owner_id: user_id,
-                                    completed: false,
-                                });
-                                console.log("Project", project);
-                                for (const tag_id of data.getAll("tags")) {
-                                    const tag = await insert("projects_tags", {
-                                        project_id: project.id,
-                                        tag_id: tag_id,
-                                    });
-                                    console.log("Tag to project:", tag);
-                                }
-                                toast("Project created successfully!", "success");
-                            } catch (error) {
-                                console.error("Error creating project:", error);
-                                toast(
-                                    "Error creating project. Please try again.",
-                                    "error"
-                                );
-                            }
+                    try {
+                        const project = await insert("project", {
+                            project_name: data.get("project_name"),
+                            details: data.get("details"),
+                            max_people: data.get("max_people"),
+                            owner_id: user_id,
+                            completed: false,
                         });
-                    document.getElementById("projects").innerHTML = projects_html;
-
-                    const tag_list = await selectTable("category_tags");
-                    let tag_list_html = "";
-                    for (const tag of tag_list) {
-                        tag_list_html += `<input class="btn" type="checkbox" name="tags" value="${tag.id}" aria-label="${tag.name}"/>`;
+                        console.log("Project", project);
+                        for (const tag_id of data.getAll("tags")) {
+                            const tag = await insert("projects_tags", {
+                                project_id: project.id,
+                                tag_id: tag_id,
+                            });
+                            console.log("Tag to project:", tag);
+                        }
+                        toast("Project created successfully!", "success");
+                        document.getElementById("new_project_modal").close();
+                    } catch (error) {
+                        console.error("Error creating project:", error);
+                        toast(
+                            "Error creating project. Please try again.",
+                            "error"
+                        );
                     }
-                    document.getElementById("tag-list").innerHTML = tag_list_html;
-
-                    document
-                        .getElementById("new_project_form")
-                        .addEventListener("submit", async (event) => {
-                            event.preventDefault();
-                            if (!user_id) {
-                                toast("Please log in to create a project.", "error");
-                                return;
-                            }
-                            const data = new FormData(new_project_form);
-
-                            try {
-                                const project = await insert("project", {
-                                    project_name: data.get("project_name"),
-                                    details: data.get("details"),
-                                    max_people: data.get("max_people"),
-                                    owner_id: user_id,
-                                    completed: false,
-                                });
-                                console.log("Project", project);
-                                for (const tag_id of data.getAll("tags")) {
-                                    const tag = await insert("projects_tags", {
-                                        project_id: project.id,
-                                        tag_id: tag_id,
-                                    });
-                                    console.log("Tag to project:", tag);
-                                }
-                                toast("Project created successfully!", "success");
-                            } catch (error) {
-                                console.error("Error creating project:", error);
-                                toast(
-                                    "Error creating project. Please try again.",
-                                    "error"
-                                );
-                            }
-                        });
+                });
         </script>
     </head>
 
@@ -152,9 +103,9 @@
                                 type="text"
                                 placeholder="Project name"
                                 class="input input-bordered w-full"
-                                value="5"
                                 required
                             />
+
                             <textarea
                                 name="details"
                                 placeholder="Details"
@@ -162,21 +113,17 @@
                                 required
                             ></textarea>
                             <div
-                                class="flex flex-wrap gap-4"
                                 id="tag-list"
+                                class="flex flex-wrap gap-4"
                             ></div>
-                            <label class="label">
-                                <span class="label-text">Max people</span>
-                                <input
-                                    name="max_people"
-                                    type="number"
-                                    placeholder="Max people"
-                                    class="input input-bordered w-full"
-                                    value="5"
-                                    required
-                                />
-                            </label>
-
+                            <input
+                                name="max_people"
+                                type="number"
+                                placeholder="Max people"
+                                class="input input-bordered w-full"
+                                value="5"
+                                required
+                            />
                             <button type="submit" class="btn btn-primary">
                                 Create Project
                             </button>
@@ -189,11 +136,9 @@
             </div>
 
             <ul id="projects" class="list"></ul>
-            <ul id="projects" class="list"></ul>
         </main>
 
         <div id="coco_footer"></div>
-        <div id="toast-container" class="toast"></div>
         <div id="toast-container" class="toast"></div>
     </body>
 </html>
