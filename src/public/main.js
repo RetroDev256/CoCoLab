@@ -126,6 +126,8 @@ export function getToken() {
     try { return _ls.getItem("token"); } catch (_) { return null; }
 }
 
+// Returns the user ID as a string, eg. "21" if the user is signed in.
+// If the user is not signed in, then the function will return "null".
 export function getUserId() {
     const token = getToken();
 
