@@ -17,7 +17,7 @@ let current_user_id = getUserId();
 let global_project_id = 0;
 
 // When page loads, show information for this specific project requested by the user
-export async function init() {
+async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
     global_project_id = project_id;
@@ -31,11 +31,9 @@ export async function init() {
     await renderProject(project);
 }
 
-if (typeof window !== 'undefined') {
-    init();
-}
+init();
 
-export function renderUser(user) {
+function renderUser(user) {
     return ` <div class="flex gap-2 rounded-box bg-base-200 p-3">
                     <div class="avatar avatar-placeholder">
                         <div class="bg-neutral text-neutral-content size-10 rounded-full">
@@ -49,7 +47,7 @@ export function renderUser(user) {
                 </div>`;
 }
 
-export async function renderProject(project) {
+async function renderProject(project) {
     const renderElder = document.getElementById("project");
 
     const owner = await getUser(project.owner_id);
@@ -67,7 +65,7 @@ export async function renderProject(project) {
                 Complete Project
             </button>`;
         } else if (
-            members.some((member) => member.user.id === current_user_id)
+            members.some((member) => member.user_id === current_user_id)
         ) {
             return "";
         } else {
@@ -122,7 +120,7 @@ export async function renderProject(project) {
     addListeners();
 }
 
-export async function renderTags() {
+async function renderTags() {
     // Get the list of all projects_tags for that project_id
     const tag_ids = await selectByValue(
         "projects_tags",
@@ -147,7 +145,7 @@ export async function renderTags() {
         .join("");
 }
 
-export async function renderRequests() {
+async function renderRequests() {
     const requests = await getJoinRequests();
 
     if (requests.length === 0) {
@@ -187,11 +185,11 @@ export async function renderRequests() {
     `;
 }
 
-export async function getUser(user_id) {
+async function getUser(user_id) {
     return selectById("users", user_id);
 }
 
-export async function getMembers() {
+async function getMembers() {
     const project_members = await selectByValue(
         "project_members",
         "project_id",
@@ -205,7 +203,7 @@ export async function getMembers() {
     );
 }
 
-export async function getJoinRequests() {
+async function getJoinRequests() {
     const requests = await selectByValue(
         "project_requests",
         "project_id",
@@ -214,12 +212,12 @@ export async function getJoinRequests() {
     return await Promise.all(
         requests.map(async (request) => {
             const user = await getUser(request.user_id);
-            return { user, ...request };
+            return { user, role: request.role };
         })
     );
 }
 
-export function addListeners() {
+function addListeners() {
     const join_project_btn = document.getElementById("join-project");
     if (join_project_btn)
         join_project_btn.addEventListener("click", (e) => request(e.target));
@@ -241,11 +239,11 @@ export function addListeners() {
 //For regular people viewing a project, there should be a button they can click that allows them to "join" the project
 //That button will send the user's contact information to the project owner, who can then accept/reject the person
 
-export async function request(btn) {
+async function request(btn) {
     btn.disabled = true;
 
     try {
-        const response = await insert("project_requests", {
+        const response = insert("project_requests", {
             user_id: current_user_id,
             project_id: global_project_id,
             role: "requester",
@@ -261,7 +259,7 @@ export async function request(btn) {
     toast("Request sent successfully");
 }
 
-export async function acceptRequest(btn) {
+async function acceptRequest(btn) {
     const request_id = btn.value;
     btn.disabled = true;
     try {
@@ -285,7 +283,7 @@ export async function acceptRequest(btn) {
     //Get user to show up onscreen
 }
 
-export async function rejectRequest(btn) {
+async function rejectRequest(btn) {
     const request_id = btn.value;
     btn.disabled = true;
     try {
@@ -304,7 +302,7 @@ export async function rejectRequest(btn) {
 
 //For project owners, they can mark a project as complete. That will make it so the project won't show
 //on the project board. It will print a notice of success, then disable the button
-export async function completeProject(btn) {
+async function completeProject(btn) {
     btn.disabled = true;
     try {
         const response = await updateById("project", global_project_id, {
@@ -319,35 +317,4 @@ export async function completeProject(btn) {
     }
 
     toast("You completed this project!! Good job :)");
-}
-async function createProject() {
-        const tabledata = {
-            project_name: document.querySelector("#project_name_input").value,
-            max_people: document.querySelector("#max_people_input").value,
-            details: document.querySelector("#details_input").value,
-            owner_id: getUserId()
-        };
-
-        try {
-            const response = await insert("project", tabledata);
-            console.log("Project created successfully:", response);
-            alert("Project created successfully!");
-        }
-        catch (error) {
-            console.error("Error creating project:", error);
-            alert("Error creating project. Please try again.");
-        }
-
-}
-
-if (typeof document !== 'undefined') {
-    const return_search = document.querySelector("#return-search");
-    return_search.addEventListener("click", close);
-    const join_project = document.querySelector("#join-project");
-    join_project.addEventListener("click", sendInformation);
-    const createButton = document.querySelector("create-project-button");
-        createButton.addEventListener("click", async (event) => {
-            event.preventDefault();
-            await createProject();
-        });
 }
