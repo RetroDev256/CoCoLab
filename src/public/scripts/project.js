@@ -14,19 +14,19 @@ import {
 } from "../main.js";
 
 let current_user_id = getUserId();
-let global_project_id = 0;
+let global_project = {};
 
 // When page loads, show information for this specific project requested by the user
 export async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
-    global_project_id = project_id;
     const project = await selectById("project", project_id);
 
     if (project === null) {
         console.log("No matching project found");
         return;
     }
+    global_project = project;
 
     await renderProject(project);
 }
@@ -36,15 +36,17 @@ if (typeof window !== "undefined") {
 }
 
 export function renderUser(user) {
-    return ` <div class="flex gap-2 rounded-box bg-base-200 p-3">
+    const show_email =
+        current_user_id === project.owner_id || current_user_id === user.id;
+    return ` <div class="flex gap-2 rounded-box bg-base-200 p-3 w-full">
                     <div class="avatar avatar-placeholder">
                         <div class="bg-neutral text-neutral-content size-10 rounded-full">
                             <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col justify-center w-full">
                         <span class="text-sm opacity-70">${user.user_name}</span>
-                        <span class="text-sm opacity-70">${user.email}</span>
+                        ${show_email ? `<span class="text-sm opacity-70">${user.email}</span>` : ""}
                     </div>
                 </div>`;
 }
@@ -94,13 +96,13 @@ export async function renderProject(project) {
                     <span>${(members.length / project.max_people) * 100}% filled</span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                    <div class="indicator">
+                    <div class="indicator w-full">
                         <span class="indicator-item indicator-center badge badge-primary">Owner</span>
                         ${renderUser(owner)}
                     </div>
                     ${members
                         .map(
-                            (member) => `<div class="indicator">
+                            (member) => `<div class="indicator w-full">
                             <span class="indicator-item indicator-center badge">${member.role}</span>
                             ${renderUser(member.user)}
                         </div>`
@@ -122,11 +124,11 @@ export async function renderTags() {
     const tag_ids = await selectByValue(
         "projects_tags",
         "project_id",
-        global_project_id
+        global_project.id
     );
 
     if (tag_ids.length === 0) {
-        console.log(`There are no tags for project ${global_project_id}`);
+        console.log(`There are no tags for project ${global_project.id}`);
         return "";
     }
 
@@ -190,7 +192,7 @@ export async function getMembers() {
     const project_members = await selectByValue(
         "project_members",
         "project_id",
-        global_project_id
+        global_project.id
     );
     return await Promise.all(
         project_members.map(async (project) => {
@@ -204,7 +206,7 @@ export async function getJoinRequests() {
     const requests = await selectByValue(
         "project_requests",
         "project_id",
-        global_project_id
+        global_project.id
     );
     return await Promise.all(
         requests.map(async (request) => {
@@ -244,7 +246,7 @@ export async function request(btn) {
     try {
         const response = await insert("project_requests", {
             user_id: current_user_id,
-            project_id: global_project_id,
+            project_id: global_project.id,
             role: "requester",
         });
         console.log(response);
@@ -308,7 +310,7 @@ export async function rejectRequest(btn) {
 export async function completeProject(btn) {
     btn.disabled = true;
     try {
-        const response = await updateById("project", global_project_id, {
+        const response = await updateById("project", global_project.id, {
             completed: true,
         });
         console.log(response);
