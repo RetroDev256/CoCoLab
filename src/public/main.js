@@ -1,29 +1,31 @@
+import { withCache, invalidateCached } from "/scripts/cache.js";
 // ----------------------------------------------------------- DATABASE HELPERS
 
 const url = "https://coco.alloc.dev";
 // Returns a list of all JS objects in a table
 export async function selectTable(table) {
-    const path = `${url}/API/${table}`;
-    return await (await fetch(path)).json();
+    return withCache(`${table}`, async () => {
+        const path = `${url}/API/${table}`;
+        return await (await fetch(path)).json();
+    });
 }
 
 // Returns either a single JS object, or null
 export async function selectById(table, id) {
-    const path = `${url}/API/${table}/${id}`;
-    const response = await fetch(path);
-    const json = await response.json();
-
-    if (json.length === 0) {
-        return null;
-    } else {
-        return json[0];
-    }
+    return withCache(`${table}:id:${id}`, async () => {
+        const path = `${url}/API/${table}/${id}`;
+        const response = await fetch(path);
+        const json = await response.json();
+        return json.length === 0 ? null : json[0];
+    });
 }
 
 // Returns a list based on a table, field, and value
 export async function selectByValue(table, field, value) {
-    const path = `${url}/API/${table}/${field}/${value}`;
-    return await (await fetch(path)).json();
+    return withCache(`${table}:${field}:${value}`, async () => {
+        const path = `${url}/API/${table}/${field}/${value}`;
+        return await (await fetch(path)).json();
+    });
 }
 
 // Returns either a single JS object, or null
@@ -31,44 +33,42 @@ export async function deleteById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path, { method: "DELETE" });
     const json = await response.json();
-
-    if (json.length === 0) {
-        return null;
-    } else {
-        return json[0];
-    }
+    await invalidateCached(table);
+    return json.length === 0 ? null : json[0];
 }
 
 // Returns a list based on a table, field, and value
 export async function deleteByValue(table, field, value) {
     const path = `${url}/API/${table}/${field}/${value}`;
-    return await (await fetch(path, { method: "DELETE" })).json();
+    const result = await (await fetch(path, { method: "DELETE" })).json();
+    await invalidateCached(table);
+    return result;
 }
 
 export async function insert(table, data) {
     const path = `${url}/API/${table}`;
-    return await (
+    const result = await (
         await fetch(path, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
     ).json();
+    await invalidateCached(table);
+    return result;
 }
 
 export async function updateById(table, id, data) {
     const path = `${url}/API/${table}/${id}`;
-    return await (
+    const result = await (
         await fetch(path, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
     ).json();
+    await invalidateCached(table);
+    return result;
 }
 
 export async function updateByValue(table, field, value, data) {
