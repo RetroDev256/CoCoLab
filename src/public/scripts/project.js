@@ -11,6 +11,7 @@ import {
     updateById,
     deleteById,
     insert,
+    deleteByValue,
 } from "../main.js";
 
 let current_user_id = getUserId();
@@ -335,8 +336,14 @@ export async function completeProject(btn) {
 export async function deleteProject(btn) {
     btn.disabled = true;
     try {
-        const response = await deleteById("project", global_project.id);
-        console.log(response);
+        await deleteById("project", global_project.id);
+        await deleteByValue("project_members", "project_id", global_project.id);
+        await deleteByValue(
+            "project_requests",
+            "project_id",
+            global_project.id
+        );
+        await deleteByValue("projects_tags", "project_id", global_project.id);
     } catch (err) {
         console.log(err);
         toast("Error occurred. Try request again later.", "error");
