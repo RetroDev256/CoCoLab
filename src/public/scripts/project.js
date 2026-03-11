@@ -154,7 +154,7 @@ export async function renderProject(project) {
             ${project.project_name}
         </h1>
         <div class="flex flex-wrap gap-2">
-            ${project.tags.map((tag) => `<div class="badge badge-outline">${tag}</div>\n`)}
+            ${project.tags.map((tag) => `<div class="badge badge-outline">${tag}</div>\n`).join("")}
         </div>
         <h3 class="text-2xl font-semibold mt-4">Project Details</h3>
         <p class="project-details leading-relaxed wrap-break-word">

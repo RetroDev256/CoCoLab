@@ -20,7 +20,6 @@ if (typeof window !== "undefined") {
     populateOwnedProjects(owned);
     populateMemberships(memberships);
     populateRequests(requests);
-    populateRoles(memberships);
     populateUser(user);
 }
 
@@ -35,9 +34,11 @@ function populateOwnedProjects(projects) {
             <a href="./project.html?id=${project.id}" target="_blank">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
-                    ${project.completed
-                        ? '<span class="badge badge-success">Completed</span>'
-                        : "<span class='badge badge-primary'>Active</span>"}
+                    ${
+                        project.completed
+                            ? '<span class="badge badge-success">Completed</span>'
+                            : "<span class='badge badge-primary'>Active</span>"
+                    }
                 </div>
             </a>`
         )
@@ -86,19 +87,6 @@ async function populateRequests(requests) {
     ).then((html) => {
         div.innerHTML = html.join("");
     });
-}
-
-// Populates the HTML that deals with roles associated with the user
-function populateRoles(memberships) {
-    const div = document.getElementById("user_roles");
-    if (!div) throw new Error("user tags div does not exist");
-
-    // De-duplicate the list of roles
-    const role_list = new Set();
-    for (const membership of memberships) role_list.add(membership.role);
-    div.innerHTML = Array.from(role_list).map(
-        (role) => `<span class="badge badge-secondary">${role}</span>`
-    );
 }
 
 // Populates the HTML that relies on the user data
