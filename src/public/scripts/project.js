@@ -104,8 +104,8 @@ export function renderUser(user, is_owner) {
 export async function renderProject(project) {
     const card = document.getElementById("project");
 
-    // const is_owner = current_user_id === project.owner_id;
-    const is_owner = true;
+    const is_owner = current_user_id === project.owner_id;
+    // const is_owner = true;
 
     function renderActions() {
         if (current_user_id === null) {
@@ -166,7 +166,7 @@ export async function renderProject(project) {
             ${project.tags.map((tag) => `<div class="badge badge-outline">${tag}</div>\n`)}
         </div>
         <h3 class="text-2xl font-semibold mt-4">Project Details</h3>
-        <p class="project-details leading-relaxed">
+        <p class="project-details leading-relaxed wrap-break-word">
             ${project.details}
         </p>
         <h3 class="text-2xl font-semibold mt-4">Project Members</h3>
@@ -190,10 +190,10 @@ export async function renderProject(project) {
                     (request) => `
                 <div class="indicator flex gap-2 items-center mt-2">
                     <span class="indicator-item indicator-center badge">${request.role}</span>
-                    ${request.user ? renderUser(request.user, is_owner) : ""}
                     ${
-                        is_owner
-                            ? `
+                        request.user
+                            ? is_owner
+                                ? `${renderUser(request.user, is_owner)}
                     <button class="btn btn-square btn-primary btn-sm" value="${request.id}" ${onclick(
                         (e) => {
                             acceptRequest(e.currentTarget, request.id);
@@ -203,21 +203,29 @@ export async function renderProject(project) {
                     </button>
                     <button class="btn btn-square btn-secondary btn-sm" value="${request.id}" ${onclick(
                         (e) => {
-                            rejectRequest(e.currentTarget, request.id);
+                            deleteRequest(e.currentTarget, request.id);
                         }
                     )}>
                         <img src="../images/icons/xmark.svg" alt="Reject" />
                     </button>`
-                            : request.user
+                                : ""
+                            : is_owner
                               ? `
-                        <button class="btn btn-square btn-primary btn-sm" value="${request.id}" ${onclick(
-                            (e) => {
-                                attachRequest(e.currentTarget, request.id);
-                            }
-                        )}>
-                            Join
-                        </button>`
-                              : ""
+                    <button class="btn btn-secondary" value="${request.id}" ${onclick(
+                        (e) => {
+                            deleteRequest(e.currentTarget, request.id);
+                        }
+                    )}>
+                        Delete Role Request
+                    </button>`
+                              : `
+                    <button class="btn btn-primary" value="${request.id}" ${onclick(
+                        (e) => {
+                            attachRequest(e.currentTarget, request.id);
+                        }
+                    )}>
+                        Join Role Request
+                    </button>`
                     }
                 </div>`
                 )
@@ -314,7 +322,7 @@ export async function acceptRequest(btn, request) {
     //Get user to show up onscreen
 }
 
-export async function rejectRequest(btn, request_id) {
+export async function deleteRequest(btn, request_id) {
     btn.disabled = true;
     try {
         const result = await deleteById("project_requests", request_id);

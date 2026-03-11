@@ -26,7 +26,7 @@ for (const project of projects) {
     projects_html += `
     <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
         color.class
-    } hover:scale-105 transition-transform" 
+    } hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
     style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${color.style}">
         <h4 class="font-bold">${project.project_name}</h4>
         <div class="text-xs">${project.details}</div>
