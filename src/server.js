@@ -62,7 +62,7 @@ async function getData(req) {
 function cors(res) {
     const h = res.headers;
     h.set("Access-Control-Allow-Origin", "*");
-    h.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    h.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     h.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
     return res;
 }

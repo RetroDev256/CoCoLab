@@ -16,12 +16,12 @@ export async function apiPost(url, data) {
     // ----------------------------------------------------- INSERTING PROJECTS
     if (url.pathname === "/API/project") {
         const result = await pool.query(
-            `INSERT INTO project (project_name, max_people, completed, details, owner_id)
+            `INSERT INTO project (project_name, color, completed, details, owner_id)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *;`,
             [
                 data.project_name,
-                data.max_people,
+                data.color,
                 data.completed,
                 data.details,
                 data.owner_id,
