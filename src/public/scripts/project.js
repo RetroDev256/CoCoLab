@@ -14,10 +14,9 @@ let current_user_id = getUserId();
 export async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
-    const [project, owner, raw_members, raw_requests, raw_project_tags] =
+    const [project, raw_members, raw_requests, raw_project_tags] =
         await Promise.all([
             selectById("project", project_id),
-            selectById("users", project.owner_id),
             selectByValue("project_members", "project_id", project_id),
             selectByValue("project_requests", "project_id", project_id),
             selectByValue("projects_tags", "project_id", project_id),
@@ -26,6 +25,7 @@ export async function init() {
         toast("No matching project found", "error");
         return;
     }
+    const owner = await selectById("users", project.owner_id);
     const members = await Promise.all(
         raw_members.map(async (project) => {
             const user = await selectById("users", project.user_id);
@@ -79,7 +79,7 @@ function on(event, fn) {
 export function renderUser(user, is_owner) {
     const show_email = is_owner || current_user_id === user.id;
     return `
-    <div class="flex gap-2 p-3 w-full">
+    <a class="flex gap-2 p-3 w-full" href="./user.html?id=${user.id}" target="_blank">
         <div class="avatar avatar-placeholder">
             <div class="bg-neutral text-neutral-content size-10 rounded-full">
                 <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
@@ -89,7 +89,7 @@ export function renderUser(user, is_owner) {
             <span class="text-sm opacity-70">${user.user_name}</span>
             ${show_email ? `<span class="text-sm opacity-70">${user.email}</span>` : ""}
         </div>
-    </div>`;
+    </a>`;
 }
 
 export async function renderProject(project) {
@@ -255,8 +255,7 @@ export function renderRoleModal(id, onSubmit) {
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
         </form>
-    </dialog>
-    `;
+    </dialog>`;
 }
 
 export async function request(body) {
