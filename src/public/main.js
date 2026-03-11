@@ -206,8 +206,8 @@ if (typeof document !== "undefined") {
             <div class="navbar-end">
             ${
                 user_id
-                    ? `<a class="btn btn-ghost" href="${dir}pages/userSettings.html" id="account">
-                    <span>Loading...</span>
+                    ? `<a class="btn btn-ghost" href="${dir}pages/user.html?id=${user_id}" id="account">
+                    <span>Profile</span>
                     <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
                 </a>`
                     : `<a class="btn btn-ghost" href="${dir}pages/auth.html">
@@ -215,7 +215,6 @@ if (typeof document !== "undefined") {
                     <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
                     </a>`
             }
-            
             </div>
         </div>
     </div>
