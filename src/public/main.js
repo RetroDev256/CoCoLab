@@ -177,7 +177,6 @@ export function getUserId() {
 }
 
 // --------------------------------------------- PER-PAGE NAVIGATION AND FOOTER
-const dir = new URL(".", import.meta.url).href;
 if (typeof document !== "undefined") {
     const header = document.getElementById("coco_header");
     if (header) {
@@ -189,11 +188,11 @@ if (typeof document !== "undefined") {
         <div class="navbar bg-base-300 w-full">
             <div class="navbar-start">
                 <label for="nav-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost" >
-                    <img src="${dir}/images/icons/menu.svg" alt="Menu" />
+                    <img src="/images/icons/menu.svg" alt="Menu" />
                 </label>
             </div>
             <a class="navbar-center gap-2 p-1" href="/">
-                <img class="size-12" src="${dir}images/logo.png" alt="CoCoLab Logo" />
+                <img class="size-12" src="/images/logo.png" alt="CoCoLab Logo" />
                 <h1 class="text-4xl tracking-tight font-bold">
                     CoCo<span class="text-primary">Lab</span>
                 </h1>
@@ -201,13 +200,13 @@ if (typeof document !== "undefined") {
             <div class="navbar-end">
             ${
                 user_id
-                    ? `<a class="btn btn-ghost" href="${dir}pages/user.html?id=${user_id}" id="account">
+                    ? `<a class="btn btn-ghost" href="/pages/user.html?id=${user_id}" id="account">
                     <span>Profile</span>
-                    <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                    <img class="account" src="/images/icons/user.svg" alt="User Account" />
                 </a>`
-                    : `<a class="btn btn-ghost" href="${dir}pages/auth.html">
+                    : `<a class="btn btn-ghost" href="/pages/auth.html">
                         Sign in
-                    <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                    <img class="account" src="/images/icons/user.svg" alt="User Account" />
                     </a>`
             }
             </div>
@@ -216,16 +215,16 @@ if (typeof document !== "undefined") {
     <div class="drawer-side">
         <label for="nav-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-200 min-h-full w-80 p-4">
-            <li> <a href="${dir}">Home</a> </li>
-        <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
-            <li> <a href="${dir}pages/aboutDevs.html">About the Developers</a> </li>
-            <li> <a href="${dir}pages/contactUs.html">Contact Us</a> </li>
+            <li> <a href="/">Home</a> </li>
+        <li> <a href="/pages/projectBoard.html">Project Board</a> </li>
+            <li> <a href="/pages/aboutDevs.html">About the Developers</a> </li>
+            <li> <a href="/pages/contactUs.html">Contact Us</a> </li>
             ${
                 user_id
                     ? '<li class="mt-auto"><button class="btn btn-ghost" onclick="logout()">Logout</button></li>'
-                    : `<li class='mt-auto'> <a class='btn btn-ghost' href='${dir}pages/auth.html'>
+                    : `<li class='mt-auto'> <a class='btn btn-ghost' href='/pages/auth.html'>
                         Sign in
-                        <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                        <img class="account" src="/images/icons/user.svg" alt="User Account" />
                     </a> </li>`
             }
         </ul>
@@ -257,18 +256,18 @@ if (typeof document !== "undefined") {
         footer.innerHTML = `
 <footer class="footer footer-center p-4 bg-base-300 mt-auto">
     <aside class="grid-flow-col items-center">
-        <img class="size-10" src="${dir}/images/logo.png" alt="CoCoLab Logo" />
+        <img class="size-10" src="/images/logo.png" alt="CoCoLab Logo" />
         <p class="px-2">&copy; CoCoLab. All rights reserved.</p>
     </aside>
     <nav class="grid-flow-col gap-4">
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/facebook.svg" alt="facebook" />
+            <img class="size-5" src="/images/icons/social_media/facebook.svg" alt="facebook" />
         </a>
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/instagram.svg" alt="instagram" />
+            <img class="size-5" src="/images/icons/social_media/instagram.svg" alt="instagram" />
         </a>
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/youtube.svg" alt="youtube" />
+            <img class="size-5" src="/images/icons/social_media/youtube.svg" alt="youtube" />
         </a>
     </nav>
 </footer>`;
@@ -306,7 +305,7 @@ export function toast(message, type = "neutral", duration = 5000) {
     wrapper.className = "toast-item alert " + alertClass;
 
     wrapper.innerHTML = `
-        ${icon ? `<img src="${dir}/images/icons/${icon}" alt="Icon" />` : ""}
+        ${icon ? `<img src="/images/icons/${icon}" alt="Icon" />` : ""}
         <span class="text-sm font-medium flex-1">${message}</span>
         <button onclick="dismissToast(this)" class="btn btn-ghost btn-xs btn-circle justify-self-end">✕</button>
       `;
