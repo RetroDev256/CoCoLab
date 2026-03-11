@@ -45,14 +45,17 @@
                                 id="tag-list"
                                 class="flex flex-wrap gap-4"
                             ></div>
-                            <input
-                                name="max_people"
-                                type="number"
-                                placeholder="Max people"
-                                class="input input-bordered w-full"
-                                value="5"
-                                required
-                            />
+                            <label for="max_people" class="text-xs">
+                                Max people:
+                                <input
+                                    name="max_people"
+                                    type="number"
+                                    placeholder="Max people"
+                                    class="input input-bordered input-xs w-20"
+                                    value="5"
+                                    required
+                                />
+                            </label>
                             <button type="submit" class="btn btn-primary">
                                 Create Project
                             </button>
