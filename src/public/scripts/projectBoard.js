@@ -1,4 +1,5 @@
 import { selectTable, getUserId, insert, toast } from "/main.js";
+import { getBackground } from "./color.js";
 
 const projects = await selectTable("project");
 const tags = await selectTable("category_tags");
@@ -6,25 +7,7 @@ const projects_tags = await selectTable("projects_tags");
 const user_id = getUserId();
 
 let projects_html = "";
-const backgrounds = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-amber-500",
-    "bg-yellow-500",
-    "bg-lime-500",
-    "bg-green-500",
-    "bg-emerald-500",
-    "bg-teal-500",
-    "bg-cyan-500",
-    "bg-sky-500",
-    "bg-blue-500",
-    "bg-indigo-500",
-    "bg-violet-500",
-    "bg-purple-500",
-    "bg-fuchsia-500",
-    "bg-pink-500",
-    "bg-rose-500",
-];
+
 for (const project of projects) {
     if (project.completed) continue;
 
@@ -37,12 +20,14 @@ for (const project of projects) {
         x: Math.floor(Math.random() * 20),
         y: Math.floor(Math.random() * 20),
     };
-    const randomBackground =
-        backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    const color = getBackground(project.color);
 
     projects_html += `
-    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${randomBackground} hover:scale-105 transition-transform" 
-    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%;">
+    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
+        color.class
+    } hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
+    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${color.style}">
         <h4 class="font-bold">${project.project_name}</h4>
         <div class="text-xs">${project.details}</div>
         <div class="flex flex-wrap gap-2 mt-auto">
@@ -72,7 +57,7 @@ document
             const project = await insert("project", {
                 project_name: data.get("project_name"),
                 details: data.get("details"),
-                max_people: data.get("max_people"),
+                color: data.get("color"),
                 owner_id: user_id,
                 completed: false,
             });
