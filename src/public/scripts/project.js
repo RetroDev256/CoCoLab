@@ -14,27 +14,23 @@ let current_user_id = getUserId();
 export async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
-    const project = await selectById("project", project_id);
+    const [project, owner, raw_members, raw_requests, raw_project_tags] =
+        await Promise.all([
+            selectById("project", project_id),
+            selectById("users", project.owner_id),
+            selectByValue("project_members", "project_id", project_id),
+            selectByValue("project_requests", "project_id", project_id),
+            selectByValue("projects_tags", "project_id", project_id),
+        ]);
     if (project === null) {
         toast("No matching project found", "error");
         return;
     }
-    const owner = await selectById("users", project.owner_id);
-    const raw_members = await selectByValue(
-        "project_members",
-        "project_id",
-        project_id
-    );
     const members = await Promise.all(
         raw_members.map(async (project) => {
             const user = await selectById("users", project.user_id);
             return { user, role: project.role };
         })
-    );
-    const raw_requests = await selectByValue(
-        "project_requests",
-        "project_id",
-        project_id
     );
     const requests = await Promise.all(
         raw_requests.map(async (request) => {
@@ -44,11 +40,6 @@ export async function init() {
             const user = await selectById("users", request.user_id);
             return { user, ...request };
         })
-    );
-    const raw_project_tags = await selectByValue(
-        "projects_tags",
-        "project_id",
-        project_id
     );
     const tags = await Promise.all(
         raw_project_tags.map(async ({ tag_id }) => {
