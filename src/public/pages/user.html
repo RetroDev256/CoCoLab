@@ -4,22 +4,87 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title class="project-title-head">Project</title>
+        <title id="profile-title">User Profile</title>
 
         <link rel="stylesheet" href="../output.css" />
         <link rel="icon" type="image/webp" href="../images/brownie.webp" />
-        <script type="module" src="../main.js"></script>
+
         <script type="module" src="../scripts/user.js"></script>
+        <script type="module" src="../main.js"></script>
     </head>
 
     <body class="bg-base-200">
         <div id="coco_header"></div>
 
-        <main class="card w-full max-w-2xl shadow-xl self-center bg-base-100">
-            <div class="card-body" id="project">
-                <div class="flex justify-center gap-4">
-                    <h2 class="text-3xl">Loading...</h2>
-                    <span class="loading loading-spinner loading-md"></span>
+        <main class="max-w-7xl mx-auto py-8 flex flex-col gap-4">
+            <!-- Profile Header -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body p-8">
+                    <div class="flex items-center gap-4">
+                        <!-- User Avatar -->
+                        <img
+                            src="../images/icons/user.svg"
+                            class="w-20 h-20 object-cover"
+                        />
+
+                        <div class="space-y-1">
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <h1 class="text-4xl font-bold" id="user_name"></h1>
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <p class="opacity-70" id="user_joined"></p>
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <p class="opacity-70" id="user_email"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <!-- Owned Projects -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body p-4 space-y-4">
+                        <h2 class="card-title">Owned Projects</h2>
+                        <!-- POPULATED VIA JAVASCRIPT -->
+                        <div
+                            id="owned_projects"
+                            class="flex flex-col"
+                            style="gap: 3px"
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- Member Projects -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body p-4 space-y-4">
+                        <h2 class="card-title">Member Of</h2>
+                        <!-- POPULATED VIA JAVASCRIPT -->
+                        <div
+                            id="member_projects"
+                            class="flex flex-col gap-4"
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- Pending Requests -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body p-4 space-y-4">
+                        <h2 class="card-title">Pending Requests</h2>
+                        <!-- POPULATED VIA JAVASCRIPT -->
+                        <div
+                            id="pending_requests"
+                            class="flex flex-col gap-4"
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body p-4 space-y-4">
+                        <h2 class="card-title">Tags</h2>
+                        <!-- POPULATED VIA JAVASCRIPT -->
+                        <div id="user_tags" class="flex flex-col gap-4"></div>
+                    </div>
                 </div>
             </div>
         </main>
