@@ -3,7 +3,7 @@ const el = document.getElementById("brownie");
 // Physics
 let x, y, vx, vy;
 const SPEED = 2.5;
-const BOOST = 3;
+const BOOST = 5;
 let isHovered = false;
 
 function randomDirection(speed) {
