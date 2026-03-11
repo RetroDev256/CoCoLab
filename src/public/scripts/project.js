@@ -114,7 +114,7 @@ export async function renderProject(project) {
         if (is_owner) {
             return `
             <button class="btn btn-ghost" ${onclick((e) => {
-                deleteProject(e.currentTarget);
+                deleteProject(e.currentTarget, project.id);
             })}>
                 Delete Project
             </button>
@@ -130,7 +130,7 @@ export async function renderProject(project) {
             })}
             <button class="btn btn-primary" ${project.completed ? "disabled" : ""} ${onclick(
                 (e) => {
-                    completeProject(e.currentTarget);
+                    completeProject(e.currentTarget, project.id);
                 }
             )}>
                 Complete Project
@@ -186,8 +186,9 @@ export async function renderProject(project) {
                 )
                 .join("")}
             ${project.requests
-                .map(
-                    (request) => `
+                .map((request) => {
+                    if (!is_owner && request.user) return "";
+                    return `
                 <div class="indicator flex gap-2 items-center mt-2">
                     <span class="indicator-item indicator-center badge">${request.role}</span>
                     ${
@@ -196,7 +197,7 @@ export async function renderProject(project) {
                                 ? `${renderUser(request.user, is_owner)}
                     <button class="btn btn-square btn-primary btn-sm" value="${request.id}" ${onclick(
                         (e) => {
-                            acceptRequest(e.currentTarget, request.id);
+                            acceptRequest(e.currentTarget, request);
                         }
                     )}>
                         <img src="../images/icons/check.svg" alt="Accept" />
@@ -227,8 +228,8 @@ export async function renderProject(project) {
                         Join Role Request
                     </button>`
                     }
-                </div>`
-                )
+                </div>`;
+                })
                 .join("")}
         </div>
         <div class="card-actions justify-end mt-4">
@@ -308,7 +309,7 @@ export async function acceptRequest(btn, request) {
         console.log(addResult);
 
         //Delete Request
-        const result = await deleteById("project_requests", request_id);
+        const result = await deleteById("project_requests", request.id);
         console.log(result);
     } catch (err) {
         console.log(err);
@@ -338,10 +339,10 @@ export async function deleteRequest(btn, request_id) {
     // remove user from rendered page
 }
 
-export async function completeProject(btn) {
+export async function completeProject(btn, project_id) {
     btn.disabled = true;
     try {
-        const response = await updateById("project", global_project.id, {
+        const response = await updateById("project", project_id, {
             completed: true,
         });
         console.log(response);
@@ -355,10 +356,10 @@ export async function completeProject(btn) {
     toast("You completed this project!! Good job :)");
 }
 
-export async function deleteProject(btn) {
+export async function deleteProject(btn, project_id) {
     btn.disabled = true;
     try {
-        await deleteById("project", global_project.id);
+        await deleteById("project", project_id);
     } catch (err) {
         console.log(err);
         toast("Error occurred. Try request again later.", "error");
