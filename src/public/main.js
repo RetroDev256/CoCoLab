@@ -2,7 +2,6 @@ import { withCache, invalidateCached } from "/scripts/cache.js";
 // ----------------------------------------------------------- DATABASE HELPERS
 
 const url = "https://coco.alloc.dev";
-// Returns a list of all JS objects in a table
 export async function selectTable(table) {
     return withCache(`${table}`, async () => {
         const path = `${url}/API/${table}`;
@@ -10,7 +9,6 @@ export async function selectTable(table) {
     });
 }
 
-// Returns either a single JS object, or null
 export async function selectById(table, id) {
     return withCache(`${table}:id:${id}`, async () => {
         const path = `${url}/API/${table}/${id}`;
@@ -20,7 +18,6 @@ export async function selectById(table, id) {
     });
 }
 
-// Returns a list based on a table, field, and value
 export async function selectByValue(table, field, value) {
     return withCache(`${table}:${field}:${value}`, async () => {
         const path = `${url}/API/${table}/${field}/${value}`;
@@ -28,7 +25,6 @@ export async function selectByValue(table, field, value) {
     });
 }
 
-// Returns either a single JS object, or null
 export async function deleteById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path, { method: "DELETE" });
@@ -37,7 +33,6 @@ export async function deleteById(table, id) {
     return json.length === 0 ? null : json[0];
 }
 
-// Returns a list based on a table, field, and value
 export async function deleteByValue(table, field, value) {
     const path = `${url}/API/${table}/${field}/${value}`;
     const result = await (await fetch(path, { method: "DELETE" })).json();
@@ -239,7 +234,7 @@ if (typeof document !== "undefined") {
         if (user_id) {
             window.logout = async () => {
                 removeToken();
-                window.location.href = "./auth.html";
+                window.location.href = "/pages/auth.html";
             };
             (async () => {
                 const account = document.getElementById("account");
@@ -275,7 +270,6 @@ if (typeof document !== "undefined") {
         <a>
             <img class="size-5" src="${dir}/images/icons/social_media/youtube.svg" alt="youtube" />
         </a>
-        
     </nav>
 </footer>`;
     }
