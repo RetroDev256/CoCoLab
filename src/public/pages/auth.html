@@ -10,7 +10,7 @@
         <script type="module" src="../main.js"></script>
 
         <script type="module">
-            import { saveToken, getUserId } from "../main.js";
+            import { saveToken, getUserId, toast } from "../main.js";
 
             // Get the current user ID
             const user_id = getUserId();
@@ -36,12 +36,14 @@
                     if (!response.ok) {
                         // handle response errors
                         console.log("Authentication failure.");
+                        toast("Authentication failure.", "error");
                         return;
                     }
 
                     // Save the token in local storage for authentication
                     saveToken(await response.json());
                     console.log("Successfully logged in.");
+                    window.location.href = "./projectBoard.html";
                 });
             }
 
@@ -129,5 +131,6 @@
         </main>
 
         <div id="coco_footer"></div>
+        <div id="toast-container" class="toast"></div>
     </body>
 </html>
