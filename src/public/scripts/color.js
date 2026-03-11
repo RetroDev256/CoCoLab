@@ -15,7 +15,7 @@ export function randomColor() {
         "#8e51ff",
         "#ad46ff",
         "#e12afb",
-        "#f6339a)",
+        "#f6339a",
         "#ff2056",
     ];
     return colors[Math.floor(Math.random() * colors.length)].replace(

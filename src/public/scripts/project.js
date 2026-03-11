@@ -48,6 +48,9 @@ export async function init() {
         })
     );
 
+    const title = document.getElementById("project-title");
+    title.textContent = `${project.project_name} | Project`;
+
     await renderProject({ ...project, owner, members, requests, tags });
 }
 
