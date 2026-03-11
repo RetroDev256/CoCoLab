@@ -15,17 +15,17 @@ INSERT INTO public.users (user_name, pw_hash, email) VALUES
 ('julia_m', '', 'julia@ai.com');
 
 -- PROJECT inserts
-INSERT INTO public.project (project_name, max_people, completed, details, owner_id) VALUES
-('Retro Game Engine', 4, false, 'A 2D engine for pixel art games.', 1),
-('AI Chatbot', 3, false, 'Natural language processor for support.', 2),
-('Crypto Wallet', 2, false, 'Secure mobile wallet for assets.', 3),
-('Social Map', 10, false, 'Geo-location social media app.', 4),
-('Fitness Tracker', 5, false, 'Track workouts and calories.', 5),
-('Recipe Finder', 4, false, 'Search meals by ingredients.', 6),
-('Code Linter', 3, false, 'Automated tool for clean code.', 7),
-('Portfolio Builder', 2, false, 'Drag and drop site builder.', 8),
-('Eco Monitor', 6, false, 'IoT app for tracking home energy.', 9),
-('Music Streamer', 8, false, 'Peer-to-peer audio platform.', 10);
+INSERT INTO public.project (project_name, completed, details, owner_id, color) VALUES
+('Retro Game Engine', false, 'A 2D engine for pixel art games.', 1, '#f396fc'),
+('AI Chatbot', false, 'Natural language processor for support.', 2, '#f396fc'),
+('Crypto Wallet', false, 'Secure mobile wallet for assets.', 3, '#f396fc'),
+('Social Map', false, 'Geo-location social media app.', 4, '#f396fc'),
+('Fitness Tracker', false, 'Track workouts and calories.', 5, '#f396fc'),
+('Recipe Finder', false, 'Search meals by ingredients.', 6, '#f396fc'),
+('Code Linter', false, 'Automated tool for clean code.', 7, '#f396fc'),
+('Portfolio Builder', false, 'Drag and drop site builder.', 8, '#f396fc'),
+('Eco Monitor', false, 'IoT app for tracking home energy.', 9, '#f396fc'),
+('Music Streamer', false, 'Peer-to-peer audio platform.', 10, '#f396fc');
 
 -- CATEGORY_TAGS inserts
 INSERT INTO public.category_tags (name) VALUES
@@ -57,7 +57,7 @@ INSERT INTO public.project_requests (role, user_id, project_id) VALUES
 ('Illustrator', 7, 4),
 ('DevOps', 6, 5),
 ('Tester', 5, 6),
-('Fullstack', 4, 7),
+('Fullstack', NULL, 7),
 ('Intern', 3, 8),
 ('Scrum Master', 2, 9),
-('Support', 1, 10);
+('Support', NULL, 10);
