@@ -1,4 +1,4 @@
-import { withCache, invalidateCached } from "/scripts/cache.js";
+import { withCache, invalidateCached } from "./scripts/cache.js";
 // ----------------------------------------------------------- DATABASE HELPERS
 
 const url = "https://coco.alloc.dev";
@@ -339,4 +339,6 @@ export function dismissToast(btn, wrapper) {
     el.classList.add("hide");
     el.addEventListener("transitionend", () => el.remove(), { once: true });
 }
-window.dismissToast = dismissToast;
+if(typeof window !== "undefined"){
+    window.dismissToast = dismissToast;
+}
