@@ -19,7 +19,24 @@
         <main class="max-w-7xl mx-auto py-8 flex flex-col gap-4">
             <!-- Profile Header -->
             <div class="card bg-base-100 shadow-xl">
-                <div class="card-body p-8" id="profile"></div>
+                <div class="card-body p-8">
+                    <div class="flex items-center gap-4">
+                        <!-- User Avatar -->
+                        <img
+                            src="../images/icons/user.svg"
+                            class="w-20 h-20 object-cover"
+                        />
+
+                        <div class="space-y-1">
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <h1 class="text-4xl font-bold" id="user_name"></h1>
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <p class="opacity-70" id="user_joined"></p>
+                            <!-- POPULATED VIA JAVASCRIPT -->
+                            <p class="opacity-70" id="user_email"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Content Grid -->

@@ -35,8 +35,9 @@ function populateOwnedProjects(projects) {
             <a href="./project.html?id=${project.id}" target="_blank">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
-                    ${project.completed ? '<span class="badge badge-success">Completed</span>' : "<span class='badge badge-primary'>Active</span>"}
-                    
+                    ${project.completed
+                        ? '<span class="badge badge-success">Completed</span>'
+                        : "<span class='badge badge-primary'>Active</span>"}
                 </div>
             </a>`
         )
@@ -53,13 +54,12 @@ async function populateMemberships(memberships) {
             const project = await selectById("project", membership.project_id);
             if (!project) throw new Error("membership references void project");
 
-            return `
-        <a href="./project.html?id=${membership.project_id}" target="_blank">
-            <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
-                <span>${project.project_name}</span>
-                <span class="badge badge-primary">${membership.role}</span>
-            </div>
-        </a>`;
+            return `<a href="./project.html?id=${membership.project_id}" target="_blank">
+                <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
+                    <span>${project.project_name}</span>
+                    <span class="badge badge-primary">${membership.role}</span>
+                </div>
+            </a>`;
         })
     ).then((html) => {
         div.innerHTML = html.join("");
@@ -76,13 +76,12 @@ async function populateRequests(requests) {
             const project = await selectById("project", request.project_id);
             if (!project) throw new Error("membership references void project");
 
-            return `
-        <a href="./project.html?id=${request.project_id}" target="_blank">
-            <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
-                <span>${project.project_name}</span>
-                <span class="badge badge-primary">${request.role}</span>
-            </div>
-        </a>`;
+            return `<a href="./project.html?id=${request.project_id}" target="_blank">
+                <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
+                    <span>${project.project_name}</span>
+                    <span class="badge badge-primary">${request.role}</span>
+                </div>
+            </a>`;
         })
     ).then((html) => {
         div.innerHTML = html.join("");
@@ -107,24 +106,13 @@ function populateUser(user) {
     if (!user) throw new Error("missing user object");
 
     const title = document.getElementById("profile-title");
-    const div = document.getElementById("profile");
-    if (!div) throw new Error("profile div does not exist");
+    const name = document.getElementById("user_name");
+    const joined = document.getElementById("user_joined");
+    const email = document.getElementById("user_email");
 
+    const date = new Date(user.created_at);
+    joined.textContent = `Joined ${date.toLocaleDateString()}`;
     title.textContent = `${user.user_name} | Profile`;
-    div.innerHTML = `<div class="flex items-center gap-4">
-
-        <div class="avatar avatar-placeholder">
-            <div class="bg-neutral text-neutral-content size-20 rounded-full">
-                <span class="text-5xl">${user.user_name.charAt(0).toUpperCase()}</span>
-            </div>
-        </div>
-
-        <div class="space-y-1">
-            <h1 class="text-4xl font-bold" id="user_name">${user.user_name}</h1>
-            <p class="opacity-70" id="user_joined">
-            ${new Date(user.created_at).toLocaleDateString()}
-            </p>
-            <p class="opacity-70" id="user_email">${user.email}</p>
-        </div>
-    </div>`;
+    name.textContent = user.user_name;
+    email.textContent = user.email;
 }
