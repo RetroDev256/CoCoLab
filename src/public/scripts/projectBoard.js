@@ -1,5 +1,5 @@
 import { selectTable, getUserId, insert, toast } from "/main.js";
-import { getBackground } from "./color.js";
+import { getStyle, randomColor } from "./color.js";
 
 const projects = await selectTable("project");
 const tags = await selectTable("category_tags");
@@ -21,13 +21,9 @@ for (const project of projects) {
         y: Math.floor(Math.random() * 20),
     };
 
-    const color = getBackground(project.color);
-
     projects_html += `
-    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
-        color.class
-    } hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
-    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${color.style}">
+    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
+    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${getStyle(project.color)}">
         <h4 class="font-bold">${project.project_name}</h4>
         <div class="text-xs">${project.details}</div>
         <div class="flex flex-wrap gap-2 mt-auto">
@@ -71,8 +67,16 @@ document
             }
             toast("Project created successfully!", "success");
             document.getElementById("new_project_modal").close();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error("Error creating project:", error);
             toast("Error creating project. Please try again.", "error");
         }
     });
+
+const color = document.getElementById("new_project_color");
+const defult = randomColor();
+color.value = defult;
+console.log(defult, color.value);
