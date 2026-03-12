@@ -14,27 +14,23 @@ let current_user_id = getUserId();
 export async function init() {
     const params = new URLSearchParams(window.location.search);
     const project_id = params.get("id");
-    const project = await selectById("project", project_id);
+    const [project, raw_members, raw_requests, raw_project_tags] =
+        await Promise.all([
+            selectById("project", project_id),
+            selectByValue("project_members", "project_id", project_id),
+            selectByValue("project_requests", "project_id", project_id),
+            selectByValue("projects_tags", "project_id", project_id),
+        ]);
     if (project === null) {
         toast("No matching project found", "error");
         return;
     }
     const owner = await selectById("users", project.owner_id);
-    const raw_members = await selectByValue(
-        "project_members",
-        "project_id",
-        project_id
-    );
     const members = await Promise.all(
         raw_members.map(async (project) => {
             const user = await selectById("users", project.user_id);
             return { user, role: project.role };
         })
-    );
-    const raw_requests = await selectByValue(
-        "project_requests",
-        "project_id",
-        project_id
     );
     const requests = await Promise.all(
         raw_requests.map(async (request) => {
@@ -45,17 +41,15 @@ export async function init() {
             return { user, ...request };
         })
     );
-    const raw_project_tags = await selectByValue(
-        "projects_tags",
-        "project_id",
-        project_id
-    );
     const tags = await Promise.all(
         raw_project_tags.map(async ({ tag_id }) => {
             const tag = await selectById("category_tags", tag_id);
             return tag ? tag.name : "INVALID_TAG";
         })
     );
+
+    const title = document.getElementById("project-title");
+    title.textContent = `${project.project_name} | Project`;
 
     await renderProject({ ...project, owner, members, requests, tags });
 }
@@ -88,7 +82,7 @@ function on(event, fn) {
 export function renderUser(user, is_owner) {
     const show_email = is_owner || current_user_id === user.id;
     return `
-    <div class="flex gap-2 p-3 w-full">
+    <a class="flex gap-2 p-3 w-full" href="./user.html?id=${user.id}" target="_blank">
         <div class="avatar avatar-placeholder">
             <div class="bg-neutral text-neutral-content size-10 rounded-full">
                 <span class="text-2xl">${user.user_name.charAt(0).toUpperCase()}</span>
@@ -98,7 +92,7 @@ export function renderUser(user, is_owner) {
             <span class="text-sm opacity-70">${user.user_name}</span>
             ${show_email ? `<span class="text-sm opacity-70">${user.email}</span>` : ""}
         </div>
-    </div>`;
+    </a>`;
 }
 
 export async function renderProject(project) {
@@ -158,12 +152,22 @@ export async function renderProject(project) {
         }
     }
 
+    function renderRoleBadge(role) {
+        return `<span class="indicator-item indicator-center badge">${
+            role.length > 20
+                ? `<div class="tooltip" data-tip="${role}">
+                        ${role.substring(0, 20)}...
+                    </div>`
+                : role
+        }</span>`;
+    }
+
     card.innerHTML = `
         <h1 class="card-title text-3xl font-bold">
             ${project.project_name}
         </h1>
         <div class="flex flex-wrap gap-2">
-            ${project.tags.map((tag) => `<div class="badge badge-outline">${tag}</div>\n`)}
+            ${project.tags.map((tag) => `<div class="badge badge-outline">${tag}</div>\n`).join("")}
         </div>
         <h3 class="text-2xl font-semibold mt-4">Project Details</h3>
         <p class="project-details leading-relaxed wrap-break-word">
@@ -180,7 +184,7 @@ export async function renderProject(project) {
                     (
                         member
                     ) => `<div class="indicator bg-base-200 rounded-box mt-2">
-                    <span class="indicator-item indicator-center badge">${member.role}</span>
+                    ${renderRoleBadge(member.role)}
                     ${renderUser(member.user, is_owner)}
                 </div>`
                 )
@@ -190,7 +194,7 @@ export async function renderProject(project) {
                     if (!is_owner && request.user) return "";
                     return `
                 <div class="indicator flex gap-2 items-center mt-2">
-                    <span class="indicator-item indicator-center badge">${request.role}</span>
+                    ${renderRoleBadge(request.role)}
                     ${
                         request.user
                             ? is_owner
@@ -240,7 +244,7 @@ export async function renderProject(project) {
         </div>`;
 }
 
-export function renderRoleModal(id, onSubmit) {
+function renderRoleModal(id, onSubmit) {
     return `
     <dialog id="${id}" class="modal">
         <div class="modal-box flex flex-col gap-4">
@@ -264,11 +268,16 @@ export function renderRoleModal(id, onSubmit) {
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
         </form>
-    </dialog>
-    `;
+    </dialog>`;
 }
 
-export async function request(body) {
+function reload() {
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+async function request(body) {
     try {
         const response = await insert("project_requests", body);
         console.log(response);
@@ -279,9 +288,10 @@ export async function request(body) {
     }
 
     toast("Request sent successfully");
+    reload();
 }
 
-export async function attachRequest(btn, id) {
+async function attachRequest(btn, id) {
     btn.disabled = true;
     try {
         const response = await updateById("project_requests", id, {
@@ -295,9 +305,10 @@ export async function attachRequest(btn, id) {
     }
 
     toast("Request updated successfully");
+    reload();
 }
 
-export async function acceptRequest(btn, request) {
+async function acceptRequest(btn, request) {
     btn.disabled = true;
     try {
         //Add member
@@ -319,11 +330,10 @@ export async function acceptRequest(btn, request) {
     }
 
     toast("Successfully accepted project member");
-
-    //Get user to show up onscreen
+    reload();
 }
 
-export async function deleteRequest(btn, request_id) {
+async function deleteRequest(btn, request_id) {
     btn.disabled = true;
     try {
         const result = await deleteById("project_requests", request_id);
@@ -336,10 +346,10 @@ export async function deleteRequest(btn, request_id) {
     }
 
     toast("Successfully rejected project member");
-    // remove user from rendered page
+    reload();
 }
 
-export async function completeProject(btn, project_id) {
+async function completeProject(btn, project_id) {
     btn.disabled = true;
     try {
         const response = await updateById("project", project_id, {
@@ -354,9 +364,10 @@ export async function completeProject(btn, project_id) {
     }
 
     toast("You completed this project!! Good job :)");
+    reload();
 }
 
-export async function deleteProject(btn, project_id) {
+async function deleteProject(btn, project_id) {
     btn.disabled = true;
     try {
         await deleteById("project", project_id);
@@ -367,5 +378,5 @@ export async function deleteProject(btn, project_id) {
         return;
     }
 
-    toast("You deleted this project. :(");
+    window.location.href = "./projectBoard.html";
 }

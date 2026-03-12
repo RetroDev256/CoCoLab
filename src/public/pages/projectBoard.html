@@ -15,7 +15,7 @@
         <div id="coco_header"></div>
 
         <main
-            class="grow rounded-box m-4 md:m-8 p-4 shadow-xl bg-repeat bg-size-[auto_500px]"
+            class="grow md:rounded-box md:m-8 md:p-4 shadow-xl bg-repeat bg-size-[auto_500px]"
             style="background-image: url(../images/board.webp)"
         >
             <div class="flex justify-between w-full">
@@ -49,7 +49,12 @@
                                 id="tag-list"
                                 class="flex flex-wrap gap-4"
                             ></div>
-                            <input name="color" type="color" class="input" />
+                            <input
+                                name="color"
+                                type="color"
+                                class="input"
+                                id="new_project_color"
+                            />
                             <button type="submit" class="btn btn-primary">
                                 Create Project
                             </button>
@@ -63,7 +68,7 @@
 
             <ul
                 id="projects"
-                class="m-4 grid gap-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+                class="m-2 md:m-4 grid justify-items-center gap-2 md:gap-8 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
             ></ul>
         </main>
 

@@ -1,5 +1,5 @@
 import { selectTable, getUserId, insert, toast } from "/main.js";
-import { getBackground } from "./color.js";
+import { getStyle, randomColor } from "./color.js";
 
 const projects = await selectTable("project");
 const tags = await selectTable("category_tags");
@@ -11,19 +11,19 @@ let projects_html = "";
 function renderProjects() {
     for (const project of projects) {
         if (project.completed) continue;
-    
+
         project.tags = projects_tags
             .filter((tag) => tag.project_id == project.id)
             .map((tag) => tags.find((t) => t.id == tag.tag_id).name);
-    
+
         const randomRotation = Math.floor(Math.random() * 10 - 5);
         const randomTransition = {
             x: Math.floor(Math.random() * 20),
             y: Math.floor(Math.random() * 20),
         };
-    
+
         const color = getBackground(project.color);
-    
+
         projects_html += `
         <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
             color.class
@@ -73,18 +73,25 @@ document
             }
             toast("Project created successfully!", "success");
             document.getElementById("new_project_modal").close();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error("Error creating project:", error);
             toast("Error creating project. Please try again.", "error");
         }
     });
 
+document.getElementById("new_project_color").value = randomColor();
 
 function filterProjects(query) {
-    function searchCallback(project)
-    {
-        return (project.name.toLowerCase().includes(query.toLowerCase())
-      || project.tags.some((tag) => tag.name.toLowerCase().includes(query.toLowerCase())));
+    function searchCallback(project) {
+        return (
+            project.name.toLowerCase().includes(query.toLowerCase()) ||
+            project.tags.some((tag) =>
+                tag.name.toLowerCase().includes(query.toLowerCase())
+            )
+        );
     }
     const filteredProjects = projects.filter(searchCallback);
     filteredProjects.sort((a, b) => a.name.localeCompare(b.name));
@@ -97,4 +104,6 @@ function searchHandler() {
     filterProjects(userInput.toLowerCase());
 }
 
-document.querySelector("#search-image").addEventListener("click", searchHandler);
+document
+    .querySelector("#search-image")
+    .addEventListener("click", searchHandler);
