@@ -76,7 +76,4 @@ document
         }
     });
 
-const color = document.getElementById("new_project_color");
-const defult = randomColor();
-color.value = defult;
-console.log(defult, color.value);
+document.getElementById("new_project_color").value = randomColor();
