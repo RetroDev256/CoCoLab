@@ -8,32 +8,34 @@ const user_id = getUserId();
 
 let projects_html = "";
 
-for (const project of projects) {
-    if (project.completed) continue;
-
-    const my_tags = projects_tags
-        .filter((tag) => tag.project_id == project.id)
-        .map((tag) => tags.find((t) => t.id == tag.tag_id).name);
-
-    const randomRotation = Math.floor(Math.random() * 10 - 5);
-    const randomTransition = {
-        x: Math.floor(Math.random() * 20),
-        y: Math.floor(Math.random() * 20),
-    };
-
-    const color = getBackground(project.color);
-
-    projects_html += `
-    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
-        color.class
-    } hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
-    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${color.style}">
-        <h4 class="font-bold">${project.project_name}</h4>
-        <div class="text-xs">${project.details}</div>
-        <div class="flex flex-wrap gap-2 mt-auto">
-        ${my_tags.map((tag) => `<div class="badge badge-xs badge-outline">${tag}</div>`).join("")}
-        </div>
-    </a>`;
+function renderProjects() {
+    for (const project of projects) {
+        if (project.completed) continue;
+    
+        project.tags = projects_tags
+            .filter((tag) => tag.project_id == project.id)
+            .map((tag) => tags.find((t) => t.id == tag.tag_id).name);
+    
+        const randomRotation = Math.floor(Math.random() * 10 - 5);
+        const randomTransition = {
+            x: Math.floor(Math.random() * 20),
+            y: Math.floor(Math.random() * 20),
+        };
+    
+        const color = getBackground(project.color);
+    
+        projects_html += `
+        <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 ${
+            color.class
+        } hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
+        style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${color.style}">
+            <h4 class="font-bold">${project.project_name}</h4>
+            <div class="text-xs">${project.details}</div>
+            <div class="flex flex-wrap gap-2 mt-auto">
+            ${project.tags.map((tag) => `<div class="badge badge-xs badge-outline">${tag}</div>`).join("")}
+            </div>
+        </a>`;
+    }
 }
 document.getElementById("projects").innerHTML = projects_html;
 
@@ -76,3 +78,23 @@ document
             toast("Error creating project. Please try again.", "error");
         }
     });
+
+
+function filterProjects(query) {
+    function searchCallback(project)
+    {
+        return (project.name.toLowerCase().includes(query.toLowerCase())
+      || project.tags.some((tag) => tag.name.toLowerCase().includes(query.toLowerCase())));
+    }
+    const filteredProjects = projects.filter(searchCallback);
+    filteredProjects.sort((a, b) => a.name.localeCompare(b.name));
+
+    renderProjects(filteredProjects);
+}
+
+function searchHandler() {
+    let userInput = document.getElementById("project-search").value;
+    filterProjects(userInput.toLowerCase());
+}
+
+document.querySelector("#search-image").addEventListener("click", searchHandler);
