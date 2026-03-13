@@ -43,8 +43,12 @@ document
     .getElementById("new_project_form")
     .addEventListener("submit", async (event) => {
         event.preventDefault();
+        document.getElementById("new_project_modal").close();
         if (!user_id) {
             toast("Please log in to create a project.", "error");
+            setTimeout(() => {
+                window.location.href = "/pages/auth.html";
+            }, 1000);
             return;
         }
         const data = new FormData(new_project_form);
@@ -66,7 +70,6 @@ document
                 console.log("Tag to project:", tag);
             }
             toast("Project created successfully!", "success");
-            document.getElementById("new_project_modal").close();
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
