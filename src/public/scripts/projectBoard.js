@@ -45,6 +45,10 @@ document
     .addEventListener("submit", async (event) => {
         event.preventDefault();
         const query = new FormData(event.target).get("query").toLowerCase();
+        if (!query) {
+            renderProjects(projects);
+            return;
+        }
         renderProjects(
             projects
                 .filter(
