@@ -1,37 +1,62 @@
 import { selectTable, getUserId, insert, toast } from "/main.js";
 import { getStyle, randomColor } from "./color.js";
 
-const projects = await selectTable("project");
+const raw_projects = await selectTable("project");
 const tags = await selectTable("category_tags");
 const projects_tags = await selectTable("projects_tags");
 const user_id = getUserId();
 
-let projects_html = "";
-
-for (const project of projects) {
-    if (project.completed) continue;
-
-    const my_tags = projects_tags
-        .filter((tag) => tag.project_id == project.id)
-        .map((tag) => tags.find((t) => t.id == tag.tag_id).name);
-
-    const randomRotation = Math.floor(Math.random() * 10 - 5);
-    const randomTransition = {
-        x: Math.floor(Math.random() * 20),
-        y: Math.floor(Math.random() * 20),
+const projects = raw_projects.map((project) => {
+    return {
+        ...project,
+        tags: projects_tags
+            .filter((tag) => tag.project_id == project.id)
+            .map((tag) => tags.find((t) => t.id == tag.tag_id).name),
     };
+});
 
-    projects_html += `
-    <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
-    style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${getStyle(project.color)}">
-        <h4 class="font-bold">${project.project_name}</h4>
-        <div class="text-xs">${project.details}</div>
-        <div class="flex flex-wrap gap-2 mt-auto">
-        ${my_tags.map((tag) => `<div class="badge badge-xs badge-outline">${tag}</div>`).join("")}
-        </div>
-    </a>`;
+function renderProjects(projects) {
+    let projects_html = "";
+    for (const project of projects) {
+        if (project.completed) continue;
+
+        const randomRotation = Math.floor(Math.random() * 10 - 5);
+        const randomTransition = {
+            x: Math.floor(Math.random() * 20),
+            y: Math.floor(Math.random() * 20),
+        };
+
+        projects_html += `
+        <a href="project.html?id=${project.id}" class="size-44 p-4 shadow-xl flex flex-col gap-2 hover:scale-105 transition-transform overflow-hidden wrap-break-word" 
+        style="transform: rotate(${randomRotation}deg); translate: ${randomTransition.x}% ${randomTransition.y}%; ${getStyle(project.color)}">
+            <h4 class="font-bold">${project.project_name}</h4>
+            <div class="text-xs">${project.details}</div>
+            <div class="flex flex-wrap gap-2 mt-auto">
+            ${project.tags.map((tag) => `<div class="badge badge-xs badge-outline">${tag}</div>`).join("")}
+            </div>
+        </a>`;
+    }
+    document.getElementById("projects").innerHTML = projects_html;
 }
-document.getElementById("projects").innerHTML = projects_html;
+
+renderProjects(projects);
+document
+    .getElementById("project-search")
+    .addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const query = new FormData(event.target).get("query").toLowerCase();
+        renderProjects(
+            projects
+                .filter(
+                    (project) =>
+                        project.project_name.toLowerCase().includes(query) ||
+                        project.tags.some((tag) =>
+                            tag.toLowerCase().includes(query)
+                        )
+                )
+                .sort((a, b) => a.project_name.localeCompare(b.project_name))
+        );
+    });
 
 let tags_html = "";
 for (const tag of tags) {
@@ -51,7 +76,7 @@ document
             }, 1000);
             return;
         }
-        const data = new FormData(new_project_form);
+        const data = new FormData(event.target);
 
         try {
             const project = await insert("project", {

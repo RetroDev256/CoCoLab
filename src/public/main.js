@@ -1,4 +1,4 @@
-import { withCache, invalidateCached } from "/scripts/cache.js";
+import { withCache, invalidateCached } from "./scripts/cache.js";
 // ----------------------------------------------------------- DATABASE HELPERS
 
 const url = "https://coco.alloc.dev";
@@ -260,13 +260,13 @@ if (typeof document !== "undefined") {
         <p class="px-2">&copy; CoCoLab. All rights reserved.</p>
     </aside>
     <nav class="grid-flow-col gap-4">
-        <a>
+        <a href="https://en.wikipedia.org/wiki/Static_cling" target=_blank>
             <img class="size-5" src="/images/icons/social_media/facebook.svg" alt="facebook" />
         </a>
-        <a>
+        <a href="https://www.youtube.com/watch?v=IxX_QHay02M" target=_blank>
             <img class="size-5" src="/images/icons/social_media/instagram.svg" alt="instagram" />
         </a>
-        <a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target=_blank>
             <img class="size-5" src="/images/icons/social_media/youtube.svg" alt="youtube" />
         </a>
     </nav>
@@ -331,4 +331,6 @@ export function dismissToast(btn, wrapper) {
     el.classList.add("hide");
     el.addEventListener("transitionend", () => el.remove(), { once: true });
 }
-window.dismissToast = dismissToast;
+if(typeof window !== "undefined"){
+    window.dismissToast = dismissToast;
+}

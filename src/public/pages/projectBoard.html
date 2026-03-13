@@ -20,6 +20,18 @@
         >
             <div class="flex justify-between w-full">
                 <h1 class="text-4xl font-bold">Projects</h1>
+                <form id="project-search" class="join">
+                    <label class="input join-item">
+                        <img src="/images/icons/search.svg" alt="search" />
+                        <input
+                            type="search"
+                            name="query"
+                            required
+                            placeholder="Search title or tag"
+                        />
+                    </label>
+                    <button class="btn join-item" type="submit">Search</button>
+                </form>
                 <button class="btn" onclick="new_project_modal.showModal()">
                     New Project
                 </button>
