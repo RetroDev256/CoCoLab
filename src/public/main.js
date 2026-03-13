@@ -260,13 +260,13 @@ if (typeof document !== "undefined") {
         <p class="px-2">&copy; CoCoLab. All rights reserved.</p>
     </aside>
     <nav class="grid-flow-col gap-4">
-        <a>
+        <a href="https://en.wikipedia.org/wiki/Static_cling" target=_blank>
             <img class="size-5" src="/images/icons/social_media/facebook.svg" alt="facebook" />
         </a>
-        <a>
+        <a href="https://www.youtube.com/watch?v=IxX_QHay02M" target=_blank>
             <img class="size-5" src="/images/icons/social_media/instagram.svg" alt="instagram" />
         </a>
-        <a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target=_blank>
             <img class="size-5" src="/images/icons/social_media/youtube.svg" alt="youtube" />
         </a>
     </nav>
