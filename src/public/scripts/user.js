@@ -31,7 +31,7 @@ function populateOwnedProjects(projects) {
     div.innerHTML = projects
         .map(
             (project) => `
-            <a href="./project.html?id=${project.id}" target="_blank">
+            <a href="./project.html?id=${project.id}">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
                     ${
@@ -55,7 +55,7 @@ async function populateMemberships(memberships) {
             const project = await selectById("project", membership.project_id);
             if (!project) throw new Error("membership references void project");
 
-            return `<a href="./project.html?id=${membership.project_id}" target="_blank">
+            return `<a href="./project.html?id=${membership.project_id}">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
                     <span class="badge badge-primary">${membership.role}</span>
@@ -77,7 +77,7 @@ async function populateRequests(requests) {
             const project = await selectById("project", request.project_id);
             if (!project) throw new Error("membership references void project");
 
-            return `<a href="./project.html?id=${request.project_id}" target="_blank">
+            return `<a href="./project.html?id=${request.project_id}">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
                     <span class="badge badge-primary">${request.role}</span>
