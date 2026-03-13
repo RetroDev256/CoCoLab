@@ -1,8 +1,7 @@
-import { withCache, invalidateCached } from "/scripts/cache.js";
+import { withCache, invalidateCached } from "./scripts/cache.js";
 // ----------------------------------------------------------- DATABASE HELPERS
 
 const url = "https://coco.alloc.dev";
-// Returns a list of all JS objects in a table
 export async function selectTable(table) {
     return withCache(`${table}`, async () => {
         const path = `${url}/API/${table}`;
@@ -10,7 +9,6 @@ export async function selectTable(table) {
     });
 }
 
-// Returns either a single JS object, or null
 export async function selectById(table, id) {
     return withCache(`${table}:id:${id}`, async () => {
         const path = `${url}/API/${table}/${id}`;
@@ -20,7 +18,6 @@ export async function selectById(table, id) {
     });
 }
 
-// Returns a list based on a table, field, and value
 export async function selectByValue(table, field, value) {
     return withCache(`${table}:${field}:${value}`, async () => {
         const path = `${url}/API/${table}/${field}/${value}`;
@@ -28,7 +25,6 @@ export async function selectByValue(table, field, value) {
     });
 }
 
-// Returns either a single JS object, or null
 export async function deleteById(table, id) {
     const path = `${url}/API/${table}/${id}`;
     const response = await fetch(path, { method: "DELETE" });
@@ -37,7 +33,6 @@ export async function deleteById(table, id) {
     return json.length === 0 ? null : json[0];
 }
 
-// Returns a list based on a table, field, and value
 export async function deleteByValue(table, field, value) {
     const path = `${url}/API/${table}/${field}/${value}`;
     const result = await (await fetch(path, { method: "DELETE" })).json();
@@ -182,7 +177,6 @@ export function getUserId() {
 }
 
 // --------------------------------------------- PER-PAGE NAVIGATION AND FOOTER
-const dir = new URL(".", import.meta.url).href;
 if (typeof document !== "undefined") {
     const header = document.getElementById("coco_header");
     if (header) {
@@ -194,11 +188,11 @@ if (typeof document !== "undefined") {
         <div class="navbar bg-base-300 w-full">
             <div class="navbar-start">
                 <label for="nav-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost" >
-                    <img src="${dir}/images/icons/menu.svg" alt="Menu" />
+                    <img src="/images/icons/menu.svg" alt="Menu" />
                 </label>
             </div>
             <a class="navbar-center gap-2 p-1" href="/">
-                <img class="size-12" src="${dir}images/logo.png" alt="CoCoLab Logo" />
+                <img class="size-12" src="/images/logo.png" alt="CoCoLab Logo" />
                 <h1 class="text-4xl tracking-tight font-bold">
                     CoCo<span class="text-primary">Lab</span>
                 </h1>
@@ -206,13 +200,13 @@ if (typeof document !== "undefined") {
             <div class="navbar-end">
             ${
                 user_id
-                    ? `<a class="btn btn-ghost" href="${dir}pages/user.html?id=${user_id}" id="account">
+                    ? `<a class="btn btn-ghost" href="/pages/user.html?id=${user_id}" id="account">
                     <span>Profile</span>
-                    <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                    <img class="account" src="/images/icons/user.svg" alt="User Account" />
                 </a>`
-                    : `<a class="btn btn-ghost" href="${dir}pages/auth.html">
+                    : `<a class="btn btn-ghost" href="/pages/auth.html">
                         Sign in
-                    <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                    <img class="account" src="/images/icons/user.svg" alt="User Account" />
                     </a>`
             }
             </div>
@@ -221,16 +215,16 @@ if (typeof document !== "undefined") {
     <div class="drawer-side">
         <label for="nav-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-200 min-h-full w-80 p-4">
-            <li> <a href="${dir}">Home</a> </li>
-        <li> <a href="${dir}pages/projectBoard.html">Project Board</a> </li>
-            <li> <a href="${dir}pages/aboutDevs.html">About the Developers</a> </li>
-            <li> <a href="${dir}pages/contactUs.html">Contact Us</a> </li>
+            <li> <a href="/">Home</a> </li>
+        <li> <a href="/pages/projectBoard.html">Project Board</a> </li>
+            <li> <a href="/pages/aboutDevs.html">About the Developers</a> </li>
+            <li> <a href="/pages/contactUs.html">Contact Us</a> </li>
             ${
                 user_id
                     ? '<li class="mt-auto"><button class="btn btn-ghost" onclick="logout()">Logout</button></li>'
-                    : `<li class='mt-auto'> <a class='btn btn-ghost' href='${dir}pages/auth.html'>
+                    : `<li class='mt-auto'> <a class='btn btn-ghost' href='/pages/auth.html'>
                         Sign in
-                        <img class="account" src="${dir}images/icons/user.svg" alt="User Account" />
+                        <img class="account" src="/images/icons/user.svg" alt="User Account" />
                     </a> </li>`
             }
         </ul>
@@ -239,7 +233,7 @@ if (typeof document !== "undefined") {
         if (user_id) {
             window.logout = async () => {
                 removeToken();
-                window.location.href = "./auth.html";
+                window.location.href = "/pages/auth.html";
             };
             (async () => {
                 const account = document.getElementById("account");
@@ -262,20 +256,19 @@ if (typeof document !== "undefined") {
         footer.innerHTML = `
 <footer class="footer footer-center p-4 bg-base-300 mt-auto">
     <aside class="grid-flow-col items-center">
-        <img class="size-10" src="${dir}/images/logo.png" alt="CoCoLab Logo" />
+        <img class="size-10" src="/images/logo.png" alt="CoCoLab Logo" />
         <p class="px-2">&copy; CoCoLab. All rights reserved.</p>
     </aside>
     <nav class="grid-flow-col gap-4">
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/facebook.svg" alt="facebook" />
+            <img class="size-5" src="/images/icons/social_media/facebook.svg" alt="facebook" />
         </a>
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/instagram.svg" alt="instagram" />
+            <img class="size-5" src="/images/icons/social_media/instagram.svg" alt="instagram" />
         </a>
         <a>
-            <img class="size-5" src="${dir}/images/icons/social_media/youtube.svg" alt="youtube" />
+            <img class="size-5" src="/images/icons/social_media/youtube.svg" alt="youtube" />
         </a>
-        
     </nav>
 </footer>`;
     }
@@ -312,7 +305,7 @@ export function toast(message, type = "neutral", duration = 5000) {
     wrapper.className = "toast-item alert " + alertClass;
 
     wrapper.innerHTML = `
-        ${icon ? `<img src="${dir}/images/icons/${icon}" alt="Icon" />` : ""}
+        ${icon ? `<img src="/images/icons/${icon}" alt="Icon" />` : ""}
         <span class="text-sm font-medium flex-1">${message}</span>
         <button onclick="dismissToast(this)" class="btn btn-ghost btn-xs btn-circle justify-self-end">✕</button>
       `;
@@ -338,4 +331,6 @@ export function dismissToast(btn, wrapper) {
     el.classList.add("hide");
     el.addEventListener("transitionend", () => el.remove(), { once: true });
 }
-window.dismissToast = dismissToast;
+if(typeof window !== "undefined"){
+    window.dismissToast = dismissToast;
+}

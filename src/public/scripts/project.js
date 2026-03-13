@@ -48,6 +48,9 @@ export async function init() {
         })
     );
 
+    const title = document.getElementById("project-title");
+    title.textContent = `${project.project_name} | Project`;
+
     await renderProject({ ...project, owner, members, requests, tags });
 }
 
@@ -149,6 +152,16 @@ export async function renderProject(project) {
         }
     }
 
+    function renderRoleBadge(role) {
+        return `<span class="indicator-item indicator-center badge">${
+            role.length > 20
+                ? `<div class="tooltip" data-tip="${role}">
+                        ${role.substring(0, 20)}...
+                    </div>`
+                : role
+        }</span>`;
+    }
+
     card.innerHTML = `
         <h1 class="card-title text-3xl font-bold">
             ${project.project_name}
@@ -171,7 +184,7 @@ export async function renderProject(project) {
                     (
                         member
                     ) => `<div class="indicator bg-base-200 rounded-box mt-2">
-                    <span class="indicator-item indicator-center badge">${member.role}</span>
+                    ${renderRoleBadge(member.role)}
                     ${renderUser(member.user, is_owner)}
                 </div>`
                 )
@@ -181,7 +194,7 @@ export async function renderProject(project) {
                     if (!is_owner && request.user) return "";
                     return `
                 <div class="indicator flex gap-2 items-center mt-2">
-                    <span class="indicator-item indicator-center badge">${request.role}</span>
+                    ${renderRoleBadge(request.role)}
                     ${
                         request.user
                             ? is_owner
@@ -231,7 +244,7 @@ export async function renderProject(project) {
         </div>`;
 }
 
-export function renderRoleModal(id, onSubmit) {
+function renderRoleModal(id, onSubmit) {
     return `
     <dialog id="${id}" class="modal">
         <div class="modal-box flex flex-col gap-4">
@@ -258,7 +271,13 @@ export function renderRoleModal(id, onSubmit) {
     </dialog>`;
 }
 
-export async function request(body) {
+function reload() {
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+async function request(body) {
     try {
         const response = await insert("project_requests", body);
         console.log(response);
@@ -269,9 +288,10 @@ export async function request(body) {
     }
 
     toast("Request sent successfully");
+    reload();
 }
 
-export async function attachRequest(btn, id) {
+async function attachRequest(btn, id) {
     btn.disabled = true;
     try {
         const response = await updateById("project_requests", id, {
@@ -285,9 +305,10 @@ export async function attachRequest(btn, id) {
     }
 
     toast("Request updated successfully");
+    reload();
 }
 
-export async function acceptRequest(btn, request) {
+async function acceptRequest(btn, request) {
     btn.disabled = true;
     try {
         //Add member
@@ -309,11 +330,10 @@ export async function acceptRequest(btn, request) {
     }
 
     toast("Successfully accepted project member");
-
-    //Get user to show up onscreen
+    reload();
 }
 
-export async function deleteRequest(btn, request_id) {
+async function deleteRequest(btn, request_id) {
     btn.disabled = true;
     try {
         const result = await deleteById("project_requests", request_id);
@@ -326,10 +346,10 @@ export async function deleteRequest(btn, request_id) {
     }
 
     toast("Successfully rejected project member");
-    // remove user from rendered page
+    reload();
 }
 
-export async function completeProject(btn, project_id) {
+async function completeProject(btn, project_id) {
     btn.disabled = true;
     try {
         const response = await updateById("project", project_id, {
@@ -344,9 +364,10 @@ export async function completeProject(btn, project_id) {
     }
 
     toast("You completed this project!! Good job :)");
+    reload();
 }
 
-export async function deleteProject(btn, project_id) {
+async function deleteProject(btn, project_id) {
     btn.disabled = true;
     try {
         await deleteById("project", project_id);
@@ -357,5 +378,5 @@ export async function deleteProject(btn, project_id) {
         return;
     }
 
-    toast("You deleted this project. :(");
+    window.location.href = "./projectBoard.html";
 }
