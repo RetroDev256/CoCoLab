@@ -23,6 +23,16 @@ if (typeof window !== "undefined") {
     populateUser(user);
 }
 
+function renderRoleBadge(role) {
+    return `<span class="indicator-item indicator-center badge">${
+        role.length > 20
+            ? `<div class="tooltip" data-tip="${role}">
+                        ${role.substring(0, 20)}...
+                    </div>`
+            : role
+    }</span>`;
+}
+
 // Populates the HTML that deals with projects that the user owns
 function populateOwnedProjects(projects) {
     const div = document.getElementById("owned_projects");
@@ -58,7 +68,7 @@ async function populateMemberships(memberships) {
             return `<a href="./project.html?id=${membership.project_id}" target="_blank">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
-                    <span class="badge badge-primary">${membership.role}</span>
+                    ${renderRoleBadge(membership.role)}
                 </div>
             </a>`;
         })
@@ -80,7 +90,7 @@ async function populateRequests(requests) {
             return `<a href="./project.html?id=${request.project_id}" target="_blank">
                 <div class="p-4 gap-2 rounded-lg bg-base-200 flex justify-between">
                     <span>${project.project_name}</span>
-                    <span class="badge badge-primary">${request.role}</span>
+                   ${renderRoleBadge(request.role)}
                 </div>
             </a>`;
         })

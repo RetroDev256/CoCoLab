@@ -95,6 +95,16 @@ export function renderUser(user, is_owner) {
     </a>`;
 }
 
+function renderRoleBadge(role) {
+    return `<span class="indicator-item indicator-center badge">${
+        role.length > 20
+            ? `<div class="tooltip" data-tip="${role}">
+                        ${role.substring(0, 20)}...
+                    </div>`
+            : role
+    }</span>`;
+}
+
 export async function renderProject(project) {
     const card = document.getElementById("project");
 
@@ -150,16 +160,6 @@ export async function renderProject(project) {
                 user_request_modal.close();
             })}`;
         }
-    }
-
-    function renderRoleBadge(role) {
-        return `<span class="indicator-item indicator-center badge">${
-            role.length > 20
-                ? `<div class="tooltip" data-tip="${role}">
-                        ${role.substring(0, 20)}...
-                    </div>`
-                : role
-        }</span>`;
     }
 
     card.innerHTML = `
