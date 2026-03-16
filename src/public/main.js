@@ -121,21 +121,18 @@ const _ls = (function () {
 })();
 
 export function saveToken(token) {
-    console.log("Saving JWT Token...");
     try {
         _ls.setItem("token", token);
     } catch (_) {}
 }
 
 export function removeToken() {
-    console.log("Removing JWT Token...");
     try {
         _ls.removeItem("token");
     } catch (_) {}
 }
 
 export function getToken() {
-    console.log("Loading JWT Token...");
     try {
         return _ls.getItem("token");
     } catch (_) {
@@ -331,6 +328,6 @@ export function dismissToast(btn, wrapper) {
     el.classList.add("hide");
     el.addEventListener("transitionend", () => el.remove(), { once: true });
 }
-if(typeof window !== "undefined"){
+if (typeof window !== "undefined") {
     window.dismissToast = dismissToast;
 }
