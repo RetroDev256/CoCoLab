@@ -50,15 +50,13 @@ document
             return;
         }
         renderProjects(
-            projects
-                .filter(
-                    (project) =>
-                        project.project_name.toLowerCase().includes(query) ||
-                        project.tags.some((tag) =>
-                            tag.toLowerCase().includes(query)
-                        )
-                )
-                .sort((a, b) => a.project_name.localeCompare(b.project_name))
+            projects.filter(
+                (project) =>
+                    project.project_name.toLowerCase().includes(query) ||
+                    project.tags.some((tag) =>
+                        tag.toLowerCase().includes(query)
+                    )
+            )
         );
     });
 
@@ -90,13 +88,11 @@ document
                 owner_id: user_id,
                 completed: false,
             });
-            console.log("Project", project);
             for (const tag_id of data.getAll("tags")) {
                 const tag = await insert("projects_tags", {
                     project_id: project.id,
                     tag_id: tag_id,
                 });
-                console.log("Tag to project:", tag);
             }
             toast("Project created successfully!", "success");
             setTimeout(() => {
