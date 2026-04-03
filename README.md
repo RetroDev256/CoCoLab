@@ -1,22 +1,23 @@
-# PROJECT TITLE: CoCoLab
-
-# TEAM MEMBERS: Maddie Smith :), Ansen Eyre, Connor Ellis, Eric Petersen, Daps Purcell
-
-Website designed for the colaboration of students and buisnesses.
-
-A place to advertise your abilities, and request the work of others.
+# CoCoLab
 
 https://coco.alloc.dev/
+Website designed for the colaboration of students and buisnesses.
+A place to advertise your abilities, and request the work of others.
 
 ## TEAM MEMBERS:
 
-Maddie Smith :), Anson Eyre, Connor Ellis, Eric Petersen, Daps Purcell
+- Maddie Smith :)
+- Anson Eyre
+- Connor Ellis
+- Eric Petersen
+- Daps Purcell
 
 ## DESCRIPTION
 
 Website designed for the collaboration of students and businesses. A place to advertise your abilities, and request the work of others.Thereby lowering the barrier to professional collaboration
 
 ## ARCHITECTURE
+
 - HTML
 - CSS
 - JavaScript
@@ -37,12 +38,13 @@ Website designed for the collaboration of students and businesses. A place to ad
 - ✨ Brownie clicker ✨
 
 ## TEAM COMMUNICATION
+
 Excellent coordination skills via quality communication platforms such as Discord and a shared Google doc, which can be found here:
 [Team Collaboration Doc](https://docs.google.com/document/d/1VoHq7gj-O9fQ3EKPvHRIPv6Ds6y7lpfTSyFRV68jb4o/edit?usp=sharing)
 
 ## TEAM RESPONSIBILITIES
 
-* Take turns in the following roles: Frontend, Backend, QA, Database, CSS
+- Take turns in the following roles: Frontend, Backend, QA, Database, CSS
 
 ## REFLECTIONS
 
@@ -61,7 +63,6 @@ What can be improved:
 - Better mobile support
 - Secure db that won't get deleted
 - Hide contact information before user has been accepted
-
 
 Future plans for project:
 
