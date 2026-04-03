@@ -37,9 +37,12 @@ Website designed for the collaboration of students and businesses. A place to ad
 - ✨ Brownie clicker ✨
 
 ## TEAM COMMUNICATION
-Excellent coordination skills via quality communication platforms such as Discord and a shared Google doc
+Excellent coordination skills via quality communication platforms such as Discord and a shared Google doc, which can be found here:
+[Team Collaboration Doc](https://docs.google.com/document/d/1VoHq7gj-O9fQ3EKPvHRIPv6Ds6y7lpfTSyFRV68jb4o/edit?usp=sharing)
 
 ## TEAM RESPONSIBILITIES
+
+* Take turns in the following roles: Frontend, Backend, QA, Database, CSS
 
 ## REFLECTIONS
 
