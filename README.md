@@ -17,6 +17,15 @@ Maddie Smith :), Anson Eyre, Connor Ellis, Eric Petersen, Daps Purcell
 Website designed for the collaboration of students and businesses. A place to advertise your abilities, and request the work of others.Thereby lowering the barrier to professional collaboration
 
 ## ARCHITECTURE
+- HTML
+- CSS
+- JavaScript
+- Tailwindcss
+- DaisyUI
+- Bun
+- Cloudflare
+- PostgreSQL
+- Oracle
 
 ## FEATURES
 
@@ -28,6 +37,7 @@ Website designed for the collaboration of students and businesses. A place to ad
 - ✨ Brownie clicker ✨
 
 ## TEAM COMMUNICATION
+Excellent coordination skills via quality communication platforms such as Discord and a shared Google doc
 
 ## TEAM RESPONSIBILITIES
 
@@ -36,15 +46,22 @@ Website designed for the collaboration of students and businesses. A place to ad
 What our team learned:
 
 - It's okay to overwrite other people's work to make it better. Talk to your teammates about it.
-- y
-- z
+- Open communication and willingness to help however is needed are the best qualities for team success!
+- Taking assignments and following through decisively is the best way to make the work happen.
+- We can be humble and take correction from each other.
+- It is better to have a good pace and remain vigilant- our end product was WAY better because we didn't have to rush!
 
 What can be improved:
 
 - Faster page loads/updates
-- Remake in react for better UI/UX and DX
+- Better handheld device migration
 - Better mobile support
+- Secure db that won't get deleted
+- Hide contact information before user has been accepted
+
 
 Future plans for project:
 
 - Step on more toes
+- Provide options for businesses to make accounts where they can view students' projects, and make some of their own.
+- Remake in react for better UI/UX and DX, particularly with phones
