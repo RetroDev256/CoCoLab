@@ -14,7 +14,6 @@
 
             // Get the current user ID
             const user_id = getUserId();
-            console.log(`Current user ID: ${user_id}`);
 
             // Modify a form to do something with an endpoint instead
             function attachAuthHandler(form_id, endpoint) {
@@ -42,7 +41,6 @@
 
                     // Save the token in local storage for authentication
                     saveToken(await response.json());
-                    console.log("Successfully logged in.");
                     window.location.href = "/";
                 });
             }
